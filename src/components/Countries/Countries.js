@@ -11,7 +11,8 @@ const countries = props => {
   if (props.countries) {
     //const keys = Object.keys(props.countries);
     //const countryList = keys.map((key) => {
-    const countryList = props.countries.map((country) => {
+    const countryList = Object.keys(props.countries).map((countryKey) => {
+      const country = props.countries[countryKey];
     const player = country.state.player ? country.state.player.name : null;
     const troops = country.state.troops + country.state.newTroops;
     let buttons;
@@ -21,10 +22,10 @@ const countries = props => {
         if (country.state.newTroops > 0) {
             buttons = (
             <span>
-                <button onClick={() => props.addTroopsHandler(country.name)} disabled={props.currentPlayer.troopsToAdd <= 0}>
+                <button onClick={() => props.addTroopsHandler(countryKey)} disabled={props.currentPlayer.troopsToAdd <= 0}>
                   Agregar
                 </button>&nbsp;
-                <button onClick={() => props.removeTroopsHandler(country.name)}>
+                <button onClick={() => props.removeTroopsHandler(countryKey)}>
                   Quitar
                 </button>
             </span>
@@ -32,7 +33,7 @@ const countries = props => {
         } else {
             buttons = (
             <span>
-                <button onClick={() => props.addTroopsHandler(country.name)} disabled={props.currentPlayer.troopsToAdd <= 0}>
+                <button onClick={() => props.addTroopsHandler(countryKey)} disabled={props.currentPlayer.troopsToAdd <= 0}>
                   Agregar
                 </button>&nbsp;
             </span>
@@ -44,10 +45,10 @@ const countries = props => {
     } else if (props.currentRound === RoundType.ATTACK || props.currentRound === RoundType.MOVE_TROOPS) {
         buttons = (
           <span>
-            <button onClick={() => props.selectSourceHandler(country.name)} disabled={country.state.player.name !== props.currentPlayer.name}>
+            <button onClick={() => props.selectSourceHandler(countryKey)} disabled={country.state.player.name !== props.currentPlayer.name}>
               Origen
             </button>
-            <button onClick={() => props.selectTargetHandler(country.name)} disabled={!props.sourceSelection || props.sourceSelection === country.name}>
+            <button onClick={() => props.selectTargetHandler(countryKey)} disabled={!props.sourceSelection || props.sourceSelection === countryKey}>
               Destino
             </button>
           </span>

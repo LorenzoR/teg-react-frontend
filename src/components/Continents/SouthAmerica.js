@@ -11,12 +11,29 @@ import Uruguay from '../Countries/SouthAmerica/Uruguay';
 const southAmerica = props => {
     return (
         <g id="south-america">
-          <Colombia countryState={props.countries ? props.countries[0].state : null}/>
-          <Brasil />
-          <Peru />
-          <Chile />
-          <Argentina />
-          <Uruguay />
+          <Colombia countryState={props.countries.COLOMBIA.state}
+              countrySelection={props.countrySelection}
+              countryClicked={props.countryClicked} />
+
+          <Brasil countryState={props.countries.BRASIL.state}
+              countrySelection={props.countrySelection}
+              countryClicked={() => props.countryClicked('BRASIL')} />
+
+          <Peru countryState={props.countries.PERU.state}
+              countrySelection={props.countrySelection}
+              countryClicked={() => props.countryClicked('PERU')} />
+
+          <Chile countryState={props.countries.CHILE.state}
+              countrySelection={props.countrySelection}
+              countryClicked={() => props.countryClicked('CHILE')} />
+
+          <Argentina countryState={props.countries.ARGENTINA.state}
+              countrySelection={props.countrySelection}
+              countryClicked={() => props.countryClicked('ARGENTINA')} />
+
+          <Uruguay countryState={props.countries.URUGUAY.state}
+              countrySelection={props.countrySelection}
+              countryClicked={() => props.countryClicked('URUGUAY')} />
         </g>
     );
 };

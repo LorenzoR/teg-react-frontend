@@ -7,9 +7,6 @@ import TegMap from './TegMap';
 function App() {
   return (
     <div className="App">
-      <header>
-        Teg Online
-      </header>
       <TegMap />
     </div>
   );
