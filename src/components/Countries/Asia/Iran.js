@@ -22,7 +22,7 @@ const Iran = (props) => {
     >
       <path
         id="iran-border"
-        fill={borderFill}
+        fill={props.isSelected ? shadeColor("#caa265", -50) : borderFill}
         fillRule="evenodd"
         stroke="#000"
         strokeLinecap="butt"
@@ -33,7 +33,7 @@ const Iran = (props) => {
       ></path>
       <path
         id="iran-filling"
-        fill={fill}
+        fill={props.isSelected ? shadeColor("#d7b989", -50) : fill}
         fillRule="evenodd"
         stroke="none"
         strokeLinecap="butt"

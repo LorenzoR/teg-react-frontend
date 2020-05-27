@@ -6,7 +6,7 @@ import SouthAmerica from "../Continents/SouthAmerica";
 import Africa from "../Continents/Africa";
 import Europe from "../Continents/Europe";
 import Asia from "../Continents/Asia";
-import Oceania from "../Continents/Ocenia";
+import Oceania from "../Continents/Oceania";
 
 const map = (props) => {
   const mapWidth = "100%"; // 1602.183

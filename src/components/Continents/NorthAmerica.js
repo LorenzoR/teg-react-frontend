@@ -17,61 +17,61 @@ const northAmerica = (props) => {
     <g id="north-america">
       <Canada
         countryState={props.countries.CANADA.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('CANADA')}
         countryClicked={props.countryClicked}
       />
 
       <Yukon
         countryState={props.countries.YUKON.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('YUKON')}
         countryClicked={props.countryClicked}
       />
 
       <Alaska
         countryState={props.countries.ALASKA.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('ALASKA')}
         countryClicked={props.countryClicked}
       />
 
       <Oregon
         countryState={props.countries.OREGON.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('OREGON')}
         countryClicked={props.countryClicked}
       />
 
       <California
         countryState={props.countries.CALIFORNIA.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('CALIFORNIA')}
         countryClicked={props.countryClicked}
       />
 
       <NewYork
         countryState={props.countries.NEW_YORK.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('NEW_YORK')}
         countryClicked={props.countryClicked}
       />
 
       <Terranova
         countryState={props.countries.TERRANOVA.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('TERRANOVA')}
         countryClicked={props.countryClicked}
       />
 
       <Labrador
         countryState={props.countries.LABRADOR.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('LABRADOR')}
         countryClicked={props.countryClicked}
       />
 
       <Greenland
         countryState={props.countries.GREENLAND.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('GREENLAND')}
         countryClicked={props.countryClicked}
       />
 
       <Mexico
         countryState={props.countries.MEXICO.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('MEXICO')}
         countryClicked={props.countryClicked}
       />
     </g>

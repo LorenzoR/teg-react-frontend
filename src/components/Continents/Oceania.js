@@ -6,36 +6,36 @@ import Java from "../Countries/Oceania/Java";
 import Borneo from "../Countries/Oceania/Borneo";
 import Sumatra from "../Countries/Oceania/Sumatra";
 
-const ocenia = (props) => {
+const oceania = (props) => {
   return (
     <g id="oceania">
       <Australia
         countryState={props.countries.AUSTRALIA.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('AUSTRALIA')}
         countryClicked={props.countryClicked}
       />
 
       <Java
         countryState={props.countries.JAVA.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('JAVA')}
         countryClicked={props.countryClicked}
       />
 
       <Borneo
         countryState={props.countries.BORNEO.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('BORNEO')}
         countryClicked={props.countryClicked}
       />
 
       <Sumatra
         countryState={props.countries.SUMATRA.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('SUMATRA')}
         countryClicked={props.countryClicked}
       />
     </g>
   );
 };
 
-ocenia.propTypes = {};
+oceania.propTypes = {};
 
-export default ocenia;
+export default oceania;

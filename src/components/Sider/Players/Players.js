@@ -10,7 +10,7 @@ const players = (props) => {
     const playerName = props.currentPlayerIndex === index ? <strong>{player.name}</strong> : player.name;
 
     return (
-      <p>
+      <p key={player.name}>
         <Avatar style={{ backgroundColor: player.color }} icon={<UserOutlined />} />
         &nbsp; {playerName}
       </p>

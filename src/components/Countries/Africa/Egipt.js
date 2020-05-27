@@ -22,7 +22,7 @@ const Egipt = (props) => {
     >
       <path
         id="egipto-border"
-        fill={borderFill}
+        fill={props.isSelected ? shadeColor("#fdb456", -50) : borderFill}
         fillRule="evenodd"
         stroke="#000"
         strokeLinecap="butt"
@@ -33,7 +33,7 @@ const Egipt = (props) => {
       ></path>
       <path
         id="egipto-filling"
-        fill={fill}
+        fill={props.isSelected ? shadeColor("#fec883", -50) : fill}
         fillRule="evenodd"
         stroke="none"
         strokeLinecap="butt"

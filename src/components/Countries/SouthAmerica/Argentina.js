@@ -31,7 +31,7 @@ const Argentina = (props) => {
       >
         <path
           id="argentina-border"
-          fill={borderFill}
+          fill={props.isSelected ? shadeColor("#6bb682", -50) : borderFill}
           fillRule="evenodd"
           stroke="#000"
           strokeDasharray="none"
@@ -44,7 +44,7 @@ const Argentina = (props) => {
         ></path>
         <path
           id="argentina-filling"
-          fill={fill}
+          fill={props.isSelected ? shadeColor("#9be09e", -50) : fill}
           fillRule="evenodd"
           stroke="none"
           strokeLinecap="butt"

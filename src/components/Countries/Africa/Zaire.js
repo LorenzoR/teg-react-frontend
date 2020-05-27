@@ -22,7 +22,7 @@ const Zaire = (props) => {
     >
       <path
         id="zaire-border"
-        fill={borderFill}
+        fill={props.isSelected ? shadeColor("#fdb456", -50) : borderFill}
         fillRule="evenodd"
         stroke="#000"
         strokeLinecap="butt"
@@ -33,7 +33,7 @@ const Zaire = (props) => {
       ></path>
       <path
         id="zaire-filling"
-        fill={fill}
+        fill={props.isSelected ? shadeColor("#fec883", -50) : fill}
         fillRule="evenodd"
         stroke="none"
         strokeLinecap="butt"

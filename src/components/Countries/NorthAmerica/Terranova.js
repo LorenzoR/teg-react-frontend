@@ -22,7 +22,7 @@ const Terranova = (props) => {
     >
       <path
         id="terranova-border"
-        fill={borderFill}
+        fill={props.isSelected ? shadeColor("#d89a61", -50) : borderFill}
         fillRule="evenodd"
         stroke="#000"
         strokeDasharray="none"
@@ -35,7 +35,7 @@ const Terranova = (props) => {
       ></path>
       <path
         id="terranova-filling"
-        fill={fill}
+        fill={props.isSelected ? shadeColor("#e0b881", -50) : fill}
         fillRule="evenodd"
         stroke="none"
         strokeLinecap="butt"
@@ -62,9 +62,6 @@ const Terranova = (props) => {
               : "#e03981"
           }
           stroke="#000"
-          onclick="countryClicked('canada')"
-          onmouseout="countryMouseOut('canada')"
-          onmouseover="countryMouseOver('canada')"
         ></circle>
         <text
           id="canada-troops-number-6-2-3-2-7-2"

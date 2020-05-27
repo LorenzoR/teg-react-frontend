@@ -23,7 +23,7 @@ const Alaska = (props) => {
     >
       <path
         id="alaska-border"
-        fill={borderFill}
+        fill={props.isSelected ? shadeColor("#d89a61", -50) : borderFill}
         fillRule="evenodd"
         stroke="#000"
         strokeDasharray="none"
@@ -36,7 +36,7 @@ const Alaska = (props) => {
       ></path>
       <path
         id="alaska-filling"
-        fill={fill}
+        fill={props.isSelected ? shadeColor("#e0b881", -50) : fill}
         fillRule="evenodd"
         stroke="none"
         strokeLinecap="butt"

@@ -22,7 +22,7 @@ const Java = (props) => {
     >
       <path
         id="java-border"
-        fill={borderFill}
+        fill={props.isSelected ? shadeColor("#90a8a0", -50) : borderFill}
         fillRule="evenodd"
         stroke="#000"
         strokeLinecap="butt"
@@ -33,7 +33,7 @@ const Java = (props) => {
       ></path>
       <path
         id="java-filling"
-        fill={fill}
+        fill={props.isSelected ? shadeColor("#afc1bb", -50) : fill}
         fillRule="evenodd"
         stroke="none"
         strokeLinecap="butt"

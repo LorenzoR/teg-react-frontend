@@ -22,7 +22,7 @@ const Malasia = (props) => {
     >
       <path
         id="malasia-border"
-        fill={borderFill}
+        fill={props.isSelected ? shadeColor("#caa265", -50) : borderFill}
         fillRule="evenodd"
         stroke="#000"
         strokeLinecap="butt"
@@ -33,7 +33,7 @@ const Malasia = (props) => {
       ></path>
       <path
         id="malasia-filling"
-        fill={fill}
+        fill={props.isSelected ? shadeColor("#d7b989", -50) : fill}
         fillRule="evenodd"
         stroke="none"
         strokeLinecap="butt"

@@ -22,91 +22,91 @@ const asia = (props) => {
     <g id="asia">
       <Aral
         countryState={props.countries.ARAL.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('ARAL')}
         countryClicked={props.countryClicked}
       />
 
       <Tartaria
         countryState={props.countries.TARTARIA.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('TARTARIA')}
         countryClicked={props.countryClicked}
       />
 
       <Taimir
         countryState={props.countries.TAIMIR.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('TAIMIR')}
         countryClicked={props.countryClicked}
       />
 
       <Kamchatka
         countryState={props.countries.KAMCHATKA.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('KAMCHATKA')}
         countryClicked={props.countryClicked}
       />
 
       <Japan
         countryState={props.countries.JAPAN.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('JAPAN')}
         countryClicked={props.countryClicked}
       />
 
       <China
         countryState={props.countries.CHINA.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('CHINA')}
         countryClicked={props.countryClicked}
       />
 
       <Gobi
         countryState={props.countries.GOBI.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('GOBI')}
         countryClicked={props.countryClicked}
       />
 
       <Mongolia
         countryState={props.countries.MONGOLIA.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('MONGOLIA')}
         countryClicked={props.countryClicked}
       />
 
       <Iran
         countryState={props.countries.IRAN.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('IRAN')}
         countryClicked={props.countryClicked}
       />
 
       <Turkey
         countryState={props.countries.TURKEY.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('TURKEY')}
         countryClicked={props.countryClicked}
       />
 
       <Israel
         countryState={props.countries.ISRAEL.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('ISRAEL')}
         countryClicked={props.countryClicked}
       />
 
       <Arabia
         countryState={props.countries.ARABIA.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('ARABIA')}
         countryClicked={props.countryClicked}
       />
 
       <India
         countryState={props.countries.INDIA.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('INDIA')}
         countryClicked={props.countryClicked}
       />
 
       <Malasia
         countryState={props.countries.MALASIA.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('MALASIA')}
         countryClicked={props.countryClicked}
       />
 
       <Siberia
         countryState={props.countries.SIBERIA.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('SIBERIA')}
         countryClicked={props.countryClicked}
       />
     </g>

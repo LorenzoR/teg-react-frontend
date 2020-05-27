@@ -22,7 +22,7 @@ const Oregon = (props) => {
     >
       <path
         id="oregon-border"
-        fill={borderFill}
+        fill={props.isSelected ? shadeColor("#d89a61", -50) : borderFill}
         fillRule="evenodd"
         stroke="#000"
         strokeDasharray="none"
@@ -35,7 +35,7 @@ const Oregon = (props) => {
       ></path>
       <path
         id="oregon-filling"
-        fill={fill}
+        fill={props.isSelected ? shadeColor("#e0b881", -50) : fill}
         fillRule="evenodd"
         stroke="none"
         strokeLinecap="butt"

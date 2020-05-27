@@ -13,37 +13,37 @@ const africa = (props) => {
     <g id="africa">
       <Egypt
         countryState={props.countries.EGYPT.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('EGYPT')}
         countryClicked={props.countryClicked}
       />
 
       <Sahara
         countryState={props.countries.SAHARA.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('SAHARA')}
         countryClicked={props.countryClicked}
       />
 
       <Etiopia
         countryState={props.countries.ETHIOPIA.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('ETHIOPIA')}
         countryClicked={props.countryClicked}
       />
 
       <Zaire
         countryState={props.countries.ZAIRE.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('ZAIRE')}
         countryClicked={props.countryClicked}
       />
 
       <SouthAfrica
         countryState={props.countries.SOUTH_AFRICA.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('SOUTH_AFRICA')}
         countryClicked={props.countryClicked}
       />
 
       <Madagascar
         countryState={props.countries.MADAGASCAR.state}
-        countrySelection={props.countrySelection}
+        isSelected={[props.countrySelection.source, props.countrySelection.target].includes('MADAGASCAR')}
         countryClicked={props.countryClicked}
       />
     </g>
