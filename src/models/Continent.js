@@ -1,10 +1,10 @@
-const ContinentEnum = {
-    AFRICA: 'africa',
-    EUROPE: 'europe',
-    SOUTH_AMERICA: 'southAmerica',
-    NORTH_AMERICA: 'northAmerica',
-    ASIA: 'asia',
-    OCEANIA: 'oceania',
+const ContinentTypes = {
+    AFRICA: 'AFRICA',
+    EUROPE: 'EUROPE',
+    SOUTH_AMERICA: 'SOUTH_AMERICA',
+    NORTH_AMERICA: 'NORTH_AMERICA',
+    ASIA: 'ASIA',
+    OCEANIA: 'OCEANIA',
 };
 
 const Continents = {
@@ -35,8 +35,8 @@ const Continents = {
   };
 
 class Continent {
-    static getContinents() {
-        return ContinentEnum;
+    static getContinentTypes() {
+        return ContinentTypes;
     }
 }
 

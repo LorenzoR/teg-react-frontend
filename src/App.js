@@ -1,14 +1,15 @@
 import React from 'react';
-import tegMap from './teg-map-medium.svg';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.css';
 
 import TegMap from './TegMap';
 
 function App() {
   return (
-    <div className="App">
-      <TegMap />
-    </div>
+    <Router>
+      <Route path="/" component={TegMap}>
+      </Route>
+    </Router>
   );
 }
 

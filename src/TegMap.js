@@ -1,14 +1,17 @@
-import React, { Component } from "react";
-import _ from "lodash";
+import React, { Component } from 'react';
+import { BrowserRouter as Router, Link, useLocation } from 'react-router-dom';
+import _ from 'lodash';
+import moment from 'moment';
+import { w3cwebsocket as W3CWebSocket } from 'websocket';
 
-import { Layout } from "antd";
-import { Card } from "antd";
-import { Button, Tooltip } from "antd";
-import { Tabs } from "antd";
-import { Row, Col } from "antd";
-import { Avatar } from "antd";
-import { Statistic } from "antd";
-import { notification, Divider, Space } from "antd";
+import { Layout } from 'antd';
+import { Card } from 'antd';
+import { Button, Tooltip } from 'antd';
+import { Tabs } from 'antd';
+import { Row, Col } from 'antd';
+import { Avatar } from 'antd';
+import { Statistic } from 'antd';
+import { notification, Divider, Space } from 'antd';
 
 import {
   UserAddOutlined,
@@ -21,19 +24,22 @@ import {
   PlusCircleOutlined,
   MinusCircleOutlined,
   UserOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons';
 
-import Countries from "./components/Countries/Countries";
-import Map from "./components/Map/Map";
-import EventsLog from "./components/EventsLog/EventsLog";
-import BottomTabs from "./components/BottomTabs/BottomTabs";
-import UserInfo from "./components/UserInfo/UserInfo";
-import Players from "./components/Sider/Players/Players";
-import PlayerCardsTab from "./components/BottomTabs/PlayerCardsTab/PlayerCardsTab";
+import Countries from './components/Countries/Countries';
+import Map from './components/Map/Map';
+import EventsLog from './components/EventsLog/EventsLog';
+import BottomTabs from './components/BottomTabs/BottomTabs';
+import UserInfo from './components/UserInfo/UserInfo';
+import Players from './components/Sider/Players/Players';
+import PlayerCardsTab from './components/BottomTabs/PlayerCardsTab/PlayerCardsTab';
+import ActivityTab from './components/BottomTabs/ActivityTab/ActivityTab';
 
-import CountryConqueredModal from "./components/Modals/CountryConqueredModal";
+import CountryConqueredModal from './components/Modals/CountryConqueredModal';
+import SelectPlayerColorModal from './components/Modals/SelectPlayerColorModal';
 
-import Country from "./models/Country";
+import Country from './models/Country';
+import Mission from './models/Mission';
 
 const { Header, Footer, Sider, Content } = Layout;
 
@@ -43,202 +49,202 @@ const { Countdown } = Statistic;
 
 const CountriesRaw = {
   // North America
-  CANADA: "CANADA",
-  YUKON: "YUKON",
-  OREGON: "OREGON",
-  NEW_YORK: "NEW_YORK",
-  ALASKA: "ALASKA",
-  MEXICO: "MEXICO",
-  CALIFORNIA: "CALIFORNIA",
-  GREENLAND: "GREENLAND",
-  TERRANOVA: "TERRANOVA",
-  LABRADOR: "LABRADOR",
+  CANADA: 'CANADA',
+  YUKON: 'YUKON',
+  OREGON: 'OREGON',
+  NEW_YORK: 'NEW_YORK',
+  ALASKA: 'ALASKA',
+  MEXICO: 'MEXICO',
+  CALIFORNIA: 'CALIFORNIA',
+  GREENLAND: 'GREENLAND',
+  TERRANOVA: 'TERRANOVA',
+  LABRADOR: 'LABRADOR',
   // South America
-  COLOMBIA: "COLOMBIA",
-  PERU: "PERU",
-  BRASIL: "BRASIL",
-  ARGENTINA: "ARGENTINA",
-  CHILE: "CHILE",
-  URUGUAY: "URUGUAY",
+  COLOMBIA: 'COLOMBIA',
+  PERU: 'PERU',
+  BRASIL: 'BRASIL',
+  ARGENTINA: 'ARGENTINA',
+  CHILE: 'CHILE',
+  URUGUAY: 'URUGUAY',
   // Oceania
-  AUSTRALIA: "AUSTRALIA",
-  JAVA: "JAVA",
-  SUMATRA: "SUMATRA",
-  BORNEO: "BORNEO",
+  AUSTRALIA: 'AUSTRALIA',
+  JAVA: 'JAVA',
+  SUMATRA: 'SUMATRA',
+  BORNEO: 'BORNEO',
   // Africa
-  SAHARA: "SAHARA",
-  SOUTH_AFRICA: "SOUTH_AFRICA",
-  MADAGASCAR: "MADAGASCAR",
-  ZAIRE: "ZAIRE",
-  ETHIOPIA: "ETHIOPIA",
-  EGYPT: "EGYPT",
+  SAHARA: 'SAHARA',
+  SOUTH_AFRICA: 'SOUTH_AFRICA',
+  MADAGASCAR: 'MADAGASCAR',
+  ZAIRE: 'ZAIRE',
+  ETHIOPIA: 'ETHIOPIA',
+  EGYPT: 'EGYPT',
   // Europe
-  ICELAND: "ICELAND",
-  UK: "UK",
-  SPAIN: "SPAIN",
-  ITALY: "ITALY",
-  FRANCE: "FRANCE",
-  GERMANY: "GERMANY",
-  POLAND: "POLAND",
-  RUSIA: "RUSIA",
-  SWEDEN: "SWEDEN",
+  ICELAND: 'ICELAND',
+  UK: 'UK',
+  SPAIN: 'SPAIN',
+  ITALY: 'ITALY',
+  FRANCE: 'FRANCE',
+  GERMANY: 'GERMANY',
+  POLAND: 'POLAND',
+  RUSIA: 'RUSIA',
+  SWEDEN: 'SWEDEN',
   // Asia
-  ARAL: "ARAL",
-  TARTARIA: "TARTARIA",
-  TAIMIR: "TAIMIR",
-  SIBERIA: "SIBERIA",
-  KAMCHATKA: "KAMCHATKA",
-  JAPAN: "JAPAN",
-  MONGOLIA: "MONGOLIA",
-  IRAN: "IRAN",
-  GOBI: "GOBI",
-  CHINA: "CHINA",
-  MALASIA: "MALASIA",
-  INDIA: "INDIA",
-  TURKEY: "TURKEY",
-  ISRAEL: "ISRAEL",
-  ARABIA: "ARABIA",
+  ARAL: 'ARAL',
+  TARTARIA: 'TARTARIA',
+  TAIMIR: 'TAIMIR',
+  SIBERIA: 'SIBERIA',
+  KAMCHATKA: 'KAMCHATKA',
+  JAPAN: 'JAPAN',
+  MONGOLIA: 'MONGOLIA',
+  IRAN: 'IRAN',
+  GOBI: 'GOBI',
+  CHINA: 'CHINA',
+  MALASIA: 'MALASIA',
+  INDIA: 'INDIA',
+  TURKEY: 'TURKEY',
+  ISRAEL: 'ISRAEL',
+  ARABIA: 'ARABIA',
 };
 
 const CountriesList = {
   // North America
   NORTH_AMERICA: {
-    name: "Norteamerica",
+    name: 'Norteamerica',
     countries: {
-      CANADA: "canada",
-      YUKON: "yukon",
-      OREGON: "oregon",
-      NEW_YORK: "newYork",
-      ALASKA: "alaska",
-      MEXICO: "mexico",
-      CALIFORNIA: "california",
-      GREENLAND: "greenland",
-      TERRANOVA: "terranova",
-      LABRADOR: "labrador",
+      CANADA: 'canada',
+      YUKON: 'yukon',
+      OREGON: 'oregon',
+      NEW_YORK: 'newYork',
+      ALASKA: 'alaska',
+      MEXICO: 'mexico',
+      CALIFORNIA: 'california',
+      GREENLAND: 'greenland',
+      TERRANOVA: 'terranova',
+      LABRADOR: 'labrador',
     },
   },
   // South America
   SOUTH_AMERICA: {
-    name: "Sudamerica",
+    name: 'Sudamerica',
     countries: {
-      COLOMBIA: "colombia",
-      PERU: "peru",
-      BRASIL: "brasil",
-      ARGENTINA: "argentina",
-      CHILE: "chile",
-      URUGUAY: "uruguay",
+      COLOMBIA: 'colombia',
+      PERU: 'peru',
+      BRASIL: 'brasil',
+      ARGENTINA: 'argentina',
+      CHILE: 'chile',
+      URUGUAY: 'uruguay',
     },
   },
   // Oceania
   OCEANIA: {
-    name: "Oceania",
+    name: 'Oceania',
     countries: {
-      AUSTRALIA: "australia",
-      JAVA: "java",
-      SUMATRA: "sumatra",
-      BORNEO: "borneo",
+      AUSTRALIA: 'australia',
+      JAVA: 'java',
+      SUMATRA: 'sumatra',
+      BORNEO: 'borneo',
     },
   },
   // Africa
   AFRICA: {
-    name: "Africa",
+    name: 'Africa',
     countries: {
-      SAHARA: "sahara",
-      SOUTH_AFRICA: "sudafrica",
-      MADAGASCAR: "madagascar",
-      ZAIRE: "zaire",
-      ETHIOPIA: "etiopia",
-      EGYPT: "egipto",
+      SAHARA: 'sahara',
+      SOUTH_AFRICA: 'sudafrica',
+      MADAGASCAR: 'madagascar',
+      ZAIRE: 'zaire',
+      ETHIOPIA: 'etiopia',
+      EGYPT: 'egipto',
     },
   },
   // Europe
   EUROPE: {
-    name: "Europa",
+    name: 'Europa',
     countries: {
-      ICELAND: "islandia",
-      UK: "gran bretania",
-      SPAIN: "espania",
-      ITALY: "italia",
-      FRANCE: "francia",
-      GERMANY: "alemania",
-      POLAND: "polonia",
-      RUSIA: "rusia",
-      SWEDEN: "suecia",
+      ICELAND: 'islandia',
+      UK: 'gran bretania',
+      SPAIN: 'espania',
+      ITALY: 'italia',
+      FRANCE: 'francia',
+      GERMANY: 'alemania',
+      POLAND: 'polonia',
+      RUSIA: 'rusia',
+      SWEDEN: 'suecia',
     },
   },
   // Asia
   ASIA: {
-    name: "Asia",
+    name: 'Asia',
     countries: {
-      ARAL: "aral",
-      TARTARIA: "tartaria",
-      TAIMIR: "taimir",
-      SIBERIA: "siberia",
-      KAMCHATKA: "kamchatka",
-      JAPAN: "japon",
-      MONGOLIA: "mongolia",
-      IRAN: "iran",
-      GOBI: "gobi",
-      CHINA: "china",
-      MALASIA: "malasia",
-      INDIA: "india",
-      TURKEY: "turquia",
-      ISRAEL: "israel",
-      ARABIA: "arabia",
+      ARAL: 'aral',
+      TARTARIA: 'tartaria',
+      TAIMIR: 'taimir',
+      SIBERIA: 'siberia',
+      KAMCHATKA: 'kamchatka',
+      JAPAN: 'japon',
+      MONGOLIA: 'mongolia',
+      IRAN: 'iran',
+      GOBI: 'gobi',
+      CHINA: 'china',
+      MALASIA: 'malasia',
+      INDIA: 'india',
+      TURKEY: 'turquia',
+      ISRAEL: 'israel',
+      ARABIA: 'arabia',
     },
   },
 };
 
 const Continents = {
   AFRICA: {
-    name: "africa",
+    name: 'africa',
     bonus: 3,
   },
   EUROPE: {
-    name: "europe",
+    name: 'europe',
     bonus: 5,
   },
   SOUTH_AMERICA: {
-    name: "southAmerica",
+    name: 'southAmerica',
     bonus: 3,
   },
   NORTH_AMERICA: {
-    name: "northAmerica",
+    name: 'northAmerica',
     bonus: 5,
   },
   OCEANIA: {
-    name: "oceania",
+    name: 'oceania',
     bonus: 2,
   },
   ASIA: {
-    name: "asia",
+    name: 'asia',
     bonus: 7,
   },
 };
 
 const Fillings = {
-  AFRICA: "#fdc782",
-  EUROPE: "#f2d8af",
-  SOUTH_AMERICA: "#9adf9d",
-  NORTH_AMERICA: "#e0b881",
-  OCEANIA: "#aec0ba",
-  ASIA: "#d6b888",
+  AFRICA: '#fdc782',
+  EUROPE: '#f2d8af',
+  SOUTH_AMERICA: '#9adf9d',
+  NORTH_AMERICA: '#e0b881',
+  OCEANIA: '#aec0ba',
+  ASIA: '#d6b888',
 };
 
 const RoundType = {
-  ATTACK: "attack",
-  MOVE_TROOPS: "moveTroops",
-  ADD_TROOPS: "addTroops",
-  GET_CARD: "getCard",
+  ATTACK: 'attack',
+  MOVE_TROOPS: 'moveTroops',
+  ADD_TROOPS: 'addTroops',
+  GET_CARD: 'getCard',
 };
 
 const CardExchange = [4, 7, 10, 15, 20];
 
 const CardType = {
-  SHIP: "ship",
-  CANNON: "cannon",
-  BALLOON: "balloon",
-  WILDCARD: "wildcard",
+  SHIP: 'ship',
+  CANNON: 'cannon',
+  BALLOON: 'balloon',
+  WILDCARD: 'wildcard',
 };
 
 const CountryCards = [
@@ -306,109 +312,122 @@ const CardsForExchange = {
 // List of missions
 const Missions = {
   1: {
-    text: "Ocupar África, 5 países de América del Norte y 4 países de Europa.",
+    text: 'Ocupar África, 5 países de América del Norte y 4 países de Europa.',
   },
   2: {
     text:
-      "Ocupar América del Sur, 7 países de Europa y 3 países limítrofes entre sí en cualquier lugar del mapa.",
+      'Ocupar América del Sur, 7 países de Europa y 3 países limítrofes entre sí en cualquier lugar del mapa.',
   },
   3: {
-    text: "Ocupar Asia y 2 países de América del Sur.",
+    text: 'Ocupar Asia y 2 países de América del Sur.',
   },
   4: {
-    text: "Ocupar Europa, 4 países de Asia y 2 países de América del Sur.",
+    text: 'Ocupar Europa, 4 países de Asia y 2 países de América del Sur.',
   },
   5: {
-    text: "Ocupar América del Norte, 2 países de Oceanía y 4 de Asia.",
+    text: 'Ocupar América del Norte, 2 países de Oceanía y 4 de Asia.',
   },
   6: {
     text:
-      "Ocupar 2 países de Oceanía, 2 países de África, 2 países de América del Sur, 3 países de Europa, 4 de América del Norte y 3 de Asia.",
+      'Ocupar 2 países de Oceanía, 2 países de África, 2 países de América del Sur, 3 países de Europa, 4 de América del Norte y 3 de Asia.',
   },
   7: {
-    text: "Ocupar Oceanía, América del Norte y 2 países de Europa.",
+    text: 'Ocupar Oceanía, América del Norte y 2 países de Europa.',
   },
   8: {
-    text: "Ocupar América del Sur, África y 4 países de Asia.",
+    text: 'Ocupar América del Sur, África y 4 países de Asia.',
   },
   9: {
-    text: "Ocupar Oceanía, África y 5 países de América del Norte.",
+    text: 'Ocupar Oceanía, África y 5 países de América del Norte.',
   },
   10: {
     text:
-      "Destruir el ejército azul, de ser imposible al jugador de la derecha.",
+      'Destruir el ejército azul, de ser imposible al jugador de la derecha.',
   },
   11: {
     text:
-      "Destruir al ejército rojo, de ser imposible al jugador de la derecha.",
+      'Destruir al ejército rojo, de ser imposible al jugador de la derecha.',
   },
   12: {
     text:
-      "Destruir al ejército negro, de ser imposible al jugador de la derecha.",
+      'Destruir al ejército negro, de ser imposible al jugador de la derecha.',
   },
   13: {
     text:
-      "Destruir al ejército amarillo, de ser imposible al jugador de la derecha.",
+      'Destruir al ejército amarillo, de ser imposible al jugador de la derecha.',
   },
   14: {
     text:
-      "Destruir al ejército verde, de ser imposible al jugador de la derecha.",
+      'Destruir al ejército verde, de ser imposible al jugador de la derecha.',
   },
   15: {
     text:
-      "Destruir al ejército magenta, de ser imposible al jugador de la derecha.",
+      'Destruir al ejército magenta, de ser imposible al jugador de la derecha.',
   },
 };
 
 const PlayerColors = {
-  BLUE: "blue",
-  RED: "red",
-  BLACK: "black",
-  PINK: "pink",
-  YELLOW: "yellow",
-  GREEN: "green",
+  BLUE: 'blue',
+  RED: 'red',
+  BLACK: 'black',
+  PINK: 'pink',
+  YELLOW: 'yellow',
+  GREEN: 'green',
 };
 
 const MIN_TROOPS_PER_ROUND = 3;
 
-const NORTH_AMERICA_FILLING = "#e0b881";
-const SOUTH_AMERICA_FILLING = "#9adf9d";
-const AFRICA_FILLING = "#fdc782";
-const EUROPA_FILLING = "#f2d8af";
-const ASIA_FILLING = "#d6b888";
-const OCEANIA_FILLING = "#aec0ba";
+const NORTH_AMERICA_FILLING = '#e0b881';
+const SOUTH_AMERICA_FILLING = '#9adf9d';
+const AFRICA_FILLING = '#fdc782';
+const EUROPA_FILLING = '#f2d8af';
+const ASIA_FILLING = '#d6b888';
+const OCEANIA_FILLING = '#aec0ba';
+
+let client = null;
+let gameId = null;
 
 class TegMap extends Component {
   state = {
     currentRound: RoundType.ADD_TROOPS,
     currentPlayerIndex: 0,
-    players: [
+    currentPlayer: null,
+    players: [],
+    players2: [
       {
         id: 1,
-        name: "player1",
-        color: "red",
+        name: 'player1',
+        color: 'red',
         troopsToAdd: 3,
-        cards: [CountryCards[0], CountryCards[1], CountryCards[2], CountryCards[3]],
+        cards: [
+          CountryCards[0],
+          CountryCards[1],
+          CountryCards[2],
+          CountryCards[3],
+        ],
         cardExchanges: 0,
         canGetCard: false,
+        mission: null,
       },
       {
         id: 2,
-        name: "player2",
-        color: "yellow",
+        name: 'player2',
+        color: 'yellow',
         troopsToAdd: 3,
         cards: [],
         cardExchanges: 0,
         canGetCard: false,
+        mission: null,
       },
       {
         id: 3,
-        name: "player3",
-        color: "blue",
+        name: 'player3',
+        color: 'blue',
         troopsToAdd: 3,
         cards: [],
         cardExchanges: 0,
         canGetCard: false,
+        mission: null,
       },
     ],
     countrySelection: {
@@ -420,49 +439,72 @@ class TegMap extends Component {
     dices: { attacker: [], defender: [] },
     countryCards: [],
     modals: {
+      chooseColorVisible: true,
       countryConqueredVisible: false,
     },
-    canadaFill: "#e0b881",
-    countries: null,
-    countries2: {
-      // North America
-      canada: {
-        continent: Continents.NORTH_AMERICA,
-        style: {
-          filling: Fillings.NORTH_AMERICA,
-        },
-        state: {
-          player: null,
-          troops: 0,
-        },
-      },
-      yukon: NORTH_AMERICA_FILLING,
-      oregon: NORTH_AMERICA_FILLING,
-      nuevaYork: NORTH_AMERICA_FILLING,
-      alaska: NORTH_AMERICA_FILLING,
-      mexico: NORTH_AMERICA_FILLING,
-      california: NORTH_AMERICA_FILLING,
-      groenlandia: NORTH_AMERICA_FILLING,
-      terranova: NORTH_AMERICA_FILLING,
-      labrador: NORTH_AMERICA_FILLING,
-      // South America
-      argentina: {
-        continent: Continents.SOUTH_AMERICA,
-      },
-      brasil: SOUTH_AMERICA_FILLING,
-    },
-    fill: {
-      canada: NORTH_AMERICA_FILLING,
-      yukon: NORTH_AMERICA_FILLING,
-      oregon: NORTH_AMERICA_FILLING,
-      nuevaYork: NORTH_AMERICA_FILLING,
-      alaska: NORTH_AMERICA_FILLING,
-      mexico: NORTH_AMERICA_FILLING,
-      california: NORTH_AMERICA_FILLING,
-      groenlandia: NORTH_AMERICA_FILLING,
-      terranova: NORTH_AMERICA_FILLING,
-      labrador: NORTH_AMERICA_FILLING,
-    },
+    activity: [],
+  };
+
+  componentWillMount() {
+    // Websocket
+    console.log('aasdasdasd');
+    // const query = new URLSearchParams(useLocation().search);
+    const query = new URLSearchParams(this.props.location.search);
+    console.log(query.get('game_id'));
+    gameId = query.get('game_id');
+    const endpoint = `ws://localhost:3001?game_id=${gameId}`;
+    client = new W3CWebSocket(endpoint);
+    // gameId = '1234';
+
+    client.onopen = (data, data2) => {
+      console.log('WebSocket Client Connected');
+      console.log('data', data);
+      console.log('props', this.props);
+      // this.logInUser('someUsername');
+    };
+
+    client.onmessage = (message) => {
+      console.log('recibido');
+      if (message && message.data) {
+        const messageData = JSON.parse(message.data);
+        if (messageData.body) {
+          console.log('data', JSON.parse(message.data));
+
+          const { action } = messageData;
+
+          debugger;
+          if (action === 'joinGame') {
+            if (messageData.body.players) {
+              const { players } = messageData.body;
+              this.setState({ players });
+            } else {
+              this.setState({ players: [] });
+            }
+          } else if (action === 'gameStarted') {
+            const { players } = messageData.body;
+            const { countries } = messageData.body;
+            const modals = { ...this.state.modals };
+            modals.chooseColorVisible = false;
+
+            this.setState({ players, countries, modals });
+          } else if (action === 'troopsAdded') {
+            const { players } = messageData.body;
+            const { countries } = messageData.body;
+
+            this.setState({ players, countries });
+          }
+        }
+      }
+    };
+  }
+
+  sendMessage = (data, action) => {
+    client.send(
+      JSON.stringify({
+        data,
+        action,
+      }),
+    );
   };
 
   componentDidMount() {
@@ -481,7 +523,7 @@ class TegMap extends Component {
               newTroops: 0,
             },
           };
-        }
+        },
       );
     });
 
@@ -489,45 +531,49 @@ class TegMap extends Component {
 
     this.setState({ countries, countryCards });
 
-    // Deal countries
-    this.dealCountries(countries);
+    // Deal countries and missions
+    // this.dealCountriesAndMissions(countries);
   }
 
   countryClicked = (country) => {
     debugger;
     const countrySelection = { ...this.state.countrySelection };
-    console.log("click!" + country);
-    if (!this.state.countrySelection.source) {
-      // Select source
-      countrySelection.source = country;
-      this.setState({ countrySelection });
-    } else if (!this.state.countrySelection.target) {
-      // Select destiny
-      countrySelection.target = country;
-      this.setState({ countrySelection });
-    } else {
+    console.log('click!' + country);
+    if (this.state.currentRound === RoundType.ATTACK) {
+      if (!this.state.countrySelection.source) {
+        // Select source
+        countrySelection.source = country;
+      } else if (!this.state.countrySelection.target) {
+        // Select destiny
+        countrySelection.target = country;
+      } else {
+        // Select source and clear destiny
+        countrySelection.source = country;
+        countrySelection.target = '';
+      }
+    } else if (this.state.currentRound === RoundType.ADD_TROOPS) {
       // Select source and clear destiny
       countrySelection.source = country;
-      countrySelection.target = "";
-
-      this.setState({ countrySelection });
+      countrySelection.target = '';
     }
+
+    this.setState({ countrySelection });
   };
 
   countryClickedBAK = (country) => {
     debugger;
     const countrySelection = { ...this.state.countrySelection };
-    console.log("click!" + country);
+    console.log('click!' + country);
     if (!this.state.countrySelection.source) {
       // Select source
       const fill = { ...this.state.fill };
-      fill[country] = "#ff0000";
+      fill[country] = '#ff0000';
       countrySelection.source = country;
       this.setState({ countrySelection, fill });
     } else if (!this.state.countrySelection.target) {
       // Select destiny
       const fill = { ...this.state.fill };
-      fill[country] = "#ff0001";
+      fill[country] = '#ff0001';
       countrySelection.target = country;
       this.setState({ countrySelection, fill });
     } else {
@@ -536,7 +582,7 @@ class TegMap extends Component {
       fill[this.state.countrySelection.source] = NORTH_AMERICA_FILLING;
       fill[this.state.countrySelection.target] = NORTH_AMERICA_FILLING;
       countrySelection.source = country;
-      countrySelection.target = "";
+      countrySelection.target = '';
 
       this.setState({ countrySelection, fill });
     }
@@ -555,8 +601,9 @@ class TegMap extends Component {
     return shuffledArray;
   };
 
-  dealCountries = (countriesP) => {
+  dealCountriesAndMissions = (countriesP) => {
     const numberOfPlayers = this.state.players.length;
+    const players = [...this.state.players];
     const countryKeys = this.shuffleArray(Object.keys(countriesP));
     const countries = { ...countriesP };
     let counter = 0;
@@ -568,7 +615,23 @@ class TegMap extends Component {
       country.state.newTroops = 0; // To keep track of troops added during ADD_TROOPS round
     });
 
-    this.setState({ countries });
+    // Deal missions
+    const missions = Mission.getRandomMissions(players.length);
+
+    missions.forEach((mission, index) => {
+      players[index].mission = mission;
+    });
+
+    // Game started
+    const activity = [
+      {
+        type: 'green',
+        time: moment().format('HH:mm:ss'),
+        text: 'Game started',
+      },
+    ];
+
+    this.setState({ countries, players, activity });
   };
 
   calculateTroopsToAddPerPlayer = () => {
@@ -589,20 +652,45 @@ class TegMap extends Component {
     Object.keys(troopsPerPlayer).forEach((key) => {
       troopsPerPlayer[key] = Math.max(
         MIN_TROOPS_PER_ROUND,
-        troopsPerPlayer[key]
+        troopsPerPlayer[key],
       );
     });
 
     return troopsPerPlayer;
   };
 
+  getCountriesByPlayer(playerIndex) {
+    const player = this.state.players[playerIndex];
+    const countries = [];
+
+    Object.keys(this.state.countries).forEach((countryKey) => {
+      const country = this.state.countries[countryKey];
+      if (country.state.player.id === player.id) {
+        countries.push(country);
+      }
+    });
+
+    return countries;
+  }
+
   finishRound = () => {
+    // Check if mission completed
+    const mission = this.state.players[this.state.currentPlayerIndex].mission;
+
+    const currentPlayerCountries = this.getCountriesByPlayer(
+      this.state.currentPlayerIndex,
+    );
+
+    if (Mission.missionCompleted(mission, currentPlayerCountries)) {
+      console.log('Mission completed!');
+    }
+
     // Check if it's last player
     if (this.state.currentPlayerIndex === this.state.players.length - 1) {
       // Change round type and change order of players
       const currentPlayerIndex = 0;
       const players = [...this.state.players];
-      let currentRound = "";
+      let currentRound = '';
 
       if (this.state.currentRound === RoundType.ADD_TROOPS) {
         currentRound = RoundType.ATTACK;
@@ -641,6 +729,7 @@ class TegMap extends Component {
         players,
         currentRound,
         countries,
+        countrySelection: {}, // Clear selection
       });
     } else {
       // Add recently added troops to troops
@@ -656,11 +745,20 @@ class TegMap extends Component {
       }
 
       const currentPlayerIndex = this.state.currentPlayerIndex + 1;
-      this.setState({ currentPlayerIndex, countries });
+      this.setState({
+        currentPlayerIndex,
+        countries,
+        countrySelection: {}, // Clear selection
+      });
     }
   };
 
+  /** Send message to add troops */
   addTroops = (countryName) => {
+    console.log('Add troops MSG');
+    this.sendMessage({ gameId, country: countryName, count: 1 }, 'addTroops');
+
+    /*
     const countries = { ...this.state.countries };
     // const country = countries.filter((country) => country.name === countryName);
     const country = countries[countryName];
@@ -674,7 +772,8 @@ class TegMap extends Component {
 
     this.setState({ countries, player });
 
-    console.log("Add to " + countryName);
+    console.log('Add to ' + countryName);
+    */
   };
 
   removeTroops = (countryName) => {
@@ -689,16 +788,16 @@ class TegMap extends Component {
     }
 
     this.setState({ countries, players });
-    console.log("Remove from " + countryName);
+    console.log('Remove from ' + countryName);
   };
 
   selectSourceHandler = (countryName) => {
-    console.log("Source" + countryName);
+    console.log('Source' + countryName);
     this.countryClicked(countryName);
   };
 
   selectTargetHandler = (countryName) => {
-    console.log("Target" + countryName);
+    console.log('Target' + countryName);
     this.countryClicked(countryName);
   };
 
@@ -725,14 +824,21 @@ class TegMap extends Component {
 
   attack = () => {
     console.log(
-      `${this.state.countrySelection.source} attacks ${this.state.countrySelection.target}`
+      `${this.state.countrySelection.source} attacks ${this.state.countrySelection.target}`,
     );
     const countries = { ...this.state.countries };
     const attacker = countries[this.state.countrySelection.source];
     const defender = countries[this.state.countrySelection.target];
+    const activity = [...this.state.activity];
+
+    activity.push({
+      type: 'green',
+      time: moment().format('HH:mm:ss'),
+      text: `${this.state.countrySelection.source} attacks ${this.state.countrySelection.target}`,
+    });
 
     if (!this.canAttack(attacker, defender)) {
-      console.error("Cant attack!");
+      console.error('Cant attack!');
       return false;
     }
 
@@ -775,11 +881,11 @@ class TegMap extends Component {
       if (dice > dicesCopy.defender[index]) {
         // Defender lost
         defender.state.troops -= 1;
-        console.log("Defence lost one");
+        console.log('Defence lost one');
       } else {
         // Attacker lost
         attacker.state.troops -= 1;
-        console.log("Attack lost one");
+        console.log('Attack lost one');
       }
     });
 
@@ -789,7 +895,7 @@ class TegMap extends Component {
     const modals = { ...this.state.modals };
 
     if (defender.state.troops === 0) {
-      console.log("Conquered!");
+      console.log('Conquered!');
       defender.state.player = attacker.state.player;
       const troopsToMove = 1;
 
@@ -802,21 +908,27 @@ class TegMap extends Component {
       player.canGetCard = this.playerCanGetCard(player);
 
       modals.countryConqueredVisible = true;
+
+      activity.push({
+        type: 'green',
+        time: moment().format('HH:mm:ss'),
+        text: `${this.state.countrySelection.source} conquers ${this.state.countrySelection.target}`,
+      });
     }
 
-    this.setState({ countries, dices, players, modals });
+    this.setState({ countries, dices, players, modals, activity });
   };
 
   moveTroops = (troopsToMove) => {
     console.log(
-      `Moving from ${this.state.countrySelection.source} to ${this.state.countrySelection.target}`
+      `Moving from ${this.state.countrySelection.source} to ${this.state.countrySelection.target}`,
     );
     const countries = { ...this.state.countries };
     const source = countries[this.state.countrySelection.source];
     const target = countries[this.state.countrySelection.target];
 
     if (!this.canMove(source, target)) {
-      console.error("Cant attack!");
+      console.error('Cant attack!');
       return false;
     }
 
@@ -827,7 +939,7 @@ class TegMap extends Component {
   };
 
   getCountryCard = () => {
-    console.log("Get card");
+    console.log('Get card');
     const players = [...this.state.players];
     const player = players[this.state.currentPlayerIndex];
 
@@ -887,11 +999,11 @@ class TegMap extends Component {
     const player = this.state.players[this.state.currentPlayerIndex];
 
     if (!this.playerCanExchangeCards(player)) {
-      console.error("You cant exchange");
+      console.error('You cant exchange');
       return null;
     }
 
-    console.log("Exchange cards");
+    console.log('Exchange cards');
   };
 
   throwDice = () => {
@@ -919,20 +1031,20 @@ class TegMap extends Component {
   openNotification = (placement) => {
     notification.info({
       message: `Notification ${placement}`,
-      description: "Time out!",
+      description: 'Time out!',
       placement,
     });
   };
 
   onCounterFinish = () => {
-    console.log("Time out!");
+    console.log('Time out!');
     // Notification
-    this.openNotification("topRight");
+    this.openNotification('topRight');
     this.finishRound();
   };
 
   changeCountryCard = (country) => {
-    console.log("cambio " + country);
+    console.log('cambio ' + country);
     const countries = { ...this.state.countries };
     const cardCountry = _.find(countries, function (o) {
       return o.countryKey === country;
@@ -948,7 +1060,7 @@ class TegMap extends Component {
 
     if (cardCountry.state.player.name !== player.name) {
       // TODO. Handle error
-      console.error("Player does not have this country");
+      console.error('Player does not have this country');
       return null;
     }
 
@@ -970,6 +1082,41 @@ class TegMap extends Component {
     this.setState({ players });
   };
 
+  selectPlayerColorModalOKHandler = (username, color) => {
+    // Send message
+    this.sendMessage(
+      { gameId, username, color: PlayerColors[color] },
+      'joinGame',
+    );
+    console.log('username', username);
+    console.log('color', color);
+    // const modals = { ...this.state.modals };
+    // modals.chooseColorVisible = false;
+
+    // this.setState({ modals });
+    const players = [...this.state.players];
+    const newPlayer = {
+      id: 1,
+      name: username,
+      color: PlayerColors[color],
+      troopsToAdd: 3,
+      cardExchanges: 0,
+      canGetCard: false,
+      mission: null,
+    };
+
+    players.push(newPlayer);
+
+    this.setState({ players });
+  };
+
+  /** Send message to start a game */
+  startGame = () => {
+    // Send message
+    console.log('START GAME MSG');
+    this.sendMessage({ gameId }, 'startGame');
+  };
+
   render() {
     const currentPlayer = this.state.players[this.state.currentPlayerIndex];
 
@@ -977,6 +1124,18 @@ class TegMap extends Component {
     let countryList;
     let countryConqueredModal;
     let playerCards;
+
+    // No player so show modal to choose color
+    if (this.state.modals.chooseColorVisible) {
+      return (
+        <SelectPlayerColorModal
+          visible={this.state.modals.chooseColorVisible}
+          players={this.state.players}
+          startGameHander={this.startGame}
+          okHandler={this.selectPlayerColorModalOKHandler}
+        />
+      );
+    }
 
     if (this.state.countries) {
       map = (
@@ -1022,21 +1181,21 @@ class TegMap extends Component {
         />
       );
     } else {
-      countryConqueredModal = "";
+      countryConqueredModal = '';
     }
 
     // Card Head style
-    const cardHeadStyle = { fontWeight: "bold", backgroundColor: "lightblue" };
+    const cardHeadStyle = { fontWeight: 'bold', backgroundColor: 'lightblue' };
 
     const deadline = Date.now() + 1000 * 60 * 3; // 3 minutes (Moment is also OK)
-    const countDownTitle = <span style={{ color: "white" }}>Tiempo</span>;
+    const countDownTitle = <span style={{ color: 'white' }}>Tiempo</span>;
 
     return (
       <Layout>
         <Header>
-          <Row style={{ color: "white" }}>
+          <Row style={{ color: 'white' }}>
             <Col span={12}>
-              <h1 style={{ color: "white" }}>Teg Online</h1>
+              <h1 style={{ color: 'white' }}>Teg Online</h1>
             </Col>
             <Col span={12}>
               <Row>
@@ -1059,7 +1218,7 @@ class TegMap extends Component {
                     title={countDownTitle}
                     value={deadline}
                     onFinish={this.onCounterFinish}
-                    valueStyle={{ color: "white" }}
+                    valueStyle={{ color: 'white' }}
                   />
                 </Col>
               </Row>
@@ -1072,12 +1231,15 @@ class TegMap extends Component {
             <div>
               <div>{map}</div>
               <hr />
-              <div className="card-container">
+              <div className="card-container" style={{ marginLeft: '5px' }}>
                 <Tabs type="card">
-                  <TabPane tab="Tab Title 1" key="1">
-                    <p>Content of Tab Pane 1</p>
-                    <p>Content of Tab Pane 1</p>
-                    <p>Content of Tab Pane 1</p>
+                  <TabPane tab="Mission" key="1">
+                    <p>
+                      {this.state.players[this.state.currentPlayerIndex].mission
+                        ? this.state.players[this.state.currentPlayerIndex]
+                            .mission.text
+                        : 'Loading...'}
+                    </p>
                   </TabPane>
                   <TabPane tab="Cards" key="2">
                     <PlayerCardsTab
@@ -1090,14 +1252,17 @@ class TegMap extends Component {
                   <TabPane tab="Countries" key="3">
                     {countryList}
                   </TabPane>
+                  <TabPane tab="Activity" key="4">
+                    <ActivityTab activity={this.state.activity} />
+                  </TabPane>
                 </Tabs>
               </div>
             </div>
           </Content>
-          <Sider style={{ color: "white" }}>
+          <Sider style={{ color: 'white' }}>
             <Card size="small" title="Last Attack" headStyle={cardHeadStyle}>
-              <p>Attacker dices: {this.state.dices.attacker.join(", ")}</p>
-              <p>Defender dices: {this.state.dices.defender.join(", ")}</p>
+              <p>Attacker dices: {this.state.dices.attacker.join(', ')}</p>
+              <p>Defender dices: {this.state.dices.defender.join(', ')}</p>
             </Card>
             <Card size="small" title="Actions" headStyle={cardHeadStyle}>
               <Tooltip title="Finish Round">
@@ -1105,7 +1270,7 @@ class TegMap extends Component {
                   type="primary"
                   shape="circle"
                   icon={<CheckCircleOutlined twoToneColor="#52c41a" />}
-                  style={{ marginRight: "4px" }}
+                  style={{ marginRight: '4px' }}
                   onClick={() => this.finishRound()}
                 />
               </Tooltip>
@@ -1114,7 +1279,7 @@ class TegMap extends Component {
                   type="primary"
                   shape="circle"
                   icon={<CreditCardOutlined />}
-                  style={{ marginRight: "4px" }}
+                  style={{ marginRight: '4px' }}
                   onClick={() => this.getCountryCard()}
                   disabled={
                     this.state.currentRound === RoundType.ADD_TROOPS ||
@@ -1128,7 +1293,7 @@ class TegMap extends Component {
                   type="primary"
                   shape="circle"
                   icon={<UserAddOutlined />}
-                  style={{ marginRight: "4px" }}
+                  style={{ marginRight: '4px' }}
                   onClick={() => this.exchangeCards()}
                   disabled={
                     this.state.currentRound === RoundType.ADD_TROOPS ||
@@ -1146,7 +1311,7 @@ class TegMap extends Component {
                   type="primary"
                   shape="circle"
                   icon={<PlusCircleOutlined />}
-                  style={{ marginRight: "4px" }}
+                  style={{ marginRight: '4px' }}
                   disabled={!this.state.countrySelection.source}
                   onClick={() =>
                     this.addTroops(this.state.countrySelection.source)
@@ -1158,7 +1323,7 @@ class TegMap extends Component {
                   type="primary"
                   shape="circle"
                   icon={<MinusCircleOutlined />}
-                  style={{ marginRight: "4px" }}
+                  style={{ marginRight: '4px' }}
                   disabled={!this.state.countrySelection.source}
                   onClick={() =>
                     this.removeTroops(this.state.countrySelection.source)
@@ -1170,7 +1335,7 @@ class TegMap extends Component {
                   type="primary"
                   shape="circle"
                   icon={<LoginOutlined />}
-                  style={{ marginRight: "4px" }}
+                  style={{ marginRight: '4px' }}
                   onClick={() => this.moveTroops(1)}
                   disabled={
                     this.state.currentRound === RoundType.ADD_TROOPS ||
