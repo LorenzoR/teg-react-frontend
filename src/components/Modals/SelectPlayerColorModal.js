@@ -31,9 +31,14 @@ const SelectPlayerColorModal = (props) => {
   const pickColor = () => {
     setUserSubmitted(true);
     props.okHandler(username, color);
+  };
+
+  const joinGame = () => {
+    console.log('join!');
+    props.reConnectHandler(color);
   }
 
-  const players = [ ...props.players ];
+  const players = [...props.players];
 
   const black = _.find(players, (o) => o.color === 'black');
   const red = _.find(players, (o) => o.color === 'red');
@@ -53,7 +58,15 @@ const SelectPlayerColorModal = (props) => {
       okButtonProps={{ disabled: !username || username === '' || !color }}
       footer={[
         <Button
-          key="submit"
+          key="joinGame"
+          type="primary"
+          onClick={joinGame}
+          disabled={color === null}
+        >
+          Join Game
+        </Button>,
+        <Button
+          key="pickColor"
           type="primary"
           onClick={pickColor}
           disabled={userSubmitted}
@@ -68,9 +81,11 @@ const SelectPlayerColorModal = (props) => {
           cancelText="No"
         >
           <Button
-            key="submit"
+            key="startGame"
             type="primary"
-            disabled={!username || username === '' || !color || props.players.length < 2}
+            disabled={
+              !username || username === '' || !color || props.players.length < 2
+            }
           >
             Start game
           </Button>
@@ -79,33 +94,62 @@ const SelectPlayerColorModal = (props) => {
     >
       <Row>
         <Col className="gutter-row" span={12}>
-          Black <Radio.Button
-              onClick={() => setColor('BLACK')} disabled={black || userSubmitted} checked={color === 'BLACK'}
-              style={{ background: 'black' }}>
+          Black{' '}
+          <Radio.Button
+            onClick={() => setColor('BLACK')}
+            disabled={(black && black.playerStatus === 'online') || userSubmitted}
+            checked={color === 'BLACK'}
+            style={{ background: 'black' }}
+          >
             {black ? black.name : AVAILABLE}
           </Radio.Button>
           <br />
-          Pink <Radio.Button onClick={() => setColor('PINK')} disabled={pink || userSubmitted} checked={color === 'PINK'}
-          style={{ background: 'pink' }}>
+          Pink{' '}
+          <Radio.Button
+            onClick={() => setColor('PINK')}
+            disabled={(pink && pink.playerStatus === 'online') || userSubmitted}
+            checked={color === 'PINK'}
+            style={{ background: 'pink' }}
+          >
             {pink ? pink.name : AVAILABLE}
-            </Radio.Button>
+          </Radio.Button>
           <br />
-          Red <Radio onClick={() => setColor('RED')} disabled={red || userSubmitted} checked={color === 'RED'}>
+          Red{' '}
+          <Radio
+            onClick={() => setColor('RED')}
+            disabled={(red && red.playerStatus === 'online') || userSubmitted}
+            checked={color === 'RED'}
+          >
             {red ? red.name : AVAILABLE}
-            </Radio>
+          </Radio>
         </Col>
         <Col className="gutter-row" span={12}>
-          Blue <Radio onClick={() => setColor('BLUE')} disabled={blue || userSubmitted} checked={color === 'BLUE'}>
+          Blue{' '}
+          <Radio
+            onClick={() => setColor('BLUE')}
+            disabled={(blue && blue.playerStatus === 'online') || userSubmitted}
+            checked={color === 'BLUE'}
+          >
             {blue ? blue.name : AVAILABLE}
-            </Radio>
+          </Radio>
           <br />
-          Yellow <Radio onClick={() => setColor('YELLOW')} disabled={yellow || userSubmitted} checked={color === 'YELLOW'}>
+          Yellow{' '}
+          <Radio
+            onClick={() => setColor('YELLOW')}
+            disabled={(yellow && yellow.playerStatus === 'online') || userSubmitted}
+            checked={color === 'YELLOW'}
+          >
             {yellow ? yellow.name : AVAILABLE}
-            </Radio>
+          </Radio>
           <br />
-          Green <Radio onClick={() => setColor('GREEN')} disabled={green || userSubmitted} checked={color === 'GREEN'}>
+          Green{' '}
+          <Radio
+            onClick={() => setColor('GREEN')}
+            disabled={(green && green.playerStatus === 'online') || userSubmitted}
+            checked={color === 'GREEN'}
+          >
             {green ? green.name : AVAILABLE}
-            </Radio>
+          </Radio>
         </Col>
       </Row>
       <Divider />

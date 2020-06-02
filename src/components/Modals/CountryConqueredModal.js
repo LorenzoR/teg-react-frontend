@@ -11,13 +11,13 @@ const countryConqueredModal = props => {
           closable={false}
           title={props.title}
           footer={[
-            <Button key="move_1" type="primary" onClick={() => props.moveTroopsHandler(1)}>
+            <Button key="move_1" type="primary" onClick={() => props.moveTroopsHandler(0)}>
               1
             </Button>,
-            <Button key="move_2" type="primary" onClick={() => props.moveTroopsHandler(2)} disabled={props.troops <= 2}>
+            <Button key="move_2" type="primary" onClick={() => props.moveTroopsHandler(1)} disabled={props.troops <= 2}>
               2
             </Button>,
-            <Button key="move_3" type="primary" onClick={() => props.moveTroopsHandler(3)} disabled={props.troops <= 3}>
+            <Button key="move_3" type="primary" onClick={() => props.moveTroopsHandler(2)} disabled={props.troops <= 3}>
               3
             </Button>,
           ]}
