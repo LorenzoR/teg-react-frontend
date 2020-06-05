@@ -1282,42 +1282,36 @@ const map = (props) => {
           <NorthAmerica
             countries={props.countries}
             countrySelection={props.countrySelection}
-            fill={props.fill}
             countryClicked={props.countryClickedHandler}
           />
 
           <SouthAmerica
             countries={props.countries}
             countrySelection={props.countrySelection}
-            fill={props.fill}
             countryClicked={props.countryClickedHandler}
           />
 
           <Europe
             countries={props.countries}
             countrySelection={props.countrySelection}
-            fill={props.fill}
             countryClicked={props.countryClickedHandler}
           />
 
           <Oceania
             countries={props.countries}
             countrySelection={props.countrySelection}
-            fill={props.fill}
             countryClicked={props.countryClickedHandler}
           />
 
           <Africa
             countries={props.countries}
             countrySelection={props.countrySelection}
-            fill={props.fill}
             countryClicked={props.countryClickedHandler}
           />
 
           <Asia
             countries={props.countries}
             countrySelection={props.countrySelection}
-            fill={props.fill}
             countryClicked={props.countryClickedHandler}
           />
         </g>
@@ -1326,6 +1320,10 @@ const map = (props) => {
   );
 };
 
-map.propTypes = {};
+map.propTypes = {
+  countries: PropTypes.object,
+  countrySelection: PropTypes.object,
+  countryClickedHandler: PropTypes.func,
+};
 
 export default map;

@@ -6,6 +6,10 @@ import { Card, Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 
 const userInfo = (props) => {
+  if (!props.player) {
+    return <div></div>;
+  }
+
   const title = (
     <span>
       <Avatar
@@ -16,19 +20,52 @@ const userInfo = (props) => {
     </span>
   );
 
+  const troopsToAdd = [];
+
+  troopsToAdd.push(<p><strong>Troops to add: </strong>{props.player.troopsToAdd.free}</p>);
+
+  if (props.player.troopsToAdd.ASIA > 0) {
+    troopsToAdd.push(<p><strong>Asia: </strong>{props.player.troopsToAdd.ASIA}</p>);
+  }
+
+  if (props.player.troopsToAdd.AFRICA > 0) {
+    troopsToAdd.push(<p><strong>Africa: </strong>{props.player.troopsToAdd.AFRICA}</p>);
+  }
+
+  if (props.player.troopsToAdd.EUROPE > 0) {
+    troopsToAdd.push(<p><strong>Europe: </strong>{props.player.troopsToAdd.EUROPE}</p>);
+  }
+
+  if (props.player.troopsToAdd.NORTH_AMERICA > 0) {
+    troopsToAdd.push(<p><strong>North America: </strong>{props.player.troopsToAdd.NORTH_AMERICA}</p>);
+  }
+
+  if (props.player.troopsToAdd.OCEANIA > 0) {
+    troopsToAdd.push(<p><strong>Oceania: </strong>{props.player.troopsToAdd.OCEANIA}</p>);
+  }
+
+  if (props.player.troopsToAdd.SOUTH_AMERICA > 0) {
+    troopsToAdd.push(<p><strong>South America: </strong>{props.player.troopsToAdd.SOUTH_AMERICA}</p>);
+  }
+
   return (
     <Card size="small" title={title} headStyle={props.headStyle}>
       <p>
-        <strong>Countries: </strong>10
+        <strong>Countries: </strong> { props.countriesCount }
       </p>
-      <p>
-        <strong>Troops to add: </strong>
-        {props.player.troopsToAdd}
-      </p>
+      <div>
+        {troopsToAdd.map((elem) => {
+          return elem;
+        })}
+      </div>
     </Card>
   );
 };
 
-userInfo.propTypes = {};
+userInfo.propTypes = {
+  player: PropTypes.object,
+  headStyle: PropTypes.object,
+  countriesCount: PropTypes.number,
+};
 
 export default userInfo;

@@ -73,7 +73,7 @@ const Colombia = (props) => {
             WebkitTextAlign: "center",
             textAlign: "center",
           }}
-          fill="#fff"
+          fill={props.countryState.player && ['pink', 'yellow'].includes(props.countryState.player.color) ? '#000' : '#FFF'}
           stroke="none"
           strokeLinecap="butt"
           strokeLinejoin="miter"

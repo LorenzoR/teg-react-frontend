@@ -78,6 +78,10 @@ const northAmerica = (props) => {
   );
 };
 
-northAmerica.propTypes = {};
+northAmerica.propTypes = {
+  countries: PropTypes.object,
+  countrySelection: PropTypes.object,
+  countryClicked: PropTypes.func,
+};
 
 export default northAmerica;

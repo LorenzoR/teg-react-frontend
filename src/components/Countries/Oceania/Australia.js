@@ -75,7 +75,7 @@ const Australia = (props) => {
             WebkitTextAlign: "center",
             textAlign: "center",
           }}
-          fill="#fff"
+          fill={props.countryState.player && ['pink', 'yellow'].includes(props.countryState.player.color) ? '#000' : '#FFF'}
           stroke="none"
           strokeLinecap="butt"
           strokeLinejoin="miter"
@@ -102,7 +102,7 @@ const Australia = (props) => {
 };
 
 Australia.propTypes = {
-  countryState: Object,
+  // countryState: Object,
 };
 
 export default Australia;

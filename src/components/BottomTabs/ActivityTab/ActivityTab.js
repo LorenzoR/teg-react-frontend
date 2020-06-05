@@ -17,6 +17,8 @@ const ActivityTab = (props) => {
   );
 };
 
-ActivityTab.propTypes = {};
+ActivityTab.propTypes = {
+  activity: PropTypes.array,
+};
 
 export default ActivityTab;

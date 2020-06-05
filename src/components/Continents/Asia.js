@@ -113,6 +113,10 @@ const asia = (props) => {
   );
 };
 
-asia.propTypes = {};
+asia.propTypes = {
+  countries: PropTypes.object,
+  countrySelection: PropTypes.object,
+  countryClicked: PropTypes.func,
+};
 
 export default asia;

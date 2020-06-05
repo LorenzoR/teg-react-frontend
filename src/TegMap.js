@@ -11,7 +11,7 @@ import { Tabs } from 'antd';
 import { Row, Col } from 'antd';
 import { Avatar } from 'antd';
 import { Statistic } from 'antd';
-import { notification, Divider, Space } from 'antd';
+import { notification, Divider, Space, Modal } from 'antd';
 
 import {
   UserAddOutlined,
@@ -30,16 +30,19 @@ import Countries from './components/Countries/Countries';
 import Map from './components/Map/Map';
 import EventsLog from './components/EventsLog/EventsLog';
 import BottomTabs from './components/BottomTabs/BottomTabs';
-import UserInfo from './components/UserInfo/UserInfo';
-import Players from './components/Sider/Players/Players';
+
 import PlayerCardsTab from './components/BottomTabs/PlayerCardsTab/PlayerCardsTab';
 import ActivityTab from './components/BottomTabs/ActivityTab/ActivityTab';
+import GameHeader from './components/Header/Header';
+import GameSider from './components/Sider/GameSider';
 
 import CountryConqueredModal from './components/Modals/CountryConqueredModal';
 import SelectPlayerColorModal from './components/Modals/SelectPlayerColorModal';
+import GameFinishedModal from './components/Modals/GameFinishedModal';
 
 import Country from './models/Country';
 import Mission from './models/Mission';
+import RoundType from './models/Round';
 
 const { Header, Footer, Sider, Content } = Layout;
 
@@ -231,13 +234,6 @@ const Fillings = {
   ASIA: '#d6b888',
 };
 
-const RoundType = {
-  ATTACK: 'attack',
-  MOVE_TROOPS: 'moveTroops',
-  ADD_TROOPS: 'addTroops',
-  GET_CARD: 'getCard',
-};
-
 const CardExchange = [4, 7, 10, 15, 20];
 
 const CardType = {
@@ -389,8 +385,10 @@ let gameId = null;
 
 class TegMap extends Component {
   state = {
+    visible: false,
     // currentRound: RoundType.ADD_TROOPS,
-    round: { type: null, count: null, currentPlayerIndex: 0 },
+    // round: { type: null, count: null, playerIndex: 0 },
+    round: null,
     currentPlayer: null,
     currentPlayerId: null,
     players: [],
@@ -442,6 +440,7 @@ class TegMap extends Component {
     modals: {
       chooseColorVisible: true,
       countryConqueredVisible: false,
+      gameFinishedVisible: false,
     },
     activity: [],
   };
@@ -493,18 +492,36 @@ class TegMap extends Component {
             const modals = { ...this.state.modals };
             modals.chooseColorVisible = false;
 
-            const currentPlayer = _.find(this.state.players, (obj) => obj.id === connectionId);
+            const currentPlayer = _.find(
+              this.state.players,
+              (obj) => obj.id === connectionId,
+            );
 
-            this.setState({ currentPlayerId: connectionId, modals, currentPlayer });
+            this.setState({
+              currentPlayerId: connectionId,
+              modals,
+              currentPlayer,
+            });
           } else if (action === 'countryAttacked') {
             // const { countries } = messageData.body;
-            const { attacker, defender, dices, players, countryConquered } = messageData.body;
+            const {
+              attacker,
+              defender,
+              dices,
+              players,
+              countryConquered,
+            } = messageData.body;
             const countries = { ...this.state.countries };
             const modals = { ...this.state.modals };
             countries[attacker.countryKey] = attacker;
             countries[defender.countryKey] = defender;
 
-            if (countryConquered && attacker.state.player.color === this.state.currentPlayer.color) {
+            // Show modal to select troops to move after conquer
+            if (
+              countryConquered &&
+              attacker.state.player.color === this.state.currentPlayer.color &&
+              attacker.state.troops > 1
+            ) {
               // Show modal to select troops to move
               modals.countryConqueredVisible = true;
             }
@@ -512,19 +529,29 @@ class TegMap extends Component {
             this.setState({ countries, dices, modals, players });
           } else if (action === 'troopsMoved') {
             // const { countries } = messageData.body;
-            const { source, target, count } = messageData.body;
+            const { source, target, count, round } = messageData.body;
             const countries = { ...this.state.countries };
 
             countries[source.countryKey] = source;
             countries[target.countryKey] = target;
 
-            this.setState({ countries });
+            this.setState({ countries, round });
           } else if (action === 'roundFinished') {
-            const { round, players } = messageData.body;
-            // Clear selection
-            const countrySelection = { source: null, target: null };
+            const { round, players, gameStatus } = messageData.body;
 
-            this.setState({ round, players, countrySelection });
+            // Game finished
+            if (gameStatus === 'finished') {
+              console.log('game finished!');
+              const modals = { ...this.state.modals };
+              modals.gameFinishedVisible = true;
+              
+              this.setState({ modals });
+            } else {
+              // Clear selection
+              const countrySelection = { source: null, target: null };
+
+              this.setState({ round, players, countrySelection });
+              }
           } else if (action === 'troopsAdded') {
             const { players } = messageData.body;
             const { countries } = messageData.body;
@@ -550,9 +577,19 @@ class TegMap extends Component {
             modals.chooseColorVisible = false;
 
             debugger;
-            const currentPlayer = _.find(players, (obj) => obj.id === currentPlayerId);
+            const currentPlayer = _.find(
+              players,
+              (obj) => obj.id === currentPlayerId,
+            );
 
-            this.setState({ players, countries, round, currentPlayerId, modals, currentPlayer });
+            this.setState({
+              players,
+              countries,
+              round,
+              currentPlayerId,
+              modals,
+              currentPlayer,
+            });
           } else if (action === 'reJoinGame') {
             const { reConnectedPlayerName } = messageData.body;
 
@@ -563,7 +600,7 @@ class TegMap extends Component {
               placement: 'topRight',
             });
           } else if (action === 'cardReceived') {
-            const { players, playerName } = messageData.body;
+            const { players, playerName, round } = messageData.body;
 
             if (players) {
               // Message to the player that got the card
@@ -577,7 +614,34 @@ class TegMap extends Component {
                 placement: 'topRight',
               });
             }
+
+            if (round) {
+              this.setState({ round });
+            }
+          } else if (action === 'cardExchanged') {
+            const { players, countries } = messageData.body;
+
+            // Message to everyone
+            notification.info({
+              message: `Country card`,
+              description: `Card exchanged`,
+              placement: 'topRight',
+            });
+
+            this.setState({ countries, players });
+          } else if (action === 'cardsExchanged') {
+            const { players } = messageData.body;
+
+            // Message to everyone
+            notification.info({
+              message: `Country card`,
+              description: `Cards exchanged`,
+              placement: 'topRight',
+            });
+
+            this.setState({ players });
           }
+          
         }
       }
     };
@@ -622,24 +686,34 @@ class TegMap extends Component {
 
   countryClicked = (country) => {
     debugger;
+    const player = _.find(this.state.players, (obj) => obj.id === this.state.currentPlayerId);
     const countrySelection = { ...this.state.countrySelection };
-    console.log('click!' + country);
-    if (this.state.round.type === RoundType.ATTACK) {
+
+    if ([RoundType.ATTACK, RoundType.MOVE_TROOPS].includes(this.state.round.type)) {
       if (!this.state.countrySelection.source) {
-        // Select source
-        countrySelection.source = country;
+        // Check country belongs to player
+        if (this.state.countries[country].state.player.color === player.color) {
+          // Select source
+          countrySelection.source = country;
+        }
       } else if (!this.state.countrySelection.target) {
         // Select destiny
         countrySelection.target = country;
       } else {
+        // Check country belongs to player
+        if (this.state.countries[country].state.player.color === player.color) {
+          // Select source and clear destiny
+          countrySelection.source = country;
+          countrySelection.target = '';
+        }
+      }
+    } else if ([RoundType.ADD_TROOPS, RoundType.FIRST_ADD_TROOPS, RoundType.SECOND_ADD_TROOPS].includes(this.state.round.type)) {
+      // Check country belongs to player
+      if (this.state.countries[country].state.player.color === player.color) {
         // Select source and clear destiny
         countrySelection.source = country;
         countrySelection.target = '';
       }
-    } else if (this.state.round.type === RoundType.ADD_TROOPS) {
-      // Select source and clear destiny
-      countrySelection.source = country;
-      countrySelection.target = '';
     }
 
     this.setState({ countrySelection });
@@ -760,8 +834,13 @@ class TegMap extends Component {
 
   finishRound = () => {
     console.log('Add troops MSG');
-    this.sendMessage(
-      { gameId, playerId: this.state.currentPlayerId },
+    const player = _.find(this.state.players, (obj) => obj.id === this.state.currentPlayerId);
+
+    this.sendMessage({
+        gameId,
+        playerId: this.state.currentPlayerId,
+        playerColor: player.color,
+      },
       'finishRound',
     );
     /*
@@ -848,15 +927,21 @@ class TegMap extends Component {
   /** Send message to add troops */
   addTroops = (countryName) => {
     console.log('Add troops MSG');
-    this.sendMessage(
-      {
-        gameId,
-        country: countryName,
-        count: 1,
-        playerId: this.state.currentPlayerId,
-      },
-      'addTroops',
-    );
+    const player = _.find(this.state.players, (obj) => obj.id === this.state.currentPlayerId);
+
+    if (player) {
+      this.sendMessage(
+        {
+          gameId,
+          country: countryName,
+          count: 1,
+          playerColor: player.color,
+        },
+        'addTroops',
+      );
+    } else {
+      // TODO. Handle error
+    }
     /*
     const countries = { ...this.state.countries };
     // const country = countries.filter((country) => country.name === countryName);
@@ -877,15 +962,21 @@ class TegMap extends Component {
 
   removeTroops = (countryName) => {
     console.log('Remove troops MSG');
-    this.sendMessage(
-      {
-        gameId,
-        country: countryName,
-        count: -1,
-        playerId: this.state.currentPlayerId,
-      },
-      'addTroops',
-    );
+    const player = _.find(this.state.players, (obj) => obj.id === this.state.currentPlayerId);
+
+    if (player) {
+      this.sendMessage(
+        {
+          gameId,
+          country: countryName,
+          count: -1,
+          playerColor: player.color,
+        },
+        'addTroops',
+      );
+    } else {
+      // TODO. Handle error
+    }
     /*
     const countries = { ...this.state.countries };
     const country = countries[countryName];
@@ -938,17 +1029,22 @@ class TegMap extends Component {
       `${this.state.countrySelection.source} attacks ${this.state.countrySelection.target}`,
     );
     console.log('Attack!');
-    const playerId = this.state.currentPlayerId;
+    // const playerId = this.state.currentPlayerId;
+    const player = _.find(this.state.players, (obj) => obj.id === this.state.currentPlayerId);
 
-    this.sendMessage(
-      {
-        gameId,
-        playerId,
-        attacker: this.state.countrySelection.source,
-        defender: this.state.countrySelection.target,
-      },
-      'attack',
-    );
+    if (player) {
+      this.sendMessage(
+        {
+          gameId,
+          playerColor: player.color,
+          attacker: this.state.countrySelection.source,
+          defender: this.state.countrySelection.target,
+        },
+        'attack',
+      );
+    } else {
+      // TODO. Handle error
+    }
 
     /*
     const countries = { ...this.state.countries };
@@ -1050,18 +1146,22 @@ class TegMap extends Component {
       `Moving from ${this.state.countrySelection.source} to ${this.state.countrySelection.target}`,
     );
 
-    const playerId = this.state.currentPlayerId;
+    const player = _.find(this.state.players, (obj) => obj.id === this.state.currentPlayerId);
 
-    this.sendMessage(
-      {
-        gameId,
-        playerId,
-        source: this.state.countrySelection.source,
-        target: this.state.countrySelection.target,
-        count: troopsToMove,
-      },
-      'moveTroops',
-    );
+    if (player) {
+      this.sendMessage(
+        {
+          gameId,
+          playerColor: player.color,
+          source: this.state.countrySelection.source,
+          target: this.state.countrySelection.target,
+          count: troopsToMove,
+        },
+        'moveTroops',
+      );
+    } else {
+      // TODO. Handle error
+    }
 
     /*
     const countries = { ...this.state.countries };
@@ -1086,9 +1186,13 @@ class TegMap extends Component {
   getCountryCard = () => {
     console.log('Get card');
 
-    const playerId = this.state.currentPlayerId;
+    const player = _.find(this.state.players, (obj) => obj.id === this.state.currentPlayerId);
 
-    this.sendMessage({gameId, playerId}, 'getCard');
+    if (player) {
+      this.sendMessage({ gameId, playerColor: player.color, }, 'getCard');
+    } else {
+      // TODO. Handle error
+    }
 
     /*
     const players = [...this.state.players];
@@ -1148,6 +1252,22 @@ class TegMap extends Component {
   };
 
   exchangeCards = (cards) => {
+    console.log(`Exchange cards`, cards);
+    const player = _.find(this.state.players, (obj) => obj.id === this.state.currentPlayerId);
+
+    if (player) {
+      this.sendMessage(
+        {
+          gameId,
+          playerColor: player.color,
+          cards,
+        },
+        'exchangeCards',
+      );
+    } else {
+      // TODO. Handle error
+    }
+    /*
     const player = this.state.players[this.state.round.playerIndex];
 
     if (!this.playerCanExchangeCards(player)) {
@@ -1156,7 +1276,26 @@ class TegMap extends Component {
     }
 
     console.log('Exchange cards');
+    */
   };
+
+  exchangeCard = (card) => {
+    console.log(`Exchange card ${card}`);
+    const player = _.find(this.state.players, (obj) => obj.id === this.state.currentPlayerId);
+
+    if (player) {
+      this.sendMessage(
+        {
+          gameId,
+          playerColor: player.color,
+          card,
+        },
+        'exchangeCard',
+      );
+    } else {
+      // TODO. Handle error
+    }
+  }
 
   throwDice = () => {
     return Math.floor(Math.random() * 6) + 1;
@@ -1167,21 +1306,26 @@ class TegMap extends Component {
   };
 
   // TODO. Rename this
-  handleOk = (troopsToMove) => {
+  moveTroopsAfterConquest = (troopsToMove) => {
     console.log(`move ${troopsToMove} troops`);
 
-    const playerId = this.state.currentPlayerId;
+    const player = _.find(this.state.players, (obj) => obj.id === this.state.currentPlayerId);
 
-    this.sendMessage(
-      {
-        gameId,
-        playerId,
-        source: this.state.countrySelection.source,
-        target: this.state.countrySelection.target,
-        count: troopsToMove,
-      },
-      'moveTroops',
-    );
+    if (player) {
+      this.sendMessage(
+        {
+          gameId,
+          playerColor: player.color,
+          source: this.state.countrySelection.source,
+          target: this.state.countrySelection.target,
+          count: troopsToMove,
+          conquest: true,
+        },
+        'moveTroops',
+      );
+    } else {
+      // TODO. Handle error
+    }
 
     // Close modal
     const modals = { ...this.state.modals };
@@ -1214,8 +1358,8 @@ class TegMap extends Component {
   onCounterFinish = () => {
     console.log('Time out!');
     // Notification
-    this.openNotification('topRight');
-    this.finishRound();
+    // this.openNotification('topRight');
+    // this.finishRound();
   };
 
   changeCountryCard = (country) => {
@@ -1289,11 +1433,8 @@ class TegMap extends Component {
 
   reConnect = (color) => {
     // Send message
-    this.sendMessage(
-      { gameId, color: PlayerColors[color] },
-      'reConnect',
-    );
-  }
+    this.sendMessage({ gameId, color: PlayerColors[color] }, 'reConnect');
+  };
 
   /** Send message to start a game */
   startGame = () => {
@@ -1302,28 +1443,34 @@ class TegMap extends Component {
     this.sendMessage({ gameId }, 'startGame');
   };
 
+  showModal = () => {
+    this.setState({
+      visible: true,
+    });
+  };
+
+  handleCancel = (e) => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
+
+  handleOk = (e) => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
+
   render() {
-    // No player so show modal to choose color
-    if (this.state.modals.chooseColorVisible) {
-      return (
-        <SelectPlayerColorModal
-          visible={this.state.modals.chooseColorVisible}
-          players={this.state.players}
-          startGameHander={this.startGame}
-          okHandler={this.selectPlayerColorModalOKHandler}
-          reConnectHandler={this.reConnect}
-        />
-      );
-    }
-
-    debugger;
-
     let map;
     let countryList;
     let countryConqueredModal;
     let currentPlayer;
     let bottomTabs;
     // let playerCards;
+    // let modals;
 
     if (this.state.countries) {
       // const currentPlayer = this.state.players[this.state.round.playerIndex];
@@ -1335,13 +1482,11 @@ class TegMap extends Component {
       map = (
         <Map
           countries={this.state.countries}
-          fill={this.state.fill}
           countrySelection={this.state.countrySelection}
           countryClickedHandler={this.countryClicked}
-          onMouseOverHandler={this.countryMouseOver}
-          onMouseOutHandler={this.countryMouseOut}
         />
       );
+      /*
       countryList = (
         <Countries
           currentPlayer={currentPlayer}
@@ -1355,7 +1500,9 @@ class TegMap extends Component {
           selectTargetHandler={this.selectSourceHandler}
         />
       );
+      */
 
+      /*
       bottomTabs = (
         <Tabs type="card">
           <TabPane tab="Mission" key="1">
@@ -1375,190 +1522,125 @@ class TegMap extends Component {
           </TabPane>
         </Tabs>
       );
+      */
     } else {
       map = <div></div>;
       countryList = <div></div>;
-      bottomTabs = <div></div>;
+      // bottomTabs = <div></div>;
     }
 
-    if (this.state.countrySelection && this.state.countrySelection.source) {
+    /*
+    // No player so show modal to choose color
+    if (this.state.modals.chooseColorVisible) {
+      modals = (
+        <SelectPlayerColorModal
+          visible={this.state.modals.chooseColorVisible}
+          players={this.state.players}
+          startGameHander={this.startGame}
+          okHandler={this.selectPlayerColorModalOKHandler}
+          reConnectHandler={this.reConnect}
+        />
+      );
+    } else if (
+      this.state.countrySelection &&
+      this.state.countrySelection.source
+    ) {
       const troops = this.state.countries[this.state.countrySelection.source]
         .state.troops;
       const title = `${this.state.countrySelection.source} conquered ${this.state.countrySelection.target}!`;
-      countryConqueredModal = (
+      modals = (
         <CountryConqueredModal
           troops={troops}
           title={title}
           countryConqueredModalVisible={
             this.state.modals.countryConqueredVisible
           }
-          moveTroopsHandler={this.handleOk}
+          moveTroopsHandler={this.moveTroopsAfterConquest}
         />
       );
     } else {
-      countryConqueredModal = '';
+      modals = '';
     }
+    */
 
-    // Card Head style
-    const cardHeadStyle = { fontWeight: 'bold', backgroundColor: 'lightblue' };
+    const troops = this.state.countries && this.state.countries[this.state.countrySelection.source] ? this.state.countries[this.state.countrySelection.source]
+        .state.troops : 0;
+    const title = `${this.state.countrySelection.source} conquered ${this.state.countrySelection.target}!`;
 
-    const deadline = Date.now() + 1000 * 60 * 3; // 3 minutes (Moment is also OK)
-    const countDownTitle = <span style={{ color: 'white' }}>Tiempo</span>;
+    const modals = (
+      <div>
+        <SelectPlayerColorModal
+          visible={this.state.modals.chooseColorVisible}
+          players={this.state.players}
+          startGameHander={this.startGame}
+          okHandler={this.selectPlayerColorModalOKHandler}
+          reConnectHandler={this.reConnect}
+        />
+        <CountryConqueredModal
+          troops={troops}
+          title={title}
+          countryConqueredModalVisible={
+            this.state.modals.countryConqueredVisible
+          }
+          moveTroopsHandler={this.moveTroopsAfterConquest}
+        />
+        <GameFinishedModal
+          visible={this.state.modals.gameFinishedVisible}
+          okHandler={this.selectPlayerColorModalOKHandler} />
+      </div>
+    );
+
+    // Count player countries
+    let playerCountries = 0;
+
+    if (this.state.countries && currentPlayer) {
+      _.forIn(this.state.countries, (value, key) => {
+        if (value.state.player.color === currentPlayer.color) {
+          playerCountries += 1;
+        }
+      });
+    }
 
     return (
       <Layout>
         <Header>
-          <Row style={{ color: 'white' }}>
-            <Col span={12}>
-              <h1 style={{ color: 'white' }}>Teg Online</h1>
-            </Col>
-            <Col span={12}>
-              <Row>
-                <Col span={8}>
-                  Current round: {this.state.round.type} (#
-                  {this.state.round.count})
-                </Col>
-                <Col span={8}>
-                  Current player: &nbsp;
-                  <Avatar
-                    style={{
-                      backgroundColor: this.state.players[
-                        this.state.round.playerIndex
-                      ].color,
-                    }}
-                    icon={<UserOutlined />}
-                  />
-                  &nbsp;
-                  {this.state.players[this.state.round.playerIndex].name}
-                </Col>
-                <Col span={8}>
-                  <Countdown
-                    title={countDownTitle}
-                    value={deadline}
-                    onFinish={this.onCounterFinish}
-                    valueStyle={{ color: 'white' }}
-                  />
-                </Col>
-              </Row>
-            </Col>
-          </Row>
+          <GameHeader
+            round={this.state.round}
+            players={this.state.players}
+            onCounterFinish={this.onCounterFinish}
+          />
         </Header>
         <Layout>
           <Content>
-            {countryConqueredModal}
+            {modals}
             <div>
               <div>{map}</div>
               <hr />
-              <div className="card-container" style={{ marginLeft: '5px' }}>
-                {bottomTabs}
-              </div>
+              <BottomTabs
+                players={this.state.players}
+                currentPlayerId={this.state.currentPlayerId}
+                activity={this.state.activity}
+                changeCardHandler={this.exchangeCard}
+                changeCardsHandler={this.exchangeCards}
+              />
             </div>
           </Content>
-          <Sider style={{ color: 'white' }}>
-            <Card size="small" title="Last Attack" headStyle={cardHeadStyle}>
-              <p>Attacker dices: {this.state.dices.attacker.join(', ')}</p>
-              <p>Defender dices: {this.state.dices.defender.join(', ')}</p>
-            </Card>
-            <Card size="small" title="Actions" headStyle={cardHeadStyle}>
-              <Tooltip title="Finish Round">
-                <Button
-                  type="primary"
-                  shape="circle"
-                  icon={<CheckCircleOutlined twoToneColor="#52c41a" />}
-                  style={{ marginRight: '4px' }}
-                  onClick={() => this.finishRound()}
-                  disabled={this.state.currentPlayer.color !== this.state.players[this.state.round.playerIndex].color}
-                />
-              </Tooltip>
-              <Tooltip title="Get Card">
-                <Button
-                  type="primary"
-                  shape="circle"
-                  icon={<CreditCardOutlined />}
-                  style={{ marginRight: '4px' }}
-                  onClick={() => this.getCountryCard()}
-                  disabled={
-                    this.state.round.type === RoundType.ADD_TROOPS ||
-                    !this.state.players[this.state.round.playerIndex].canGetCard
-                  }
-                />
-              </Tooltip>
-              <Tooltip title="Exchange Cards">
-                <Button
-                  type="primary"
-                  shape="circle"
-                  icon={<UserAddOutlined />}
-                  style={{ marginRight: '4px' }}
-                  onClick={() => this.exchangeCards()}
-                  disabled={
-                    this.state.round.type === RoundType.ADD_TROOPS ||
-                    !this.state.players[this.state.round.playerIndex].canGetCard
-                  }
-                />
-              </Tooltip>
-            </Card>
-            <Card size="small" title="Country" headStyle={cardHeadStyle}>
-              <p>Source: {this.state.countrySelection.source}</p>
-              <p>Target: {this.state.countrySelection.target}</p>
-              <Tooltip title="Add Troops">
-                <Button
-                  type="primary"
-                  shape="circle"
-                  icon={<PlusCircleOutlined />}
-                  style={{ marginRight: '4px' }}
-                  disabled={!this.state.countrySelection.source}
-                  onClick={() =>
-                    this.addTroops(this.state.countrySelection.source)
-                  }
-                />
-              </Tooltip>
-              <Tooltip title="Remove Troops">
-                <Button
-                  type="primary"
-                  shape="circle"
-                  icon={<MinusCircleOutlined />}
-                  style={{ marginRight: '4px' }}
-                  disabled={!this.state.countrySelection.source}
-                  onClick={() =>
-                    this.removeTroops(this.state.countrySelection.source)
-                  }
-                />
-              </Tooltip>
-              <Tooltip title="Move Troops">
-                <Button
-                  type="primary"
-                  shape="circle"
-                  icon={<LoginOutlined />}
-                  style={{ marginRight: '4px' }}
-                  onClick={() => this.moveTroops(1)}
-                  disabled={
-                    this.state.round.type === RoundType.ADD_TROOPS ||
-                    !this.state.countrySelection.source ||
-                    !this.state.countrySelection.target
-                  }
-                />
-              </Tooltip>
-              <Tooltip title="Attack">
-                <Button
-                  type="primary"
-                  shape="circle"
-                  icon={<ThunderboltOutlined />}
-                  onClick={() => this.attack()}
-                  disabled={
-                    this.state.round.type !== RoundType.ATTACK ||
-                    !this.state.countrySelection.source ||
-                    !this.state.countrySelection.target
-                  }
-                />
-              </Tooltip>
-            </Card>
-            <Players
-              players={this.state.players}
-              headStyle={cardHeadStyle}
-              currentPlayerIndex={this.state.round.playerIndex}
-            />
-            <UserInfo player={currentPlayer} headStyle={cardHeadStyle} />
-          </Sider>
+          <GameSider
+            dices={this.state.dices}
+            currentPlayer={this.state.currentPlayer}
+            players={this.state.players}
+            round={this.state.round}
+            countrySelection={this.state.countrySelection}
+            currentPlayerId={this.state.currentPlayerId}
+            addTroopsHandler={this.addTroops}
+            removeTroopsHandler={this.removeTroops}
+            attackHandler={this.attack}
+            moveTroopsHandler={this.moveTroops}
+            exchangeCardsHandler={this.exchangeCards}
+            getCountryCardHandler={this.getCountryCard}
+            finishRoundHandler={this.finishRound}
+            countriesCount={playerCountries}
+          />
         </Layout>
         <Footer>Footer</Footer>
       </Layout>

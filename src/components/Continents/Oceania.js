@@ -36,6 +36,10 @@ const oceania = (props) => {
   );
 };
 
-oceania.propTypes = {};
+oceania.propTypes = {
+  countries: PropTypes.object,
+  countrySelection: PropTypes.object,
+  countryClicked: PropTypes.func,
+};
 
 export default oceania;

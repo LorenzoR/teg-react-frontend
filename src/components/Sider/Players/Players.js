@@ -26,6 +26,10 @@ const players = (props) => {
   );
 };
 
-players.propTypes = {};
+players.propTypes = {
+  players: PropTypes.array,
+  headStyle: PropTypes.object,
+  currentPlayerIndex: PropTypes.number,
+};
 
 export default players;

@@ -39,7 +39,9 @@ const southAmerica = props => {
 };
 
 southAmerica.propTypes = {
-    
+  countries: PropTypes.object,
+  countrySelection: PropTypes.object,
+  countryClicked: PropTypes.func,
 };
 
 export default southAmerica;

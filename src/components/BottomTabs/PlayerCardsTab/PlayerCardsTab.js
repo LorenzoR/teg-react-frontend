@@ -1,13 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
+import _ from 'lodash';
 
 import { Tabs, Button, Checkbox } from "antd";
 
-function onChange(e) {
-  console.log(`checked = ${e.target.checked}`);
-}
-
 const PlayerCardsTab = (props) => {
+  const [checkedCards, setCheckedCards] = useState([]);
+
+  const clickCard = (country) => {
+    const cards = [...checkedCards];
+
+    if (!_.find(cards, (obj) => obj === country)) {
+      // Add card
+      console.log('add card', country);
+      cards.push(country);
+    } else {
+      // Remove card
+      console.log('remove card', country);
+      _.remove(cards, (obj) => obj === country);
+    }
+
+    setCheckedCards(cards);
+    console.log('CARDS', cards);
+  }
+
   let playerCards;
 
   if (props.cards.length > 0) {
@@ -18,7 +34,7 @@ const PlayerCardsTab = (props) => {
           {props.cards.map((card) => {
             return (
               <li key={card.country}>
-                <Checkbox onChange={onChange}>
+                <Checkbox onClick={() => clickCard(card.country)}>
                   {card.country} ({card.type}) &nbsp;
                 </Checkbox>
                 <Button
@@ -32,7 +48,7 @@ const PlayerCardsTab = (props) => {
           })}
         </ul>
         <Button
-          onClick={() => props.changeCardsHandler("INDIA")}
+          onClick={() => props.changeCardsHandler(checkedCards)}
           disabled={props.cards.length < 3}
         >
           Change 3 cards
@@ -47,6 +63,10 @@ const PlayerCardsTab = (props) => {
   return playerCards;
 };
 
-PlayerCardsTab.propTypes = {};
+PlayerCardsTab.propTypes = {
+  cards: PropTypes.array,
+  changeCardHandler: PropTypes.func,
+  changeCardsHandler: PropTypes.func,
+};
 
 export default PlayerCardsTab;

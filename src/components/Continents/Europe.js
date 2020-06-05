@@ -70,6 +70,10 @@ const europe = (props) => {
   );
 };
 
-europe.propTypes = {};
+europe.propTypes = {
+  countries: PropTypes.object,
+  countrySelection: PropTypes.object,
+  countryClicked: PropTypes.func,
+};
 
 export default europe;

@@ -74,6 +74,7 @@ const SelectPlayerColorModal = (props) => {
           Pick color
         </Button>,
         <Popconfirm
+          key="popconfirm"
           placement="bottom"
           title={`Are you sure you want to start the game with ${props.players.length} players?`}
           onConfirm={() => props.startGameHander()}
@@ -166,6 +167,12 @@ const SelectPlayerColorModal = (props) => {
   );
 };
 
-SelectPlayerColorModal.propTypes = {};
+SelectPlayerColorModal.propTypes = {
+  visible: PropTypes.bool,
+  players: PropTypes.array,
+  startGameHander: PropTypes.func,
+  okHandler: PropTypes.func,
+  reConnectHandler: PropTypes.func,
+};
 
 export default SelectPlayerColorModal;
