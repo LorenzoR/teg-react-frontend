@@ -72,7 +72,7 @@ const GameFinishedModal = (props) => {
     >
       <Row>
         <Col className="gutter-row" span={24}>
-        <TrophyOutlined /> Player RED won!
+        <TrophyOutlined /> Player {props.winner} won!
         </Col>
       </Row>
       <Divider />
@@ -87,6 +87,7 @@ const GameFinishedModal = (props) => {
 GameFinishedModal.propTypes = {
   okHandler: PropTypes.func,
   visible: PropTypes.bool,
+  winner: PropTypes.string,
   /*
   players: PropTypes.array,
   startGameHander: PropTypes.func,

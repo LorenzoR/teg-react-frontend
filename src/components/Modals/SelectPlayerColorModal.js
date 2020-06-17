@@ -14,13 +14,6 @@ const SelectPlayerColorModal = (props) => {
   const [color, setColor] = useState(null);
   const [userSubmitted, setUserSubmitted] = useState(false);
 
-  const handleOk = (e) => {
-    console.log(e);
-    this.setState({
-      visible: false,
-    });
-  };
-
   const handleCancel = (e) => {
     console.log(e);
     this.setState({
@@ -33,9 +26,29 @@ const SelectPlayerColorModal = (props) => {
     props.okHandler(username, color);
   };
 
-  const joinGame = () => {
+  const joinGame2 = () => {
     console.log('join!');
     props.reConnectHandler(color);
+  }
+
+  const colorClicked = (color) => {
+    debugger;
+    setColor(color);
+
+    // Check if there was a player with that color already
+    const player = _.find(players, (o) => o.color === color.toLowerCase());
+
+    if (player && player.name) {
+      setUsername(player.name);
+      // setUserSubmitted(true)
+    }
+  }
+
+  const joinGame = () => {
+    console.log('join!');
+    setUserSubmitted(true);
+    props.joinGameHandler(username, color);
+    // props.reConnectHandler(color);
   }
 
   const players = [...props.players];
@@ -47,6 +60,85 @@ const SelectPlayerColorModal = (props) => {
   const green = _.find(players, (o) => o.color === 'green');
   const pink = _.find(players, (o) => o.color === 'pink');
 
+  const playersButtons = {
+    black: _.find(players, (o) => o.color === 'black'),
+    red: _.find(players, (o) => o.color === 'red'),
+    blue: _.find(players, (o) => o.color === 'blue'),
+    yellow: _.find(players, (o) => o.color === 'yellow'),
+    green: _.find(players, (o) => o.color === 'green'),
+    pink: _.find(players, (o) => o.color === 'pink'),
+  };
+
+  const radioButtonNames = {
+    black: black ? black.name : AVAILABLE,
+    red: red ? red.name : AVAILABLE,
+    blue: blue ? blue.name : AVAILABLE,
+    yellow: yellow ? yellow.name : AVAILABLE,
+    green: green ? green.name : AVAILABLE,
+    pink: pink ? pink.name : AVAILABLE,
+  };
+
+  const buttonsDisabled = {
+    black: (black && black.playerStatus === 'online') || userSubmitted,
+    red: (red && red.playerStatus === 'online') || userSubmitted,
+    blue: (blue && blue.playerStatus === 'online') || userSubmitted,
+    yellow: (yellow && yellow.playerStatus === 'online') || userSubmitted,
+    green: (green && green.playerStatus === 'online') || userSubmitted,
+    pink: (pink && pink.playerStatus === 'online') || userSubmitted,
+  };
+
+  console.log('PROPS', props);
+
+  // If game has started only enable the players that went offline
+  if (props.gameStatus === 'started') {
+    console.log('GAME STARTED');
+    console.log(buttonsDisabled);
+    _.forIn(buttonsDisabled, (value, key) => {
+      const player = _.find(props.players, (obj) => obj.color === key);
+
+      if (player && player.playerStatus !== 'online') {
+        buttonsDisabled[key] = false;
+      } else {
+        buttonsDisabled[key] = true;
+      }
+    });
+    console.log(buttonsDisabled);
+  }
+
+  const footerButtons = [
+    <Button
+      key="joinGame"
+      type="primary"
+      onClick={joinGame}
+      disabled={username === '' || color === null || userSubmitted}
+    >
+      Join Game
+    </Button>,
+    <Popconfirm
+      key="popconfirm"
+      placement="bottom"
+      title={`Are you sure you want to start the game with ${props.players.length} players?`}
+      onConfirm={() => props.startGameHander()}
+      okText="Yes"
+      cancelText="No"
+    >
+      <Button
+        key="startGame"
+        type="primary"
+        disabled={
+          !username || username === '' || !color || props.players.length < 2
+        }
+      >
+        Start game
+      </Button>
+    </Popconfirm>,
+  ];
+
+  if (!props.isAdmin) {
+    console.log('IS not ADMIN!');
+    footerButtons.pop();
+  }
+
   return (
     <Modal
       title="Choose color"
@@ -56,100 +148,65 @@ const SelectPlayerColorModal = (props) => {
       closable={false}
       maskClosable={false}
       okButtonProps={{ disabled: !username || username === '' || !color }}
-      footer={[
-        <Button
-          key="joinGame"
-          type="primary"
-          onClick={joinGame}
-          disabled={color === null}
-        >
-          Join Game
-        </Button>,
-        <Button
-          key="pickColor"
-          type="primary"
-          onClick={pickColor}
-          disabled={userSubmitted}
-        >
-          Pick color
-        </Button>,
-        <Popconfirm
-          key="popconfirm"
-          placement="bottom"
-          title={`Are you sure you want to start the game with ${props.players.length} players?`}
-          onConfirm={() => props.startGameHander()}
-          okText="Yes"
-          cancelText="No"
-        >
-          <Button
-            key="startGame"
-            type="primary"
-            disabled={
-              !username || username === '' || !color || props.players.length < 2
-            }
-          >
-            Start game
-          </Button>
-        </Popconfirm>,
-      ]}
+      footer={footerButtons}
     >
       <Row>
         <Col className="gutter-row" span={12}>
           Black{' '}
           <Radio.Button
-            onClick={() => setColor('BLACK')}
-            disabled={(black && black.playerStatus === 'online') || userSubmitted}
+            onClick={() => colorClicked('BLACK')}
+            disabled={buttonsDisabled.black}
             checked={color === 'BLACK'}
             style={{ background: 'black' }}
           >
-            {black ? black.name : AVAILABLE}
+            {radioButtonNames.black}
           </Radio.Button>
           <br />
           Pink{' '}
           <Radio.Button
-            onClick={() => setColor('PINK')}
-            disabled={(pink && pink.playerStatus === 'online') || userSubmitted}
+            onClick={() => colorClicked('PINK')}
+            disabled={buttonsDisabled.pink}
             checked={color === 'PINK'}
             style={{ background: 'pink' }}
           >
-            {pink ? pink.name : AVAILABLE}
+            {radioButtonNames.pink}
           </Radio.Button>
           <br />
           Red{' '}
           <Radio
-            onClick={() => setColor('RED')}
-            disabled={(red && red.playerStatus === 'online') || userSubmitted}
+            onClick={() => colorClicked('RED')}
+            disabled={buttonsDisabled.red}
             checked={color === 'RED'}
           >
-            {red ? red.name : AVAILABLE}
+            {radioButtonNames.red}
           </Radio>
         </Col>
         <Col className="gutter-row" span={12}>
           Blue{' '}
           <Radio
-            onClick={() => setColor('BLUE')}
-            disabled={(blue && blue.playerStatus === 'online') || userSubmitted}
+            onClick={() => colorClicked('BLUE')}
+            disabled={buttonsDisabled.blue}
             checked={color === 'BLUE'}
           >
-            {blue ? blue.name : AVAILABLE}
+            {radioButtonNames.blue}
           </Radio>
           <br />
           Yellow{' '}
           <Radio
-            onClick={() => setColor('YELLOW')}
-            disabled={(yellow && yellow.playerStatus === 'online') || userSubmitted}
+            onClick={() => colorClicked('YELLOW')}
+            disabled={buttonsDisabled.yellow}
             checked={color === 'YELLOW'}
           >
-            {yellow ? yellow.name : AVAILABLE}
+            {radioButtonNames.yellow}
           </Radio>
           <br />
           Green{' '}
           <Radio
-            onClick={() => setColor('GREEN')}
-            disabled={(green && green.playerStatus === 'online') || userSubmitted}
+            onClick={() => colorClicked('GREEN')}
+            disabled={buttonsDisabled.green}
             checked={color === 'GREEN'}
           >
-            {green ? green.name : AVAILABLE}
+            {radioButtonNames.green}
           </Radio>
         </Col>
       </Row>
@@ -158,8 +215,9 @@ const SelectPlayerColorModal = (props) => {
         <Col span={24}>
           <Input
             placeholder="Name"
+            value={username}
             onChange={(e) => setUsername(e.target.value)}
-            disabled={userSubmitted}
+            disabled={userSubmitted || props.gameStatus === 'started'}
           />
         </Col>
       </Row>
@@ -169,9 +227,11 @@ const SelectPlayerColorModal = (props) => {
 
 SelectPlayerColorModal.propTypes = {
   visible: PropTypes.bool,
+  gameStatus: PropTypes.string,
   players: PropTypes.array,
+  isAdmin: PropTypes.bool,
   startGameHander: PropTypes.func,
-  okHandler: PropTypes.func,
+  joinGameHandler: PropTypes.func,
   reConnectHandler: PropTypes.func,
 };
 

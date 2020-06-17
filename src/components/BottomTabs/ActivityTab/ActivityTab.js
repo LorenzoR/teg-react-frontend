@@ -3,13 +3,21 @@ import PropTypes from 'prop-types';
 
 import { Timeline } from 'antd';
 
+const getColorByActivityType = (activityType) => {
+  return 'blue';
+}
+
+const formatTimestamp = (timestamp) => {
+  return timestamp;
+}
+
 const ActivityTab = (props) => {
   return (
     <Timeline>
-      {props.activity.map((activity) => {
+      {props.eventsLog.map((activity) => {
         return (
-          <Timeline.Item color={activity.type}>
-            [{activity.time}] {activity.text}
+          <Timeline.Item color={getColorByActivityType(activity.type)}>
+            [{formatTimestamp(activity.time)}] {activity.text}
           </Timeline.Item>
         );
       })}
@@ -18,7 +26,7 @@ const ActivityTab = (props) => {
 };
 
 ActivityTab.propTypes = {
-  activity: PropTypes.array,
+  eventsLog: PropTypes.array,
 };
 
 export default ActivityTab;

@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import _ from 'lodash';
 
 import Iceland from "../Countries/Europe/Iceland";
 import UK from "../Countries/Europe/UK";
@@ -12,57 +13,69 @@ import Rusia from "../Countries/Europe/Rusia";
 import Sweden from "../Countries/Europe/Sweden";
 
 const europe = (props) => {
+  const countryStates = {
+    iceland: _.find(props.countries, { countryKey: 'ICELAND' }),
+    uk: _.find(props.countries, { countryKey: 'UK' }),
+    spain: _.find(props.countries, { countryKey: 'SPAIN' }),
+    france: _.find(props.countries, { countryKey: 'FRANCE' }),
+    germany: _.find(props.countries, { countryKey: 'GERMANY' }),
+    poland: _.find(props.countries, { countryKey: 'POLAND' }),
+    italy: _.find(props.countries, { countryKey: 'ITALY' }),
+    rusia: _.find(props.countries, { countryKey: 'RUSIA' }),
+    sweden: _.find(props.countries, { countryKey: 'SWEDEN' }),
+  };
+
   return (
     <g id="europe">
       <Iceland
-        countryState={props.countries.ICELAND.state}
+        countryState={countryStates.iceland.state}
         isSelected={[props.countrySelection.source, props.countrySelection.target].includes('ICELAND')}
         countryClicked={props.countryClicked}
       />
 
       <UK
-        countryState={props.countries.UK.state}
+        countryState={countryStates.uk.state}
         isSelected={[props.countrySelection.source, props.countrySelection.target].includes('UK')}
         countryClicked={props.countryClicked}
       />
 
       <Spain
-        countryState={props.countries.SPAIN.state}
+        countryState={countryStates.spain.state}
         isSelected={[props.countrySelection.source, props.countrySelection.target].includes('SPAIN')}
         countryClicked={props.countryClicked}
       />
 
       <France
-        countryState={props.countries.FRANCE.state}
+        countryState={countryStates.france.state}
         isSelected={[props.countrySelection.source, props.countrySelection.target].includes('FRANCE')}
         countryClicked={props.countryClicked}
       />
       <Germany
-        countryState={props.countries.GERMANY.state}
+        countryState={countryStates.germany.state}
         isSelected={[props.countrySelection.source, props.countrySelection.target].includes('GERMANY')}
         countryClicked={props.countryClicked}
       />
 
       <Poland
-        countryState={props.countries.POLAND.state}
+        countryState={countryStates.poland.state}
         isSelected={[props.countrySelection.source, props.countrySelection.target].includes('POLAND')}
         countryClicked={props.countryClicked}
       />
 
       <Italy
-        countryState={props.countries.ITALY.state}
+        countryState={countryStates.italy.state}
         isSelected={[props.countrySelection.source, props.countrySelection.target].includes('ITALY')}
         countryClicked={props.countryClicked}
       />
 
       <Rusia
-        countryState={props.countries.RUSIA.state}
+        countryState={countryStates.rusia.state}
         isSelected={[props.countrySelection.source, props.countrySelection.target].includes('RUSIA')}
         countryClicked={props.countryClicked}
       />
 
       <Sweden
-        countryState={props.countries.SWEDEN.state}
+        countryState={countryStates.sweden.state}
         isSelected={[props.countrySelection.source, props.countrySelection.target].includes('SWEDEN')}
         countryClicked={props.countryClicked}
       />

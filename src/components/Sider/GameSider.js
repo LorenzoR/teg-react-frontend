@@ -22,6 +22,8 @@ import {
 import UserInfo from '../UserInfo/UserInfo';
 import Players from './Players/Players';
 
+import Country from '../../models/Country';
+
 import RoundType from '../../models/Round';
 
 const { Sider } = Layout;
@@ -43,105 +45,112 @@ const GameSider = (props) => {
     return <div>Loading...</div>;
   }
 
+  let canAddTroops = false;
+
+  if (props.countrySelection.source) {
+    const continent = Country.getCountryContinent(props.countrySelection.source);
+    canAddTroops = currentPlayer.troopsToAdd
+      && (currentPlayer.troopsToAdd.free || currentPlayer.troopsToAdd[continent]);
+  }
+
+  const source = _.find(props.countries, { countryKey: props.countrySelection.source});
+  const target = _.find(props.countries, { countryKey: props.countrySelection.target});
+
+  const canRemoveTroops = props.countrySelection.source && source.state.newTroops;
+
+  // Check countries are selected, they belong to the same player and source has at least 2 troops
+  const canMoveTroops = props.countrySelection.source && props.countrySelection.target
+      && source.state.troops > 1
+      && source.state.player.color === target.state.player.color;
+
+  const attackActionButtons = [
+    <Tooltip title="Attack">
+      <Button
+        type="primary"
+        shape="circle"
+        icon={<ThunderboltOutlined />}
+        style={{ marginRight: '4px'}}
+        onClick={() => props.attackHandler()}
+        disabled={
+          props.round.type !== RoundType.ATTACK ||
+          !props.countrySelection.source ||
+          !props.countrySelection.target
+        }
+      />
+    </Tooltip>,
+    <Tooltip title="Move Troops">
+      <Button
+        type="primary"
+        shape="circle"
+        icon={<LoginOutlined />}
+        style={{ marginRight: '4px' }}
+        onClick={() => props.moveTroopsHandler(1)}
+        disabled={!canMoveTroops}
+      />
+    </Tooltip>,
+    <Tooltip title="Get Card">
+      <Button
+        type="primary"
+        shape="circle"
+        icon={<CreditCardOutlined />}
+        onClick={() => props.getCountryCardHandler()}
+        disabled={
+          props.round.type === RoundType.ADD_TROOPS ||
+          !props.players[props.round.playerIndex].canGetCard
+        }
+      />
+    </Tooltip>,
+  ];
+
+  const addTroopsActionButtons = [
+    <Tooltip title="Add Troops">
+      <Button
+        type="primary"
+        shape="circle"
+        icon={<PlusCircleOutlined />}
+        style={{ marginRight: '4px'}}
+        disabled={!canAddTroops}
+        onClick={() => props.addTroopsHandler(props.countrySelection.source)}
+      />
+    </Tooltip>,
+    <Tooltip title="Remove Troops">
+      <Button
+        type="primary"
+        shape="circle"
+        icon={<MinusCircleOutlined />}
+        style={{ marginRight: '4px'}}
+        disabled={!canRemoveTroops}
+        onClick={() => props.removeTroopsHandler(props.countrySelection.source)}
+      />
+    </Tooltip>,
+  ];
+
+  let actionButtons;
+
+  if (props.round) {
+    if (
+      [RoundType.ATTACK, RoundType.GET_CARD, RoundType.MOVE_TROOPS].includes(
+        props.round.type,
+      )
+    ) {
+      actionButtons = attackActionButtons;
+    } else {
+      actionButtons = addTroopsActionButtons;
+    }
+  } else {
+    actionButtons = <div></div>;
+  }
+
   return (
     <Sider style={{ color: 'white' }}>
       <Card size="small" title="Last Attack" headStyle={cardHeadStyle}>
         <p>Attacker dices: {props.dices.attacker.join(', ')}</p>
         <p>Defender dices: {props.dices.defender.join(', ')}</p>
       </Card>
-      <Card size="small" title="Actions" headStyle={cardHeadStyle}>
-        <Tooltip title="Finish Round">
-          <Button
-            type="primary"
-            shape="circle"
-            icon={<CheckCircleOutlined twoToneColor="#52c41a" />}
-            style={{ marginRight: '4px' }}
-            onClick={() => props.finishRoundHandler()}
-            disabled={
-              props.currentPlayer.color !==
-              props.players[props.round.playerIndex].color
-            }
-          />
-        </Tooltip>
-        <Tooltip title="Get Card">
-          <Button
-            type="primary"
-            shape="circle"
-            icon={<CreditCardOutlined />}
-            style={{ marginRight: '4px' }}
-            onClick={() => props.getCountryCardHandler()}
-            disabled={
-              props.round.type === RoundType.ADD_TROOPS ||
-              !props.players[props.round.playerIndex].canGetCard
-            }
-          />
-        </Tooltip>
-        <Tooltip title="Exchange Cards">
-          <Button
-            type="primary"
-            shape="circle"
-            icon={<UserAddOutlined />}
-            style={{ marginRight: '4px' }}
-            onClick={() => props.exchangeCardsHandler()}
-            disabled={
-              props.round.type === RoundType.ADD_TROOPS ||
-              !props.players[props.round.playerIndex].canGetCard
-            }
-          />
-        </Tooltip>
-      </Card>
       <Card size="small" title="Country" headStyle={cardHeadStyle}>
         <p>Source: {props.countrySelection.source}</p>
         <p>Target: {props.countrySelection.target}</p>
-        <Tooltip title="Add Troops">
-          <Button
-            type="primary"
-            shape="circle"
-            icon={<PlusCircleOutlined />}
-            style={{ marginRight: '4px' }}
-            disabled={!props.countrySelection.source}
-            onClick={() => props.addTroopsHandler(props.countrySelection.source)}
-          />
-        </Tooltip>
-        <Tooltip title="Remove Troops">
-          <Button
-            type="primary"
-            shape="circle"
-            icon={<MinusCircleOutlined />}
-            style={{ marginRight: '4px' }}
-            disabled={!props.countrySelection.source}
-            onClick={() =>
-              props.removeTroopsHandler(props.countrySelection.source)
-            }
-          />
-        </Tooltip>
-        <Tooltip title="Move Troops">
-          <Button
-            type="primary"
-            shape="circle"
-            icon={<LoginOutlined />}
-            style={{ marginRight: '4px' }}
-            onClick={() => props.moveTroopsHandler(1)}
-            disabled={
-              props.round.type === RoundType.ADD_TROOPS ||
-              !props.countrySelection.source ||
-              !props.countrySelection.target
-            }
-          />
-        </Tooltip>
-        <Tooltip title="Attack">
-          <Button
-            type="primary"
-            shape="circle"
-            icon={<ThunderboltOutlined />}
-            onClick={() => props.attackHandler()}
-            disabled={
-              props.round.type !== RoundType.ATTACK ||
-              !props.countrySelection.source ||
-              !props.countrySelection.target
-            }
-          />
-        </Tooltip>
+        {actionButtons}
       </Card>
       <Players
         players={props.players}
@@ -151,7 +160,8 @@ const GameSider = (props) => {
       <UserInfo
         player={currentPlayer}
         headStyle={cardHeadStyle}
-        countriesCount={props.countriesCount} />
+        countriesCount={props.countriesCount}
+      />
     </Sider>
   );
 };
@@ -169,8 +179,8 @@ GameSider.propTypes = {
   removeTroopsHandler: PropTypes.func,
   exchangeCardsHandler: PropTypes.func,
   getCountryCardHandler: PropTypes.func,
-  finishRoundHandler: PropTypes.func,
   countriesCount: PropTypes.number,
+  countries: PropTypes.object,
 };
 
 export default GameSider;
