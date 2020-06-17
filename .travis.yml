@@ -1,5 +1,9 @@
 sudo: required
-dist: trusty
+dist: xenial
+env:
+  global:
+    # include $HOME/.local/bin for `aws`
+    - PATH=$HOME/.local/bin:$PATH
 language: node_js
 node_js:
   - 'stable'
@@ -10,7 +14,7 @@ cache:
   directories:
     - node_modules
 before_install:
-  - pyenv global 3.7.1
+  # - pyenv global 3.7.1
   - pip install -U pip
   - pip install awscli
   #- mkdir -p ~/$TRAVIS_BUILD_NUMBER
