@@ -24,6 +24,8 @@ before_install:
 install:
   - npm install
   # - npm i -g react-deploy-cli
+
+script:
   - npm run build
   - npm run deploy-s3
 
