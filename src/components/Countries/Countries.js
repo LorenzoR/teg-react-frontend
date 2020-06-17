@@ -94,6 +94,14 @@ const countries = (props) => {
   }
 };
 
-countries.propTypes = {};
+countries.propTypes = {
+  countries: PropTypes.array,
+  currentRound: PropTypes.object,
+  currentPlayer: PropTypes.object,
+  addTroopsHandler: PropTypes.func,
+  removeTroopsHandler: PropTypes.func,
+  selectSourceHandler: PropTypes.func,
+  selectTargetHandler: PropTypes.func,
+};
 
 export default countries;

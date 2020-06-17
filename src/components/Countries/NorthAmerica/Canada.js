@@ -98,6 +98,10 @@ const Canada = (props) => {
   );
 };
 
-Canada.propTypes = {};
+Canada.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default Canada;

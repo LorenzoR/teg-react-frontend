@@ -98,6 +98,10 @@ const Chile = (props) => {
   );
 };
 
-Chile.propTypes = {};
+Chile.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default Chile;

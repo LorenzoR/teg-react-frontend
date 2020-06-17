@@ -38,6 +38,10 @@ class Continent {
     static getContinentTypes() {
         return ContinentTypes;
     }
+
+    static getAllContinents() {
+      return Continents;
+    }
 }
 
 export default Continent;

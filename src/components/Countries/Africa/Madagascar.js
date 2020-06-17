@@ -95,6 +95,10 @@ const Madagascar = (props) => {
   );
 };
 
-Madagascar.propTypes = {};
+Madagascar.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default Madagascar;

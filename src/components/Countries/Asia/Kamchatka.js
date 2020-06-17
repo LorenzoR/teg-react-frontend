@@ -95,6 +95,10 @@ const Kamchatka = (props) => {
   );
 };
 
-Kamchatka.propTypes = {};
+Kamchatka.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default Kamchatka;

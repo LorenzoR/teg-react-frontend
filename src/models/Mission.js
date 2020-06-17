@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import Continent from './Continent';
 import Country from './Country';
 import Player from './Player';

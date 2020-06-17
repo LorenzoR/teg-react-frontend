@@ -95,6 +95,10 @@ const Gobi = (props) => {
   );
 };
 
-Gobi.propTypes = {};
+Gobi.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default Gobi;

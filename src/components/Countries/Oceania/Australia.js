@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 
 import shadeColor from "../../../helpers/shadeColor";
@@ -6,8 +6,6 @@ import shadeColor from "../../../helpers/shadeColor";
 const Australia = (props) => {
   const [borderFill, setBorderFill] = useState("#90a8a0");
   const [fill, setFill] = useState("#afc1bb");
-
-  const isSelected = props.isSelected;
 
   return (
     <g
@@ -102,7 +100,9 @@ const Australia = (props) => {
 };
 
 Australia.propTypes = {
-  // countryState: Object,
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
 };
 
 export default Australia;

@@ -95,6 +95,10 @@ const Etiopia = (props) => {
   );
 };
 
-Etiopia.propTypes = {};
+Etiopia.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default Etiopia;

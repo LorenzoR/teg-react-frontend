@@ -5,21 +5,6 @@ import { List, Avatar, Button } from 'antd';
 
 import { UserOutlined } from '@ant-design/icons';
 
-const data = [
-  {
-    title: 'Player 1',
-  },
-  {
-    title: 'Player 2',
-  },
-  {
-    title: 'Player 1',
-  },
-  {
-    title: 'Player 3',
-  },
-];
-
 const ChatMessagesTab = (props) => {
   const [message, setMessage] = useState('');
 

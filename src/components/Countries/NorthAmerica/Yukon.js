@@ -98,6 +98,10 @@ const Yukon = (props) => {
   );
 };
 
-Yukon.propTypes = {};
+Yukon.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default Yukon;

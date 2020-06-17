@@ -98,6 +98,10 @@ const NewYork = (props) => {
   );
 };
 
-NewYork.propTypes = {};
+NewYork.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default NewYork;

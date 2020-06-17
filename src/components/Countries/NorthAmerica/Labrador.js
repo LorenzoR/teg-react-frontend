@@ -98,6 +98,10 @@ const Labrador = (props) => {
   );
 };
 
-Labrador.propTypes = {};
+Labrador.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default Labrador;

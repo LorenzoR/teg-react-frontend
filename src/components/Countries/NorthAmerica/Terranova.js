@@ -98,6 +98,10 @@ const Terranova = (props) => {
   );
 };
 
-Terranova.propTypes = {};
+Terranova.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default Terranova;

@@ -95,6 +95,10 @@ const Israel = (props) => {
   );
 };
 
-Israel.propTypes = {};
+Israel.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default Israel;

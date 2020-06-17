@@ -98,6 +98,10 @@ const Greenland = (props) => {
   );
 };
 
-Greenland.propTypes = {};
+Greenland.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default Greenland;

@@ -95,6 +95,10 @@ const Mongolia = (props) => {
   );
 };
 
-Mongolia.propTypes = {};
+Mongolia.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default Mongolia;

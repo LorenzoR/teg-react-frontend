@@ -95,6 +95,10 @@ const Malasia = (props) => {
   );
 };
 
-Malasia.propTypes = {};
+Malasia.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default Malasia;

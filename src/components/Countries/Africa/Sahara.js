@@ -95,6 +95,10 @@ const Sahara = (props) => {
   );
 };
 
-Sahara.propTypes = {};
+Sahara.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default Sahara;

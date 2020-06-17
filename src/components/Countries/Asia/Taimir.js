@@ -95,6 +95,10 @@ const Taimir = (props) => {
   );
 };
 
-Taimir.propTypes = {};
+Taimir.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default Taimir;

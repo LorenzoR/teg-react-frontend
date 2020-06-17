@@ -95,6 +95,10 @@ const Siberia = (props) => {
   );
 };
 
-Siberia.propTypes = {};
+Siberia.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default Siberia;

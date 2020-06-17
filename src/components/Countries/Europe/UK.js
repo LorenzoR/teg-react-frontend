@@ -92,6 +92,10 @@ const UK = (props) => {
   );
 };
 
-UK.propTypes = {};
+UK.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default UK;

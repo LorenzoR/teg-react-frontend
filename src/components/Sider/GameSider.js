@@ -7,16 +7,11 @@ import { Button, Tooltip } from 'antd';
 import { Card } from 'antd';
 
 import {
-  UserAddOutlined,
   LoginOutlined,
-  FireOutlined,
   ThunderboltOutlined,
-  UserDeleteOutlined,
-  CheckCircleOutlined,
   CreditCardOutlined,
   PlusCircleOutlined,
   MinusCircleOutlined,
-  UserOutlined,
 } from '@ant-design/icons';
 
 import UserInfo from '../UserInfo/UserInfo';

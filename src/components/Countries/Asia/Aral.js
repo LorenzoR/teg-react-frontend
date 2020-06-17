@@ -95,6 +95,10 @@ const Aral = (props) => {
   );
 };
 
-Aral.propTypes = {};
+Aral.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default Aral;

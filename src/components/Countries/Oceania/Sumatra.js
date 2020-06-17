@@ -95,6 +95,10 @@ const Sumatra = (props) => {
   );
 };
 
-Sumatra.propTypes = {};
+Sumatra.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default Sumatra;

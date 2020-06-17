@@ -95,6 +95,10 @@ const Zaire = (props) => {
   );
 };
 
-Zaire.propTypes = {};
+Zaire.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default Zaire;

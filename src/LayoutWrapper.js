@@ -1,39 +1,15 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Link, useLocation } from 'react-router-dom';
+// import { BrowserRouter as Router, Link, useLocation } from 'react-router-dom';
 import _ from 'lodash';
-import moment from 'moment';
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
 
 import { Layout } from 'antd';
-import { Card } from 'antd';
-import { Button, Tooltip } from 'antd';
-import { Tabs } from 'antd';
-import { Row, Col } from 'antd';
-import { Avatar } from 'antd';
-import { Statistic } from 'antd';
-import { notification, Divider, Space, Modal } from 'antd';
+import { notification, Modal } from 'antd';
 import { Spin } from 'antd';
 
-import {
-  UserAddOutlined,
-  LoginOutlined,
-  FireOutlined,
-  ThunderboltOutlined,
-  UserDeleteOutlined,
-  CheckCircleOutlined,
-  CreditCardOutlined,
-  PlusCircleOutlined,
-  MinusCircleOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
-
-import Countries from './components/Countries/Countries';
 import Map from './components/Map/Map';
-import EventsLog from './components/EventsLog/EventsLog';
 import BottomTabs from './components/BottomTabs/BottomTabs';
 
-import PlayerCardsTab from './components/BottomTabs/PlayerCardsTab/PlayerCardsTab';
-import ActivityTab from './components/BottomTabs/ActivityTab/ActivityTab';
 import GameHeader from './components/Header/Header';
 import GameSider from './components/Sider/GameSider';
 
@@ -42,73 +18,9 @@ import SelectPlayerColorModal from './components/Modals/SelectPlayerColorModal';
 import GameFinishedModal from './components/Modals/GameFinishedModal';
 
 import Country from './models/Country';
-import Mission from './models/Mission';
 import RoundType from './models/Round';
 
-const { Header, Footer, Sider, Content } = Layout;
-
-const { TabPane } = Tabs;
-
-const { Countdown } = Statistic;
-
-const CountriesRaw = {
-  // North America
-  CANADA: 'CANADA',
-  YUKON: 'YUKON',
-  OREGON: 'OREGON',
-  NEW_YORK: 'NEW_YORK',
-  ALASKA: 'ALASKA',
-  MEXICO: 'MEXICO',
-  CALIFORNIA: 'CALIFORNIA',
-  GREENLAND: 'GREENLAND',
-  TERRANOVA: 'TERRANOVA',
-  LABRADOR: 'LABRADOR',
-  // South America
-  COLOMBIA: 'COLOMBIA',
-  PERU: 'PERU',
-  BRASIL: 'BRASIL',
-  ARGENTINA: 'ARGENTINA',
-  CHILE: 'CHILE',
-  URUGUAY: 'URUGUAY',
-  // Oceania
-  AUSTRALIA: 'AUSTRALIA',
-  JAVA: 'JAVA',
-  SUMATRA: 'SUMATRA',
-  BORNEO: 'BORNEO',
-  // Africa
-  SAHARA: 'SAHARA',
-  SOUTH_AFRICA: 'SOUTH_AFRICA',
-  MADAGASCAR: 'MADAGASCAR',
-  ZAIRE: 'ZAIRE',
-  ETHIOPIA: 'ETHIOPIA',
-  EGYPT: 'EGYPT',
-  // Europe
-  ICELAND: 'ICELAND',
-  UK: 'UK',
-  SPAIN: 'SPAIN',
-  ITALY: 'ITALY',
-  FRANCE: 'FRANCE',
-  GERMANY: 'GERMANY',
-  POLAND: 'POLAND',
-  RUSIA: 'RUSIA',
-  SWEDEN: 'SWEDEN',
-  // Asia
-  ARAL: 'ARAL',
-  TARTARIA: 'TARTARIA',
-  TAIMIR: 'TAIMIR',
-  SIBERIA: 'SIBERIA',
-  KAMCHATKA: 'KAMCHATKA',
-  JAPAN: 'JAPAN',
-  MONGOLIA: 'MONGOLIA',
-  IRAN: 'IRAN',
-  GOBI: 'GOBI',
-  CHINA: 'CHINA',
-  MALASIA: 'MALASIA',
-  INDIA: 'INDIA',
-  TURKEY: 'TURKEY',
-  ISRAEL: 'ISRAEL',
-  ARABIA: 'ARABIA',
-};
+const { Header, Footer, Content } = Layout;
 
 const CountriesList = {
   // North America
@@ -373,7 +285,8 @@ class LayoutWrapper extends Component {
             this.setState({ countries, dices, modals, players });
           } else if (action === 'troopsMoved') {
             // const { countries } = messageData.body;
-            const { source, target, count, round, eventsLog } = messageData.body;
+            // const { source, target, count, round, eventsLog } = messageData.body;
+            const { source, target, round, eventsLog } = messageData.body;
             const countries = [ ...this.state.countries ];
 
             const sourceIndex = _.findIndex(countries, { countryKey: source.countryKey });

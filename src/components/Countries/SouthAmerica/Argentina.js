@@ -108,6 +108,10 @@ const Argentina = (props) => {
   );
 };
 
-Argentina.propTypes = {};
+Argentina.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default Argentina;

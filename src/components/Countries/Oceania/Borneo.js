@@ -95,6 +95,10 @@ const Borneo = (props) => {
   );
 };
 
-Borneo.propTypes = {};
+Borneo.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default Borneo;

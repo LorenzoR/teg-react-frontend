@@ -95,6 +95,10 @@ const Java = (props) => {
   );
 };
 
-Java.propTypes = {};
+Java.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default Java;

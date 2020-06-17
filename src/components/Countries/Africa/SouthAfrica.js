@@ -95,6 +95,10 @@ const SouthAfrica = (props) => {
   );
 };
 
-SouthAfrica.propTypes = {};
+SouthAfrica.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default SouthAfrica;

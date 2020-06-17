@@ -95,6 +95,10 @@ const Turkey = (props) => {
   );
 };
 
-Turkey.propTypes = {};
+Turkey.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default Turkey;

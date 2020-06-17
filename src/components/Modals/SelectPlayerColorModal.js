@@ -21,16 +21,6 @@ const SelectPlayerColorModal = (props) => {
     });
   };
 
-  const pickColor = () => {
-    setUserSubmitted(true);
-    props.okHandler(username, color);
-  };
-
-  const joinGame2 = () => {
-    console.log('join!');
-    props.reConnectHandler(color);
-  }
-
   const colorClicked = (color) => {
     debugger;
     setColor(color);
@@ -60,6 +50,7 @@ const SelectPlayerColorModal = (props) => {
   const green = _.find(players, (o) => o.color === 'green');
   const pink = _.find(players, (o) => o.color === 'pink');
 
+  /*
   const playersButtons = {
     black: _.find(players, (o) => o.color === 'black'),
     red: _.find(players, (o) => o.color === 'red'),
@@ -68,6 +59,7 @@ const SelectPlayerColorModal = (props) => {
     green: _.find(players, (o) => o.color === 'green'),
     pink: _.find(players, (o) => o.color === 'pink'),
   };
+  */
 
   const radioButtonNames = {
     black: black ? black.name : AVAILABLE,

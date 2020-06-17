@@ -98,6 +98,10 @@ const Oregon = (props) => {
   );
 };
 
-Oregon.propTypes = {};
+Oregon.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default Oregon;

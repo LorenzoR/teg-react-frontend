@@ -95,6 +95,10 @@ const Tartaria = (props) => {
   );
 };
 
-Tartaria.propTypes = {};
+Tartaria.propTypes = {
+  countryState: PropTypes.object,
+  isSelected: PropTypes.bool,
+  countryClicked: PropTypes.func,
+};
 
 export default Tartaria;
