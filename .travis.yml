@@ -27,14 +27,14 @@ install:
   - npm run build
   - npm run deploy-s3
 
-before_script:
-  - export RELEASE_HEAD=$(git rev-parse --short HEAD | cut -c1-7)  
-  - export RELEASE_HEAD_LONG=$(git rev-parse HEAD)  
-  - export CI=false
+#before_script:
+#  - export RELEASE_HEAD=$(git rev-parse --short HEAD | cut -c1-7)  
+#  - export RELEASE_HEAD_LONG=$(git rev-parse HEAD)  
+#  - export CI=false
 
-deploy:
-  skip_cleanup: true
-  provider: script
-  script: react-deploy deploy $TRAVIS_BRANCH && react-deploy list $TRAVIS_BRANCH && react-deploy activate $RELEASE_HEAD $TRAVIS_BRANCH
-  on:
-    branch: ["master"]
+#deploy:
+#  skip_cleanup: true
+#  provider: script
+#  script: react-deploy deploy $TRAVIS_BRANCH && react-deploy list $TRAVIS_BRANCH && react-deploy activate $RELEASE_HEAD $TRAVIS_BRANCH
+#  on:
+#    branch: ["master"]
