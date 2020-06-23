@@ -12,13 +12,26 @@ import {
 
 const { Countdown } = Statistic;
 
-const deadline = Date.now() + 1000 * 60 * 3; // 3 minutes (Moment is also OK)
-const countDownTitle = <span style={{ color: 'white' }}>Tiempo</span>;
+const getRoundName = (roundType) => {
+  switch (roundType) {
+    case 'firstAddTroops':
+    case 'secondAddTroops':
+    case 'addTroops':
+      return 'Add Troops';
+    default:
+      return 'Attack';
+  }
+}
 
 const Header = (props) => {
   if (!props.players || !props.round) {
     return <div></div>;
   }
+
+  const deadline = Date.now() + 1000 * 60 * 3; // 3 minutes (Moment is also OK)
+  const countDownTitle = <span style={{ color: 'white' }}>Time</span>;
+
+  const playerColor = props.players[props.round.playerIndex].color;
 
   return (
     <Row style={{ color: 'white' }}>
@@ -28,24 +41,17 @@ const Header = (props) => {
       </Col>
       <Col span={12}>
         <Row>
-          {/* Current round */}
-          <Col span={8}>
-            Current round: {props.round.type} (#
-            {props.round.count})
-          </Col>
-          {/* Current player */}
-          <Col span={8}>
-            Current Turn: &nbsp;
+          {/* Current player and round */}
+          <Col span={16}>
+            <strong>Current Turn:</strong> &nbsp;
             <Avatar
               style={{
-                backgroundColor: props.players[
-                  props.round.playerIndex
-                ].color,
+                backgroundColor: playerColor,
               }}
               icon={<UserOutlined />}
             />
             &nbsp;
-            {props.players[props.round.playerIndex].name}
+            {props.players[props.round.playerIndex].name} - {getRoundName(props.round.type)} (#{props.round.count})
           </Col>
           {/* Countdown */}
           <Col span={4}>

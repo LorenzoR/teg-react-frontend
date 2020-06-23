@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { Modal, Button, Popconfirm } from 'antd';
 import { Row, Col, Divider } from 'antd';
 import { Radio } from 'antd';
-import { Input } from 'antd';
+import { Input, Spin, Alert } from 'antd';
 
 const AVAILABLE = 'Available';
 
@@ -106,7 +106,12 @@ const SelectPlayerColorModal = (props) => {
     >
       Join Game
     </Button>,
-    <Popconfirm
+  ];
+
+  // Add Start Game button
+  if (!props.gameStatus || props.gameStatus !== 'started') {
+    footerButtons.push(
+      <Popconfirm
       key="popconfirm"
       placement="bottom"
       title={`Are you sure you want to start the game with ${props.players.length} players?`}
@@ -123,8 +128,9 @@ const SelectPlayerColorModal = (props) => {
       >
         Start game
       </Button>
-    </Popconfirm>,
-  ];
+    </Popconfirm>
+    );
+  }
 
   if (!props.isAdmin) {
     console.log('IS not ADMIN!');
@@ -141,78 +147,93 @@ const SelectPlayerColorModal = (props) => {
       maskClosable={false}
       okButtonProps={{ disabled: !username || username === '' || !color }}
       footer={footerButtons}
+      width='50%'
     >
-      <Row>
-        <Col className="gutter-row" span={12}>
-          Black{' '}
-          <Radio.Button
-            onClick={() => colorClicked('BLACK')}
-            disabled={buttonsDisabled.black}
-            checked={color === 'BLACK'}
-            style={{ background: 'black' }}
-          >
-            {radioButtonNames.black}
-          </Radio.Button>
-          <br />
-          Pink{' '}
-          <Radio.Button
-            onClick={() => colorClicked('PINK')}
-            disabled={buttonsDisabled.pink}
-            checked={color === 'PINK'}
-            style={{ background: 'pink' }}
-          >
-            {radioButtonNames.pink}
-          </Radio.Button>
-          <br />
-          Red{' '}
-          <Radio
-            onClick={() => colorClicked('RED')}
-            disabled={buttonsDisabled.red}
-            checked={color === 'RED'}
-          >
-            {radioButtonNames.red}
-          </Radio>
-        </Col>
-        <Col className="gutter-row" span={12}>
-          Blue{' '}
-          <Radio
-            onClick={() => colorClicked('BLUE')}
-            disabled={buttonsDisabled.blue}
-            checked={color === 'BLUE'}
-          >
-            {radioButtonNames.blue}
-          </Radio>
-          <br />
-          Yellow{' '}
-          <Radio
-            onClick={() => colorClicked('YELLOW')}
-            disabled={buttonsDisabled.yellow}
-            checked={color === 'YELLOW'}
-          >
-            {radioButtonNames.yellow}
-          </Radio>
-          <br />
-          Green{' '}
-          <Radio
-            onClick={() => colorClicked('GREEN')}
-            disabled={buttonsDisabled.green}
-            checked={color === 'GREEN'}
-          >
-            {radioButtonNames.green}
-          </Radio>
-        </Col>
-      </Row>
-      <Divider />
-      <Row>
-        <Col span={24}>
-          <Input
-            placeholder="Name"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            disabled={userSubmitted || props.gameStatus === 'started'}
-          />
-        </Col>
-      </Row>
+      <Spin spinning={props.spinnerVisible}>
+        <Row>
+          <Col className="gutter-row" span={12}>
+            <Radio.Button
+                  onClick={() => colorClicked('BLACK')}
+                  disabled={buttonsDisabled.black}
+                  checked={color === 'BLACK'}
+                  style={{ background: 'black', color: 'white' }} >
+              {radioButtonNames.black}
+            </Radio.Button>
+          </Col>
+          <Col className="gutter-row" span={12}>
+            <Radio.Button
+              onClick={() => colorClicked('PINK')}
+              disabled={buttonsDisabled.pink}
+              checked={color === 'PINK'}
+              style={{ background: 'pink' }}
+            >
+              {radioButtonNames.pink}
+            </Radio.Button>
+          </Col>
+        </Row>
+        <Row>
+          <Col className="gutter-row" span={12}>
+           <Radio.Button
+              onClick={() => colorClicked('GREEN')}
+              disabled={buttonsDisabled.green}
+              checked={color === 'GREEN'}
+              style={{ background: 'green' }}
+            >
+              {radioButtonNames.green}
+            </Radio.Button>
+          </Col>
+          <Col className="gutter-row" span={12}>
+            <Radio.Button
+              onClick={() => colorClicked('RED')}
+              disabled={buttonsDisabled.red}
+              checked={color === 'RED'}
+              style={{ background: 'red' }}
+            >
+              {radioButtonNames.red}
+            </Radio.Button>
+          </Col>
+        </Row>
+        <Row>
+          <Col className="gutter-row" span={12}>
+            <Radio.Button
+              onClick={() => colorClicked('BLUE')}
+              disabled={buttonsDisabled.blue}
+              checked={color === 'BLUE'}
+              style={{ background: 'blue' }}
+            >
+              {radioButtonNames.blue}
+            </Radio.Button>
+          </Col>
+          <Col className="gutter-row" span={12}>
+            <Radio.Button
+              onClick={() => colorClicked('YELLOW')}
+              disabled={buttonsDisabled.yellow}
+              checked={color === 'YELLOW'}
+              style={{ background: 'yellow' }}
+            >
+              {radioButtonNames.yellow}
+            </Radio.Button>
+          </Col>
+        </Row>
+        <Divider />
+        <Row>
+          <Col span={24}>
+            <Input
+              placeholder="Name"
+              maxLength={30}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              disabled={userSubmitted || props.gameStatus === 'started'}
+            />
+          </Col>
+        </Row>
+        <Divider />
+        <Row>
+          <Col span={24}>
+            <Alert message="Invite Link" description={window.location.href} type="info" />
+          </Col>
+        </Row>
+      </Spin>
     </Modal>
   );
 };
@@ -225,6 +246,7 @@ SelectPlayerColorModal.propTypes = {
   startGameHander: PropTypes.func,
   joinGameHandler: PropTypes.func,
   reConnectHandler: PropTypes.func,
+  spinnerVisible: PropTypes.bool,
 };
 
 export default SelectPlayerColorModal;

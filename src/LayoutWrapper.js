@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import { BrowserRouter as Router, Link, useLocation } from 'react-router-dom';
 import _ from 'lodash';
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
 
@@ -157,6 +156,7 @@ class LayoutWrapper extends Component {
     },
     spinners: {
       mapVisible: false,
+      selectPlayerColorVisible: true,
     },
     eventsLog: [],
     chatMessages: {
@@ -168,12 +168,24 @@ class LayoutWrapper extends Component {
   componentWillMount() {
     // Websocket
     // const query = new URLSearchParams(useLocation().search);
-    const query = new URLSearchParams(this.props.location.search);
-    console.log(query.get('game_id'));
-    gameId = query.get('game_id');
-    const endpoint = `${process.env.REACT_APP_API_ENDPOINT}?game_id=${gameId}`;
+    // debugger;
+    // const query = new URLSearchParams(this.props.location.search);
+    // console.log(query.get('game_id'));
+    // gameId = query.get('game_id');
+    // const params = useParams();
+    // gameId = params.gameId;
+    gameId = this.props.match.params.gameId;
+    const endpoint = `${process.env.REACT_APP_WEBSOCKET_ENDPOINT}?game_id=${gameId}`;
     client = new W3CWebSocket(endpoint);
     // gameId = '1234';
+
+    client.onclose = (event) => {
+      alert(`Closing. ${JSON.stringify(event)}`);
+    }
+
+    client.onerror = (error) => {
+      alert(`ERROR. Could not connect to server: ${JSON.stringify(error)}`);
+    }
 
     client.onopen = (data) => {
       console.log('WebSocket Client Connected');
@@ -183,7 +195,7 @@ class LayoutWrapper extends Component {
 
       // Send message to get players
       if (client.readyState === client.OPEN) {
-        setTimeout(() => this.sendMessage({ gameId }, 'getPlayers'), 3000);
+        setTimeout(() => this.sendMessage({ gameId }, 'getPlayers'), 1500);
       }
 
       // Try to re-connect
@@ -258,31 +270,43 @@ class LayoutWrapper extends Component {
             }
           } else if (action === 'countryAttacked') {
             const {
+              gameStatus,
+              winner,
               attacker,
               defender,
               dices,
               players,
               countryConquered,
             } = messageData.body;
-            const countries = [ ...this.state.countries ];
-            const modals = { ...this.state.modals };
-            const attackerIndex = _.findIndex(countries, { countryKey: attacker.countryKey });
-            const defenderIndex = _.findIndex(countries, { countryKey: defender.countryKey });
 
-            countries[attackerIndex] = attacker;
-            countries[defenderIndex] = defender;
+            // A player was killed and attacker won the game
+            if (winner && gameStatus === 'finished') {
+              console.log('game finished!');
+              const modals = { ...this.state.modals };
+              modals.gameFinishedVisible = true;
+              
+              this.setState({ modals, winner });
+            } else {
+              const countries = [ ...this.state.countries ];
+              const modals = { ...this.state.modals };
+              const attackerIndex = _.findIndex(countries, { countryKey: attacker.countryKey });
+              const defenderIndex = _.findIndex(countries, { countryKey: defender.countryKey });
 
-            // Show modal to select troops to move after conquer
-            if (
-              countryConquered &&
-              attacker.state.player.color === this.state.currentPlayer.color &&
-              attacker.state.troops > 1
-            ) {
-              // Show modal to select troops to move
-              modals.countryConqueredVisible = true;
+              countries[attackerIndex] = attacker;
+              countries[defenderIndex] = defender;
+
+              // Show modal to select troops to move after conquer
+              if (
+                countryConquered &&
+                attacker.state.player.color === this.state.currentPlayer.color &&
+                attacker.state.troops > 1
+              ) {
+                // Show modal to select troops to move
+                modals.countryConqueredVisible = true;
+              }
+
+              this.setState({ countries, dices, modals, players });
             }
-
-            this.setState({ countries, dices, modals, players });
           } else if (action === 'troopsMoved') {
             // const { countries } = messageData.body;
             // const { source, target, count, round, eventsLog } = messageData.body;
@@ -432,9 +456,11 @@ class LayoutWrapper extends Component {
 
             this.setState({ players });
           } else if (action === 'playersInfo') {
-            const { players, currentPlayer } = messageData.body;
+            const { players, currentPlayer, gameStatus } = messageData.body;
+            const spinners = { ...this.state.spinners };
+            spinners.selectPlayerColorVisible = false;
 
-            this.setState({ players, currentPlayer });
+            this.setState({ players, currentPlayer, gameStatus, spinners });
           } else if (action === 'messageReceived') {
             const { player, message } = messageData.body;
             const chatMessages = { ...this.state.chatMessages };
@@ -521,8 +547,14 @@ class LayoutWrapper extends Component {
           countrySelection.source = countryKey;
         }
       } else if (!this.state.countrySelection.target) {
-        // Select destiny
-        countrySelection.target = countryKey;
+        if (!Country.areNeighbours(this.state.countrySelection.source, countryKey)) {
+          // If they are not neighbours, reset source selection
+          countrySelection.source = countryKey;
+        }
+        else if (this.state.countrySelection.source !== this.state.countrySelection.target) {
+          // Select destiny
+          countrySelection.target = countryKey;
+        }
       } else {
         // Check country belongs to player
         if (country.state.player.color === player.color) {
@@ -978,6 +1010,7 @@ class LayoutWrapper extends Component {
           startGameHander={this.startGame}
           joinGameHandler={this.joinGameHandler}
           reConnectHandler={this.reConnect}
+          spinnerVisible={this.state.spinners.selectPlayerColorVisible}
         />
         <CountryConqueredModal
           troops={troops}
@@ -1007,7 +1040,7 @@ class LayoutWrapper extends Component {
 
     return (
       <Layout>
-        <Header>
+        <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
           <GameHeader
             round={this.state.round}
             players={this.state.players}
@@ -1017,7 +1050,7 @@ class LayoutWrapper extends Component {
           />
         </Header>
         <Layout>
-          <Content>
+          <Content className="site-layout" style={{ padding: '0 50px', marginTop: 64 }}>
             {modals}
             <div>
               <div>

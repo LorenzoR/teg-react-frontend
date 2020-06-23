@@ -44,7 +44,7 @@ const ChatMessagesTab = (props) => {
         )}
         style={{ height: '200px', overflowY: 'scroll', paddingTop: '5px' }}
       />
-      <form onSubmit={submitForm}>
+      <form id="form-chat-msg" onSubmit={submitForm}>
         <input
           type="text"
           value={message}
