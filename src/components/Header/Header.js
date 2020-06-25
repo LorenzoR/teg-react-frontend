@@ -36,13 +36,13 @@ const Header = (props) => {
   return (
     <Row style={{ color: 'white' }}>
       {/* Title */}
-      <Col span={12}>
+      <Col md={12} sm={0}>
         <h1 style={{ color: 'white' }}>Teg Online</h1>
       </Col>
-      <Col span={12}>
+      <Col md={12} sm={24}>
         <Row>
           {/* Current player and round */}
-          <Col span={16}>
+          <Col md={16} sm={14}>
             <strong>Current Turn:</strong> &nbsp;
             <Avatar
               style={{
@@ -54,7 +54,7 @@ const Header = (props) => {
             {props.players[props.round.playerIndex].name} - {getRoundName(props.round.type)} (#{props.round.count})
           </Col>
           {/* Countdown */}
-          <Col span={4}>
+          <Col md={4} sm={6}>
             <Countdown
               title={countDownTitle}
               value={deadline}
@@ -63,7 +63,7 @@ const Header = (props) => {
             />
           </Col>
           {/* Finish round */}
-          <Col span={4}>
+          <Col md={4} sm={4}>
           <Tooltip title="Finish Turn">
             <Button type="danger" shape="round"
                 icon={<CheckCircleOutlined twoToneColor="#52c41a" />} size={'large'}

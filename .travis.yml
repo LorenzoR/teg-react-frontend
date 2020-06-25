@@ -28,4 +28,6 @@ install:
 script:
   # - npm run cypress
   - npm run build
+
+after_success:
   - npm run deploy-s3

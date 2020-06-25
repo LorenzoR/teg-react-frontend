@@ -28,7 +28,6 @@ const NewGame = props => {
   }
 
   const createGame = async () => {
-    debugger;
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}/new-game`);
 
@@ -41,20 +40,19 @@ const NewGame = props => {
 
   return (
     <Layout>
-      <Header>New Game</Header>
+      <Header>
+        <h1 style={{ color: 'white' }}>New Game</h1>
+      </Header>
       <Content>
         <Row>
-          <Col span={12} offset={6}>
+          <Col span={12} offset={6} style={{ backgroundColor: 'white', padding: '10px' }}>
             <h2>Options</h2>
             <Divider style={{ borderColor: 'black' }} />
-          </Col>
-        </Row>
-        <Row>
-          <Col span={12} offset={6}>
+
             <Form
             {...layout}
             name="basic"
-            initialValues={{ remember: true }} >
+            initialValues={{ remember: true, turnTime: 3 }} >
               <Form.Item
                 label="Max. Players"
                 name="maxPlayers"
@@ -67,6 +65,14 @@ const NewGame = props => {
                   <Option value="2">5</Option>
                   <Option value="2">6</Option>
                 </Select>
+              </Form.Item>
+
+              <Form.Item
+                label="Turn Time (minutes)"
+                name="turnTime"
+                rules={[{ required: true, message: 'Please input time per turn!' }]}
+              >
+                <Input />
               </Form.Item>
 
               <Form.Item

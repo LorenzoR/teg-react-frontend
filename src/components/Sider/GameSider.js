@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 import { Layout } from 'antd';
 import { Button, Tooltip } from 'antd';
-import { Card } from 'antd';
+import { Card, Spin } from 'antd';
 
 import {
   LoginOutlined,
@@ -143,9 +143,11 @@ const GameSider = (props) => {
         <p>Defender dices: {props.dices.defender.join(', ')}</p>
       </Card>
       <Card size="small" title="Country" headStyle={cardHeadStyle}>
-        <p>Source: {props.countrySelection.source}</p>
-        <p>Target: {props.countrySelection.target}</p>
-        {actionButtons}
+        <Spin spinning={props.spinnerVisible}>
+          <p>Source: {props.countrySelection.source}</p>
+          <p>Target: {props.countrySelection.target}</p>
+          {actionButtons}
+        </Spin>
       </Card>
       <Players
         players={props.players}
@@ -176,6 +178,7 @@ GameSider.propTypes = {
   getCountryCardHandler: PropTypes.func,
   countriesCount: PropTypes.number,
   countries: PropTypes.object,
+  spinnerVisible: PropTypes.bool,
 };
 
 export default GameSider;

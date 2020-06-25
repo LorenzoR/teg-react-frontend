@@ -180,7 +180,7 @@ class LayoutWrapper extends Component {
     // gameId = '1234';
 
     client.onclose = (event) => {
-      alert(`Closing. ${JSON.stringify(event)}`);
+      // alert(`Closing. ${JSON.stringify(event)}`);
     }
 
     client.onerror = (error) => {
@@ -195,7 +195,7 @@ class LayoutWrapper extends Component {
 
       // Send message to get players
       if (client.readyState === client.OPEN) {
-        setTimeout(() => this.sendMessage({ gameId }, 'getPlayers'), 1500);
+        setTimeout(() => this.sendMessage({ gameId }, 'getPlayers'), 500);
       }
 
       // Try to re-connect
@@ -225,7 +225,6 @@ class LayoutWrapper extends Component {
 
           const { action } = messageData;
 
-          debugger;
           if (action === 'joinGame') {
             if (messageData.body.players) {
               const { players, gameStatus } = messageData.body;
@@ -238,7 +237,6 @@ class LayoutWrapper extends Component {
             const { guests } = messageData.body;
             this.setState({ guests });
           } else if (action === 'gameStarted') {
-            debugger;
             const { players, countries, round, gameStatus, eventsLog } = messageData.body;
 
             this.setState({ players, countries, round, gameStatus, eventsLog });
@@ -295,6 +293,22 @@ class LayoutWrapper extends Component {
               countries[attackerIndex] = attacker;
               countries[defenderIndex] = defender;
 
+              // Show notification
+              notification.info({
+                message: `${attacker.countryKey} attacked ${defender.countryKey}`,
+                description: `${dices.attacker.join(' - ')} vs ${dices.defender.join(' - ')}`,
+                placement: 'topLeft',
+              });
+
+              // Country conqueres, show notification
+              if (countryConquered) {
+                notification.info({
+                  message: 'Country conquered!',
+                  description: `${attacker.countryKey} conquered ${defender.countryKey}`,
+                  placement: 'topLeft',
+                });
+              }
+
               // Show modal to select troops to move after conquer
               if (
                 countryConquered &&
@@ -306,6 +320,9 @@ class LayoutWrapper extends Component {
               }
 
               this.setState({ countries, dices, modals, players });
+
+              // Set spinner not visible
+              this.setMapSpinnerVisibility(false);
             }
           } else if (action === 'troopsMoved') {
             // const { countries } = messageData.body;
@@ -696,6 +713,9 @@ class LayoutWrapper extends Component {
   };
 
   attack = () => {
+    // Set spinner visible
+    this.setMapSpinnerVisibility(true);
+
     console.log(
       `${this.state.countrySelection.source} attacks ${this.state.countrySelection.target}`,
     );
@@ -727,6 +747,8 @@ class LayoutWrapper extends Component {
   }
 
   moveTroops = (troopsToMove) => {
+    // Spinner
+    this.setMapSpinnerVisibility(true);
     console.log(
       `Moving from ${this.state.countrySelection.source} to ${this.state.countrySelection.target}`,
     );
@@ -1050,7 +1072,7 @@ class LayoutWrapper extends Component {
           />
         </Header>
         <Layout>
-          <Content className="site-layout" style={{ padding: '0 50px', marginTop: 64 }}>
+          <Content className="site-layout" style={{ marginTop: 64 }}>
             {modals}
             <div>
               <div>
@@ -1089,6 +1111,7 @@ class LayoutWrapper extends Component {
             getCountryCardHandler={this.getCountryCard}
             countriesCount={playerCountries}
             countries={this.state.countries}
+            spinnerVisible={this.state.spinners.mapVisible}
           />
         </Layout>
         <Footer>Footer</Footer>

@@ -10,7 +10,7 @@ import Oceania from '../Continents/Oceania';
 
 const map = (props) => {
   const mapWidth = '100%'; // 1602.183
-  const mapHeight = '700'; // 938.997
+  const mapHeight = '100%'; // 938.997
 
   if (!props.countries) {
     return <div>Loading...</div>;

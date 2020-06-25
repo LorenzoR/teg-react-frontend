@@ -22,7 +22,6 @@ const SelectPlayerColorModal = (props) => {
   };
 
   const colorClicked = (color) => {
-    debugger;
     setColor(color);
 
     // Check if there was a player with that color already
@@ -109,7 +108,7 @@ const SelectPlayerColorModal = (props) => {
   ];
 
   // Add Start Game button
-  if (!props.gameStatus || props.gameStatus !== 'started') {
+  if (true || !props.gameStatus || props.gameStatus !== 'started') {
     footerButtons.push(
       <Popconfirm
       key="popconfirm"
@@ -147,10 +146,10 @@ const SelectPlayerColorModal = (props) => {
       maskClosable={false}
       okButtonProps={{ disabled: !username || username === '' || !color }}
       footer={footerButtons}
-      width='50%'
+      width='40%'
     >
       <Spin spinning={props.spinnerVisible}>
-        <Row>
+        <Row style={{ textAlign: 'center' }}>
           <Col className="gutter-row" span={12}>
             <Radio.Button
                   onClick={() => colorClicked('BLACK')}
@@ -171,7 +170,7 @@ const SelectPlayerColorModal = (props) => {
             </Radio.Button>
           </Col>
         </Row>
-        <Row>
+        <Row style={{ textAlign: 'center' }}>
           <Col className="gutter-row" span={12}>
            <Radio.Button
               onClick={() => colorClicked('GREEN')}
@@ -193,7 +192,7 @@ const SelectPlayerColorModal = (props) => {
             </Radio.Button>
           </Col>
         </Row>
-        <Row>
+        <Row style={{ textAlign: 'center' }}>
           <Col className="gutter-row" span={12}>
             <Radio.Button
               onClick={() => colorClicked('BLUE')}
