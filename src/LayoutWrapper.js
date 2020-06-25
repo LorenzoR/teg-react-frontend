@@ -336,7 +336,11 @@ class LayoutWrapper extends Component {
             countries[sourceIndex] = source;
             countries[targetIndex] = target;
 
-            this.setState({ countries, round, eventsLog });
+            // Close modal if country was conquered
+            const modals = { ...this.state.modals };
+            modals.countryConqueredVisible = false;
+
+            this.setState({ countries, round, eventsLog, modals });
 
             // Hide spinner
             this.setMapSpinnerVisibility(false);
@@ -870,6 +874,8 @@ class LayoutWrapper extends Component {
 
   // TODO. Rename this
   moveTroopsAfterConquest = (troopsToMove) => {
+    // this.setMapSpinnerVisibility(true);
+
     console.log(`move ${troopsToMove} troops`);
 
     const player = _.find(this.state.players, (obj) => obj.id === this.state.currentPlayerId);
@@ -890,11 +896,13 @@ class LayoutWrapper extends Component {
       // TODO. Handle error
     }
 
+    /*
     // Close modal
     const modals = { ...this.state.modals };
     modals.countryConqueredVisible = false;
 
     this.setState({ modals });
+    */
   };
 
   openNotification = (placement) => {
