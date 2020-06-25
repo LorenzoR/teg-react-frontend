@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Layout } from 'antd';
 import { Row, Col, Button } from 'antd';
 
-const { Header, Footer, Content } = Layout;
+const { Header, Content } = Layout;
 
 const Main = props => {
   return (
