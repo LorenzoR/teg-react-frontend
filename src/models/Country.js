@@ -284,8 +284,8 @@ const Neighbours = {
   BORNEO: ['MALASIA', 'AUSTRALIA'],
   SUMATRA: ['AUSTRALIA', 'INDIA'],
   // Asia
-  INDIA: ['AUSTRALIA', 'MALASIA', 'CHINA', 'IRAN'],
-  MALASIA: ['AUSTRALIA', 'INDIA', 'CHINA'],
+  INDIA: ['MALASIA', 'CHINA', 'IRAN', 'SUMATRA'],
+  MALASIA: ['BORNEO', 'INDIA', 'CHINA'],
   CHINA: [
     'INDIA',
     'MALASIA',
@@ -297,7 +297,7 @@ const Neighbours = {
     'KAMCHATKA',
   ],
   IRAN: ['CHINA', 'RUSIA', 'INDIA', 'GOBI', 'MONGOLIA', 'ARAL', 'TURKEY'],
-  TURKEY: ['IRAN', 'RUSIA', 'POLAND', 'EGYPT'],
+  TURKEY: ['IRAN', 'RUSIA', 'POLAND', 'EGYPT', 'ISRAEL', 'ARABIA'],
   ISRAEL: ['TURKEY', 'ARABIA', 'EGYPT'],
   ARABIA: ['ISRAEL', 'TURKEY'],
   ARAL: ['IRAN', 'RUSIA', 'MONGOLIA', 'SIBERIA', 'TARTARIA'],

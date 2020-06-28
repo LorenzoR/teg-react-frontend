@@ -38,9 +38,10 @@ const bottomTabs = (props) => {
         </TabPane>
         <TabPane tab="Cards" key="2">
           <PlayerCardsTab
-            cards={currentPlayer.cards}
+            currentPlayer={currentPlayer}
             changeCardHandler={props.changeCardHandler}
             changeCardsHandler={props.changeCardsHandler}
+            countries={props.countries}
           />
         </TabPane>
         <TabPane tab="Countries" key="3">
@@ -75,6 +76,7 @@ bottomTabs.propTypes = {
   chatMessages: PropTypes.object,
   sendChatMessageHandler: PropTypes.func,
   markChatMessagesAsReadHandler: PropTypes.func,
+  countries: PropTypes.array,
 };
 
 export default bottomTabs;

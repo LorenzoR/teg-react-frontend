@@ -26,30 +26,42 @@ const PlayerCardsTab = (props) => {
 
   let playerCards;
 
-  if (props.cards.length > 0) {
+  if (props.currentPlayer.cards.length > 0) {
     // playerCards = <ul>;
     playerCards = (
       <div>
         <ul>
-          {props.cards.map((card) => {
+          {props.currentPlayer.cards.map((card) => {
+            const country = _.find(props.countries, { countryKey: card.country });
+            const countryBelongsToPlayer = country.state.player.color === props.currentPlayer.color;
+
+            let button = <span></span>;
+
+            if (countryBelongsToPlayer) {
+              button = (
+                <Button
+                  onClick={() => props.changeCardHandler(card.country)}
+                  disabled={card.exchanged}
+                  
+                >
+                  Change
+                </Button>
+              );
+            }
+
             return (
               <li key={card.country}>
                 <Checkbox onClick={() => clickCard(card.country)}>
                   {card.country} ({card.type}) &nbsp;
                 </Checkbox>
-                <Button
-                  onClick={() => props.changeCardHandler(card.country)}
-                  disabled={card.exchanged}
-                >
-                  Change
-                </Button>
+                {button}
               </li>
             );
           })}
         </ul>
         <Button
           onClick={() => props.changeCardsHandler(checkedCards)}
-          disabled={props.cards.length < 3}
+          disabled={props.currentPlayer.cards.length < 3}
         >
           Change 3 cards
         </Button>
@@ -64,9 +76,11 @@ const PlayerCardsTab = (props) => {
 };
 
 PlayerCardsTab.propTypes = {
-  cards: PropTypes.array,
+  // cards: PropTypes.array,
+  currentPlayer: PropTypes.object,
   changeCardHandler: PropTypes.func,
   changeCardsHandler: PropTypes.func,
+  countries: PropTypes.array,
 };
 
 export default PlayerCardsTab;

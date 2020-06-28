@@ -137,12 +137,8 @@ const GameSider = (props) => {
   }
 
   return (
-    <Sider style={{ color: 'white', marginTop: 64 }}>
-      <Card size="small" title="Last Attack" headStyle={cardHeadStyle}>
-        <p>Attacker dices: {props.dices.attacker.join(', ')}</p>
-        <p>Defender dices: {props.dices.defender.join(', ')}</p>
-      </Card>
-      <Card size="small" title="Country" headStyle={cardHeadStyle}>
+    <Sider style={{ color: 'white', marginTop: '104px' }}>
+      <Card size="small" title="Country Selection" headStyle={cardHeadStyle}>
         <Spin spinning={props.spinnerVisible}>
           <p>Source: {props.countrySelection.source}</p>
           <p>Target: {props.countrySelection.target}</p>

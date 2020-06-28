@@ -4,7 +4,7 @@ import { w3cwebsocket as W3CWebSocket } from 'websocket';
 
 import { Layout } from 'antd';
 import { notification, Modal } from 'antd';
-import { Spin } from 'antd';
+import { Spin, Row, Col } from 'antd';
 
 import Map from './components/Map/Map';
 import BottomTabs from './components/BottomTabs/BottomTabs';
@@ -18,6 +18,8 @@ import GameFinishedModal from './components/Modals/GameFinishedModal';
 
 import Country from './models/Country';
 import RoundType from './models/Round';
+
+import DicesRow from './components/DicesRow/DicesRow';
 
 const { Header, Footer, Content } = Layout;
 
@@ -158,6 +160,7 @@ class LayoutWrapper extends Component {
       mapVisible: false,
       selectPlayerColorVisible: true,
     },
+    attacking: false,
     eventsLog: [],
     chatMessages: {
       unreadCount: 0,
@@ -275,6 +278,7 @@ class LayoutWrapper extends Component {
               dices,
               players,
               countryConquered,
+              eventsLog,
             } = messageData.body;
 
             // A player was killed and attacker won the game
@@ -296,18 +300,10 @@ class LayoutWrapper extends Component {
               // Show notification
               notification.info({
                 message: `${attacker.countryKey} attacked ${defender.countryKey}`,
-                description: `${dices.attacker.join(' - ')} vs ${dices.defender.join(' - ')}`,
+                description: '',
+                // description: `${dices.attacker.join(' - ')} vs ${dices.defender.join(' - ')}`,
                 placement: 'topLeft',
               });
-
-              // Country conqueres, show notification
-              if (countryConquered) {
-                notification.info({
-                  message: 'Country conquered!',
-                  description: `${attacker.countryKey} conquered ${defender.countryKey}`,
-                  placement: 'topLeft',
-                });
-              }
 
               // Show modal to select troops to move after conquer
               if (
@@ -319,10 +315,19 @@ class LayoutWrapper extends Component {
                 modals.countryConqueredVisible = true;
               }
 
-              this.setState({ countries, dices, modals, players });
-
-              // Set spinner not visible
-              this.setMapSpinnerVisibility(false);
+              setTimeout(() => {
+                // Country conquered, show notification
+                if (countryConquered) {
+                  notification.info({
+                    message: 'Country conquered!',
+                    description: `${attacker.countryKey} conquered ${defender.countryKey}`,
+                    placement: 'topLeft',
+                  });
+                }
+                // Set spinner not visible
+                this.setMapSpinnerVisibility(false);
+                this.setState({ countries, dices, modals, players, eventsLog, attacking: false });
+              }, 1000);
             }
           } else if (action === 'troopsMoved') {
             // const { countries } = messageData.body;
@@ -495,8 +500,19 @@ class LayoutWrapper extends Component {
             });
             
             this.setState({ chatMessages });
-          }
+          } else if (action === 'error') {
+            const { errorMsg } = messageData.body;
           
+            // Error message
+            notification.error({
+              message: 'Error',
+              description: errorMsg,
+              placement: 'topLeft',
+            });
+
+            // Hide spinner
+            this.setMapSpinnerVisibility(false);
+          }
         }
       }
     };
@@ -570,7 +586,10 @@ class LayoutWrapper extends Component {
       } else if (!this.state.countrySelection.target) {
         if (!Country.areNeighbours(this.state.countrySelection.source, countryKey)) {
           // If they are not neighbours, reset source selection
-          countrySelection.source = countryKey;
+          // Check country belongs to player
+          if (country.state.player.color === player.color) {
+            countrySelection.source = countryKey;
+          }
         }
         else if (this.state.countrySelection.source !== this.state.countrySelection.target) {
           // Select destiny
@@ -719,6 +738,8 @@ class LayoutWrapper extends Component {
   attack = () => {
     // Set spinner visible
     this.setMapSpinnerVisibility(true);
+    // Set attacking flag and some dices just to show animation
+    this.setState({ attacking: true, dices: { attacker: [1,1,1], defender: [1,1,1] } });
 
     console.log(
       `${this.state.countrySelection.source} attacks ${this.state.countrySelection.target}`,
@@ -1083,7 +1104,12 @@ class LayoutWrapper extends Component {
           <Content className="site-layout" style={{ marginTop: 64 }}>
             {modals}
             <div>
-              <div>
+            <Row>
+              <Col span={24}>
+                <DicesRow dices={this.state.dices} attacking={this.state.attacking} />
+              </Col>
+            </Row>
+              <div style={{ padding: '40px 0'}}>
                 <Spin spinning={this.state.spinners.mapVisible}>
                   <Map
                     countries={this.state.countries}
@@ -1101,6 +1127,7 @@ class LayoutWrapper extends Component {
                 sendChatMessageHandler={this.sendChatMessage}
                 markChatMessagesAsReadHandler={this.markChatMessagesAsRead}
                 chatMessages={this.state.chatMessages}
+                countries={this.state.countries}
               />
             </div>
           </Content>
