@@ -521,6 +521,7 @@ class LayoutWrapper extends Component {
     };
   }
 
+  // Send websocket message
   sendMessage = (data, action) => {
     client.send(
       JSON.stringify({
@@ -553,6 +554,7 @@ class LayoutWrapper extends Component {
     this.setState({ countries });
   }
 
+  // Show popup with player's mission
   showPlayerMission = (players) => {
     let missionText;
     players.forEach((player) => {
@@ -635,33 +637,6 @@ class LayoutWrapper extends Component {
     this.setState({ countrySelection });
   };
 
-  shuffleArray = (array) => {
-    const shuffledArray = [...array];
-
-    for (let i = shuffledArray.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * i);
-      const temp = shuffledArray[i];
-      shuffledArray[i] = shuffledArray[j];
-      shuffledArray[j] = temp;
-    }
-
-    return shuffledArray;
-  };
-
-  getCountriesByPlayer(playerIndex) {
-    const player = this.state.players[playerIndex];
-    const countries = [];
-
-    Object.keys(this.state.countries).forEach((countryKey) => {
-      const country = this.state.countries[countryKey];
-      if (country.state.player.id === player.id) {
-        countries.push(country);
-      }
-    });
-
-    return countries;
-  }
-
   finishRound = () => {
     // Set spinner visible
     this.setMapSpinnerVisibility(true);
@@ -739,7 +714,7 @@ class LayoutWrapper extends Component {
   };
 
   canMove = (source, target) => {
-    if (source.state.player.name !== target.state.player.name) {
+    if (source.state.player.color !== target.state.player.color) {
       return false;
     }
 
@@ -748,10 +723,6 @@ class LayoutWrapper extends Component {
     }
 
     // Can move
-    return true;
-  };
-
-  playerCanGetCard = (player) => {
     return true;
   };
 
@@ -903,14 +874,6 @@ class LayoutWrapper extends Component {
     } else {
       // TODO. Handle error
     }
-  }
-
-  throwDice = () => {
-    return Math.floor(Math.random() * 6) + 1;
-  };
-
-  tabChangeCallback = (key) => {
-    console.log(key);
   };
 
   // TODO. Rename this
@@ -961,45 +924,6 @@ class LayoutWrapper extends Component {
     // this.finishRound();
   };
 
-  changeCountryCard = (country) => {
-    console.log('cambio ' + country);
-    const countries = [ ...this.state.countries ];
-    const cardCountry = _.find(countries, function (o) {
-      return o.countryKey === country;
-    });
-
-    if (!cardCountry) {
-      // TODO. Handle error
-      return null;
-    }
-
-    const players = [...this.state.players];
-    const player = players[this.state.round.playerIndex];
-
-    if (cardCountry.state.player.name !== player.name) {
-      // TODO. Handle error
-      console.error('Player does not have this country');
-      return null;
-    }
-
-    const card = _.find(player.cards, function (card) {
-      return card.country === country;
-    });
-
-    if (!card) {
-      // TODO. Handle error
-      return null;
-    }
-
-    // Add troops
-    cardCountry.state.troops += 2;
-
-    // Set as exchanged
-    card.exchanged = true;
-
-    this.setState({ players });
-  };
-
   joinGameHandler = (username, color) => {
     // Send message
     this.sendMessage(
@@ -1022,20 +946,7 @@ class LayoutWrapper extends Component {
     this.sendMessage({ gameId }, 'startGame');
   };
 
-  showModal = () => {
-    this.setState({
-      visible: true,
-    });
-  };
-
   handleCancel = (e) => {
-    console.log(e);
-    this.setState({
-      visible: false,
-    });
-  };
-
-  handleOk = (e) => {
     console.log(e);
     this.setState({
       visible: false,

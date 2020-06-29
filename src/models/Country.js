@@ -317,7 +317,7 @@ class Country {
 
   static canAttack(source, target) {
     // Same player
-    if (source.state.player.name === target.state.player.name) {
+    if (source.state.player.color === target.state.player.color) {
       return false;
     }
 
