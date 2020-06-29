@@ -4,7 +4,7 @@ import { w3cwebsocket as W3CWebSocket } from 'websocket';
 
 import { Layout } from 'antd';
 import { notification, Modal } from 'antd';
-import { Spin, Row, Col } from 'antd';
+import { Spin, Row, Col, Alert } from 'antd';
 
 import Map from './components/Map/Map';
 import BottomTabs from './components/BottomTabs/BottomTabs';
@@ -243,6 +243,9 @@ class LayoutWrapper extends Component {
             const { players, countries, round, gameStatus, eventsLog } = messageData.body;
 
             this.setState({ players, countries, round, gameStatus, eventsLog });
+
+            // Show mission
+            this.showPlayerMission(players);
           } else if (action === 'connectionId') {
             const { connectionId } = messageData.body;
             const modals = { ...this.state.modals };
@@ -548,6 +551,23 @@ class LayoutWrapper extends Component {
     });
 
     this.setState({ countries });
+  }
+
+  showPlayerMission = (players) => {
+    let missionText;
+    players.forEach((player) => {
+      if (player.mission) {
+        missionText = player.mission.text;
+      }
+    })
+
+    Modal.info({
+      title: 'Mission',
+      content: (
+        <Alert message={missionText} type="info" />
+      ),
+      onOk() {},
+    });
   }
 
   showStartTurnNotifiction = (roundType) => {
