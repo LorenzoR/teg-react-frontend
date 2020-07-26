@@ -56,7 +56,7 @@ const AttackRoundButtons = (props) => {
                         icon={<CreditCardOutlined />}
                         onClick={() => props.getCountryCardHandler()}
                     >
-                        Cards
+                        Get Card
                     </Button>
                 </Tooltip>
         </>

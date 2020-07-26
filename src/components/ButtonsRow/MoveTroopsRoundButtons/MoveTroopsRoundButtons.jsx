@@ -66,7 +66,7 @@ const MoveTroopsRoundButtons = (props) => {
                     || !props.players[props.round.playerIndex].canGetCard
                 }
             >
-                Get Card
+                Cards
             </Button>
             </Tooltip>
         </>
