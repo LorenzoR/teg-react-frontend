@@ -12,7 +12,11 @@ const ButtonsRow = (props) => {
 
     let buttons;
 
-    if (props.round.type === RoundType.ATTACK) {
+    if ([
+        RoundType.ATTACK,
+        RoundType.MOVE_TROOPS,
+        RoundType.GET_CARD,
+    ].includes(props.round.type)) {
         buttons = (
             <AttackRoundButtons
                 attackHandler={props.attackHandler}
