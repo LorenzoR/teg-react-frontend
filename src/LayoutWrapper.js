@@ -20,6 +20,7 @@ import Country from './models/Country';
 import RoundType from './models/Round';
 
 import DicesRow from './components/DicesRow/DicesRow';
+import ButtonsRow from './components/ButtonsRow/ButtonsRow';
 
 const { Header, Footer, Content } = Layout;
 
@@ -305,7 +306,7 @@ class LayoutWrapper extends Component {
                 message: `${attacker.countryKey} attacked ${defender.countryKey}`,
                 description: '',
                 // description: `${dices.attacker.join(' - ')} vs ${dices.defender.join(' - ')}`,
-                placement: 'topLeft',
+                placement: 'bottomLeft',
               });
 
               // Show modal to select troops to move after conquer
@@ -324,7 +325,7 @@ class LayoutWrapper extends Component {
                   notification.info({
                     message: 'Country conquered!',
                     description: `${attacker.countryKey} conquered ${defender.countryKey}`,
-                    placement: 'topLeft',
+                    placement: 'bottomLeft',
                   });
                 }
                 // Set spinner not visible
@@ -393,7 +394,7 @@ class LayoutWrapper extends Component {
             notification.info({
               message: `Player disconnected`,
               description: `Player ${disconnectedPlayerName} got disconnected`,
-              placement: 'topLeft',
+              placement: 'bottomLeft',
             });
           } else if (action === 'guestDisconnected') {
             // Guest disconnected
@@ -439,7 +440,7 @@ class LayoutWrapper extends Component {
             notification.info({
               message: `Player connected`,
               description: `Player ${reConnectedPlayerName} back online`,
-              placement: 'topLeft',
+              placement: 'bottomLeft',
             });
 
             this.setState({ players });
@@ -455,7 +456,7 @@ class LayoutWrapper extends Component {
               notification.info({
                 message: `Country card`,
                 description: `Player ${playerName} got a card`,
-                placement: 'topLeft',
+                placement: 'bottomLeft',
               });
             }
 
@@ -469,7 +470,7 @@ class LayoutWrapper extends Component {
             notification.info({
               message: `Country card`,
               description: `Card exchanged`,
-              placement: 'topLeft',
+              placement: 'bottomLeft',
             });
 
             this.setState({ countries, players });
@@ -480,7 +481,7 @@ class LayoutWrapper extends Component {
             notification.info({
               message: `Country card`,
               description: `Cards exchanged`,
-              placement: 'topLeft',
+              placement: 'bottomLeft',
             });
 
             this.setState({ players });
@@ -510,7 +511,7 @@ class LayoutWrapper extends Component {
             notification.error({
               message: 'Error',
               description: errorMsg,
-              placement: 'topLeft',
+              placement: 'bottomLeft',
             });
 
             // Hide spinner
@@ -589,7 +590,7 @@ class LayoutWrapper extends Component {
     notification.info({
       message: 'Your turn!',
       description,
-      placement: 'topLeft',
+      placement: 'bottomLeft',
     });
   }
 
@@ -1035,11 +1036,26 @@ class LayoutWrapper extends Component {
           <Content className="site-layout" style={{ marginTop: 64 }}>
             {modals}
             <div>
-            <Row>
-              <Col span={24}>
-                <DicesRow dices={this.state.dices} attacking={this.state.attacking} />
-              </Col>
-            </Row>
+              {(false && (
+              <Row>
+                <Col span={24}>
+                  <DicesRow dices={this.state.dices} attacking={this.state.attacking} />
+                </Col>
+              </Row>
+              ))}
+              <ButtonsRow
+                round={this.state.round}
+                addTroopsHandler={this.addTroops}
+                removeTroopsHandler={this.removeTroops}
+                currentPlayerId={this.state.currentPlayerId}
+                players={this.state.players}
+                countrySelection={this.state.countrySelection}
+                countries={this.state.countries}
+                attackHandler={this.attack}
+                moveTroopsHandler={this.moveTroops}
+                spinnerVisible={this.state.spinners.mapVisible}
+                getCountryCardHandler={this.getCountryCard}
+              />
               <div style={{ padding: '40px 0'}}>
                 <Spin spinning={this.state.spinners.mapVisible}>
                   <Map
@@ -1078,6 +1094,7 @@ class LayoutWrapper extends Component {
             countriesCount={playerCountries}
             countries={this.state.countries}
             spinnerVisible={this.state.spinners.mapVisible}
+            attacking={this.state.attacking}
           />
         </Layout>
         <Footer>Footer</Footer>

@@ -1325,7 +1325,7 @@ const map = (props) => {
 };
 
 map.propTypes = {
-  countries: PropTypes.object,
+  countries: PropTypes.array,
   countrySelection: PropTypes.object,
   countryClickedHandler: PropTypes.func,
 };

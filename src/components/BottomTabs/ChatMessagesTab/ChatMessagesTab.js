@@ -9,6 +9,7 @@ const ChatMessagesTab = (props) => {
   const [message, setMessage] = useState('');
 
   const submitForm = (event) => {
+    debugger;
     event.preventDefault();
     props.sendChatMessageHandler(message);
 
@@ -51,7 +52,7 @@ const ChatMessagesTab = (props) => {
           onChange={handleChange}
           autoComplete="off"
         />
-        <Button type="primary" disabled={!message || message === ''} >
+        <Button type="primary" disabled={!message || message === ''} htmlType="submit" >
           Send
         </Button>
       </form>

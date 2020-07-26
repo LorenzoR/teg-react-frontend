@@ -21,7 +21,7 @@ const ActivityTab = (props) => {
         const rowClass = index % 2 === 0 ? 'oddRow' : 'evenRow';
         return (
           <Timeline.Item color={getColorByActivityType(activity.playerColor)}>
-            <span className={rowClass}>
+            <span key={activity.time} className={rowClass}>
               <strong>[{formatTimestamp(activity.time)}]</strong> {activity.text}
             </span>
           </Timeline.Item>

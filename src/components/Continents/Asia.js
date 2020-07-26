@@ -133,7 +133,7 @@ const asia = (props) => {
 };
 
 asia.propTypes = {
-  countries: PropTypes.object,
+  countries: PropTypes.array,
   countrySelection: PropTypes.object,
   countryClicked: PropTypes.func,
 };

@@ -146,7 +146,7 @@ const SelectPlayerColorModal = (props) => {
       maskClosable={false}
       okButtonProps={{ disabled: !username || username === '' || !color }}
       footer={footerButtons}
-      width='40%'
+      width="40%"
     >
       <Spin spinning={props.spinnerVisible}>
         <Row style={{ textAlign: 'center' }}>
@@ -155,7 +155,8 @@ const SelectPlayerColorModal = (props) => {
                   onClick={() => colorClicked('BLACK')}
                   disabled={buttonsDisabled.black}
                   checked={color === 'BLACK'}
-                  style={{ background: 'black', color: 'white' }} >
+                  style={{ background: 'black', color: 'white', minWidth: '70%' }}
+            >
               {radioButtonNames.black}
             </Radio.Button>
           </Col>
@@ -164,7 +165,7 @@ const SelectPlayerColorModal = (props) => {
               onClick={() => colorClicked('PINK')}
               disabled={buttonsDisabled.pink}
               checked={color === 'PINK'}
-              style={{ background: 'pink' }}
+              style={{ background: 'pink', minWidth: '70%' }}
             >
               {radioButtonNames.pink}
             </Radio.Button>
@@ -176,7 +177,7 @@ const SelectPlayerColorModal = (props) => {
               onClick={() => colorClicked('GREEN')}
               disabled={buttonsDisabled.green}
               checked={color === 'GREEN'}
-              style={{ background: 'green' }}
+              style={{ background: 'green', minWidth: '70%' }}
             >
               {radioButtonNames.green}
             </Radio.Button>
@@ -186,7 +187,7 @@ const SelectPlayerColorModal = (props) => {
               onClick={() => colorClicked('RED')}
               disabled={buttonsDisabled.red}
               checked={color === 'RED'}
-              style={{ background: 'red' }}
+              style={{ background: 'red', minWidth: '70%' }}
             >
               {radioButtonNames.red}
             </Radio.Button>
@@ -198,7 +199,7 @@ const SelectPlayerColorModal = (props) => {
               onClick={() => colorClicked('BLUE')}
               disabled={buttonsDisabled.blue}
               checked={color === 'BLUE'}
-              style={{ background: 'blue' }}
+              style={{ background: 'blue', minWidth: '70%' }}
             >
               {radioButtonNames.blue}
             </Radio.Button>
@@ -208,7 +209,7 @@ const SelectPlayerColorModal = (props) => {
               onClick={() => colorClicked('YELLOW')}
               disabled={buttonsDisabled.yellow}
               checked={color === 'YELLOW'}
-              style={{ background: 'yellow' }}
+              style={{ background: 'yellow', minWidth: '70%' }}
             >
               {radioButtonNames.yellow}
             </Radio.Button>
@@ -219,10 +220,10 @@ const SelectPlayerColorModal = (props) => {
           <Col span={24}>
             <Input
               placeholder="Name"
-              maxLength={30}
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               disabled={userSubmitted || props.gameStatus === 'started'}
+              maxLength={20}
             />
           </Col>
         </Row>
