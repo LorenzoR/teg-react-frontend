@@ -39,6 +39,7 @@ const ButtonsRow = (props) => {
                 players={props.players}
                 countrySelection={props.countrySelection}
                 countries={props.countries}
+                countryCardsModalHandler={props.countryCardsModalHandler}
             />
         );
     }
@@ -68,6 +69,7 @@ ButtonsRow.propTypes = {
     countries: PropTypes.array,
     spinnerVisible: PropTypes.bool,
     getCountryCardHandler: PropTypes.func,
+    countryCardsModalHandler: PropTypes.func,
 };
 
 export default ButtonsRow;

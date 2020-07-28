@@ -4,7 +4,7 @@ import { w3cwebsocket as W3CWebSocket } from 'websocket';
 
 import { Layout } from 'antd';
 import { notification, Modal } from 'antd';
-import { Spin, Row, Col, Alert } from 'antd';
+import { Spin, Alert } from 'antd';
 
 import Map from './components/Map/Map';
 import BottomTabs from './components/BottomTabs/BottomTabs';
@@ -15,11 +15,11 @@ import GameSider from './components/Sider/GameSider';
 import CountryConqueredModal from './components/Modals/CountryConqueredModal';
 import SelectPlayerColorModal from './components/Modals/SelectPlayerColorModal';
 import GameFinishedModal from './components/Modals/GameFinishedModal';
+import CountryCardsModal from './components/Modals/CountryCardsModal';
 
 import Country from './models/Country';
 import RoundType from './models/Round';
 
-import DicesRow from './components/DicesRow/DicesRow';
 import ButtonsRow from './components/ButtonsRow/ButtonsRow';
 
 const { Header, Footer, Content } = Layout;
@@ -156,6 +156,7 @@ class LayoutWrapper extends Component {
       chooseColorVisible: true,
       countryConqueredVisible: false,
       gameFinishedVisible: false,
+      countryCardsVisible: false,
     },
     spinners: {
       mapVisible: false,
@@ -968,6 +969,13 @@ class LayoutWrapper extends Component {
     }
   };
 
+  toggleCoutryCardsModalVisibility = () => {
+    const modals = { ...this.state.modals };
+    modals.countryCardsVisible = !modals.countryCardsVisible;
+
+    this.setState({ modals });
+  }
+
   render() {
     let currentPlayer;
 
@@ -1006,7 +1014,14 @@ class LayoutWrapper extends Component {
         <GameFinishedModal
           visible={this.state.modals.gameFinishedVisible}
           winner={this.state.winner}
-          okHandler={this.reConnect} />
+          okHandler={this.reConnect}
+        />
+        <CountryCardsModal
+          visible={this.state.modals.countryCardsVisible}
+          currentPlayer={this.state.currentPlayer}
+          countries={this.state.countries}
+          countryCardsModalHandler={this.toggleCoutryCardsModalVisibility}
+        />
       </div>
     );
 
@@ -1036,13 +1051,6 @@ class LayoutWrapper extends Component {
           <Content className="site-layout" style={{ marginTop: 64 }}>
             {modals}
             <div>
-              {(false && (
-              <Row>
-                <Col span={24}>
-                  <DicesRow dices={this.state.dices} attacking={this.state.attacking} />
-                </Col>
-              </Row>
-              ))}
               <ButtonsRow
                 round={this.state.round}
                 addTroopsHandler={this.addTroops}
@@ -1055,6 +1063,7 @@ class LayoutWrapper extends Component {
                 moveTroopsHandler={this.moveTroops}
                 spinnerVisible={this.state.spinners.mapVisible}
                 getCountryCardHandler={this.getCountryCard}
+                countryCardsModalHandler={this.toggleCoutryCardsModalVisibility}
               />
               <div style={{ padding: '40px 0'}}>
                 <Spin spinning={this.state.spinners.mapVisible}>

@@ -5,7 +5,6 @@ import { Button, Tooltip } from 'antd';
 import { PlusCircleOutlined, MinusCircleOutlined, CreditCardOutlined } from '@ant-design/icons';
 
 import Country from '../../../models/Country';
-import RoundType from '../../../models/Round';
 
 const MoveTroopsRoundButtons = (props) => {
     if (!props.players || props.players.length === 0 || !props.round) {
@@ -15,7 +14,6 @@ const MoveTroopsRoundButtons = (props) => {
     let canAddTroops = false;
 
     const source = _.find(props.countries, { countryKey: props.countrySelection.source});
-    // const target = _.find(props.countries, { countryKey: props.countrySelection.target});
     const currentPlayer = _.find(
         props.players,
         (obj) => obj.id === props.currentPlayerId,
@@ -54,17 +52,12 @@ const MoveTroopsRoundButtons = (props) => {
                     Remove Troops
                 </Button>
             </Tooltip>
-            <Tooltip title="Get Card">
+            <Tooltip title="Cards">
             <Button
                 type="primary"
                 shape="round"
                 icon={<CreditCardOutlined />}
-                onClick={() => props.getCountryCardHandler()}
-                disabled={
-                    !props.round
-                    || props.round.type === RoundType.ADD_TROOPS
-                    || !props.players[props.round.playerIndex].canGetCard
-                }
+                onClick={() => props.countryCardsModalHandler()}
             >
                 Cards
             </Button>
@@ -81,6 +74,7 @@ MoveTroopsRoundButtons.propTypes = {
     players: PropTypes.array,
     countrySelection: PropTypes.object,
     countries: PropTypes.array,
+    countryCardsModalHandler: PropTypes.func,
 };
 
 export default MoveTroopsRoundButtons;

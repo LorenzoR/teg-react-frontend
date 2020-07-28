@@ -55,6 +55,10 @@ const AttackRoundButtons = (props) => {
                         shape="round"
                         icon={<CreditCardOutlined />}
                         onClick={() => props.getCountryCardHandler()}
+                        disabled={
+                            props.round.type === RoundType.ADD_TROOPS ||
+                            !props.players[props.round.playerIndex].canGetCard
+                        }
                     >
                         Get Card
                     </Button>
