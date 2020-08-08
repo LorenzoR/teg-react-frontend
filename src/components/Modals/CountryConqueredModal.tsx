@@ -3,7 +3,14 @@ import PropTypes from 'prop-types';
 
 import { Modal, Button } from 'antd';
 
-const countryConqueredModal = (props) => {
+export interface Props {
+  title: string;
+  troops: number;
+  countryConqueredModalVisible: boolean;
+  moveTroopsHandler: (troops: number) => void;
+}
+
+const countryConqueredModal = (props: Props) => {
   return (
     <Modal
       visible={props.countryConqueredModalVisible}

@@ -173,7 +173,6 @@ class LayoutWrapper extends Component {
   componentWillMount() {
     // Websocket
     // const query = new URLSearchParams(useLocation().search);
-    // debugger;
     // const query = new URLSearchParams(this.props.location.search);
     // console.log(query.get('game_id'));
     // gameId = query.get('game_id');
@@ -294,6 +293,8 @@ class LayoutWrapper extends Component {
               
               this.setState({ modals, winner });
             } else {
+              this.setMapSpinnerVisibility(true);
+              this.setState({ attacking: true, dices });
               const countries = [ ...this.state.countries ];
               const modals = { ...this.state.modals };
               const attackerIndex = _.findIndex(countries, { countryKey: attacker.countryKey });
@@ -596,6 +597,11 @@ class LayoutWrapper extends Component {
   }
 
   countryClicked = (countryKey) => {
+    // Only current player can click a country
+    if (this.state.players[this.state.round.playerIndex].color !== this.state.currentPlayer.color) {
+      return null;
+    }
+
     const player = this.state.currentPlayer;
     const countrySelection = { ...this.state.countrySelection };
     const country = _.find(this.state.countries, { countryKey: countryKey });

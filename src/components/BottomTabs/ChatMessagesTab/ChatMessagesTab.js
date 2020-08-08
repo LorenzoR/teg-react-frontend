@@ -9,7 +9,6 @@ const ChatMessagesTab = (props) => {
   const [message, setMessage] = useState('');
 
   const submitForm = (event) => {
-    debugger;
     event.preventDefault();
     props.sendChatMessageHandler(message);
 

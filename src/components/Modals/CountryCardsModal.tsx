@@ -4,15 +4,25 @@ import _ from 'lodash';
 
 import { Modal, Button, Checkbox, Alert } from 'antd';
 
-const CountryCardsModal = (props) => {
-  const [checkedCards, setCheckedCards] = useState([]);
+export interface Props {
+  currentPlayer: any;
+  countries: any;
+  visible: boolean;
+  changeCardHandler: (cardCountry: string) => void;
+  changeCardsHandler: (cards: string[]) => void;
+  countryCardsModalHandler: () => void;
+}
+
+const CountryCardsModal = (props: Props) => {
+  const initialState: string[] = [];
+  const [checkedCards, setCheckedCards] = useState(initialState);
 
   if (!props.currentPlayer || !props.currentPlayer.cards) {
     return null;
   }
 
-  const clickCard = (country) => {
-    const cards = [...checkedCards];
+  const clickCard = (country: string) => {
+    const cards: string[] = [...checkedCards];
 
     if (!_.find(cards, (obj) => obj === country)) {
       // Add card
@@ -35,7 +45,7 @@ const CountryCardsModal = (props) => {
     playerCards = (
       <div>
         <ul>
-          {props.currentPlayer.cards.map((card) => {
+          {props.currentPlayer.cards.map((card: any) => {
             const country = _.find(props.countries, { countryKey: card.country });
             const countryBelongsToPlayer = country.state.player.color === props.currentPlayer.color;
 

@@ -59,7 +59,7 @@ const MoveTroopsRoundButtons = (props) => {
                 icon={<CreditCardOutlined />}
                 onClick={() => props.countryCardsModalHandler()}
             >
-                Cards
+                My Cards
             </Button>
             </Tooltip>
         </>
