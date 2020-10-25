@@ -7,6 +7,7 @@ import { Statistic } from 'antd';
 import {
   UserOutlined, CheckCircleOutlined,
 } from '@ant-design/icons';
+import Player from 'src/models/Player';
 
 interface Round {
   playerIndex: number;
@@ -14,15 +15,10 @@ interface Round {
   count: number;
 }
 
-interface Player {
-  color: string;
-  name: string;
-}
-
 interface Props {
   round: Round;
   players: Player[];
-  currentPlayer: Player;
+  currentPlayer: Player | undefined;
   onCounterFinish: () => void;
   finishRoundHandler: () => void;
 }
@@ -40,8 +36,8 @@ const getRoundName = (roundType: string) => {
   }
 }
 
-const Header = (props: Props) => {
-  if (!props.players || !props.round) {
+const GameHeader = (props: Props) => {
+  if (!props.players || !props.players.length || props.round.playerIndex < 0) {
     return <div></div>;
   }
 
@@ -96,4 +92,4 @@ const Header = (props: Props) => {
   );
 };
 
-export default Header;
+export default GameHeader;

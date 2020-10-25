@@ -14,7 +14,7 @@ import ChatMessagesTab from './ChatMessagesTab/ChatMessagesTab';
 const { TabPane } = Tabs;
 
 interface ChatMessage {
-  messages: [];
+  messages: { title: string, color: string, text: string }[];
   unreadCount: number;
 }
 
@@ -24,9 +24,9 @@ interface Props {
   eventsLog: [];
   chatMessages: ChatMessage;
   countries: [];
-  changeCardHandler: () => void;
-  changeCardsHandler: () => void;
-  sendChatMessageHandler: () => void;
+  changeCardHandler: (cardCountry: string) => void;
+  changeCardsHandler: (cards: string[]) => void;
+  sendChatMessageHandler: (message: string) => void;
   markChatMessagesAsReadHandler: () => void;
 }
 

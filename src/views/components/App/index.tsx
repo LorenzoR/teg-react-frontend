@@ -2,10 +2,10 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import './App.css';
-import store from './store';
-import LayoutWrapper from './views/LayoutWrapper';
-import NewGame from './NewGame';
-import Main from './Main';
+import store from '../../../store';
+import LayoutWrapper from '../LayoutWrapper';
+import NewGame from '../NewGame';
+import Main from '../Main';
 
 function App() {
   return (

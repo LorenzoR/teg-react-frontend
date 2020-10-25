@@ -16,6 +16,10 @@ class Player {
     mission: Mission = {
         text: '',
     };
+    color: string = '';
+    cards: { type: string } [] = [];
+    isAdmin: boolean = false;
+    name: string = '';
 
     static getPlayerTypes() {
         return PlayerTypes;

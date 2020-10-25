@@ -1,3 +1,9 @@
+export interface Round {
+  playerIndex: number;
+  type: string;
+  count: number;
+}
+
 const RoundType = {
   FIRST_ADD_TROOPS: 'firstAddTroops',
   SECOND_ADD_TROOPS: 'secondAddTroops',

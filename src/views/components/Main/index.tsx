@@ -6,7 +6,7 @@ import { Row, Col, Button } from 'antd';
 
 const { Header, Content } = Layout;
 
-const Main = props => {
+const Main = () => {
   return (
     <Layout>
       <Header>

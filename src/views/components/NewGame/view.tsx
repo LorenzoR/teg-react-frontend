@@ -8,6 +8,8 @@ import { Row, Col } from 'antd';
 import { Form, Input, Button, Checkbox, Select } from 'antd';
 import { Divider } from 'antd';
 
+import i18n from './i18n';
+
 const { Header, Footer, Content } = Layout;
 
 const { Option } = Select;
@@ -20,7 +22,11 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
-const NewGame = props => {
+export interface Props {
+  language: string;
+}
+
+const NewGame = (props: Props) => {
   const history = useHistory();
 
   const handleChange = () => {
@@ -38,10 +44,12 @@ const NewGame = props => {
     }
   }
 
+  const language: 'en' | 'es' = props.language as ('en' | 'es');
+
   return (
     <Layout>
       <Header>
-        <h1 style={{ color: 'white' }}>New Game</h1>
+        <h1 style={{ color: 'white' }}>{i18n.newGame[language]}</h1>
       </Header>
       <Content>
         <Row>
@@ -104,7 +112,7 @@ const NewGame = props => {
           </Col>
         </Row>
       </Content>
-      <Footer>Footer</Footer>
+      <Footer>&nbsp;</Footer>
     </Layout>
   );
 };
