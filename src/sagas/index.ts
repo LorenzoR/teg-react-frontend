@@ -25,7 +25,7 @@ function* fetchUser(action: InitGame) {
 */
 function* mySaga() {
     yield all([
-        yield takeEvery(ActionTypes.INIT_GAME, fetchUser),
+        yield takeEvery(ActionTypes.GameActionTypes.INIT_GAME, fetchUser),
     ]);
 }
 

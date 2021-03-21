@@ -8,19 +8,22 @@ import {
   UserOutlined, CheckCircleOutlined,
 } from '@ant-design/icons';
 import Player from 'src/models/Player';
+import { RequestFinishRound } from 'src/ops/game/actions';
 
 interface Round {
-  playerIndex: number;
-  type: string;
-  count: number;
+    playerIndex: number;
+    type: string;
+    count: number;
 }
 
-interface Props {
-  round: Round;
-  players: Player[];
-  currentPlayer: Player | undefined;
-  onCounterFinish: () => void;
-  finishRoundHandler: () => void;
+export interface Props {
+    gameId: string;
+    round: Round;
+    players: Player[];
+    currentPlayer: Player | undefined;
+
+    onCounterFinish: () => void;
+    finishRoundHandler: (payload: RequestFinishRound['payload']) => void;
 }
 
 const { Countdown } = Statistic;
@@ -39,6 +42,14 @@ const getRoundName = (roundType: string) => {
 const GameHeader = (props: Props) => {
   if (!props.players || !props.players.length || props.round.playerIndex < 0) {
     return <div></div>;
+  }
+
+  const finishRound = () => {
+      props.finishRoundHandler({
+          gameId: props.gameId,
+          playerId: props.currentPlayer?.id || '',
+          playerColor: props.currentPlayer?.color || '',
+      });
   }
 
   const deadline = Date.now() + 1000 * 60 * 3; // 3 minutes (Moment is also OK)
@@ -80,7 +91,7 @@ const GameHeader = (props: Props) => {
           <Tooltip title="Finish Turn">
             <Button type="primary" shape="round" danger
                 icon={<CheckCircleOutlined twoToneColor="#52c41a" />} size={'large'}
-                onClick={() => props.finishRoundHandler()}
+                onClick={() => finishRound()}
                 disabled={!props.currentPlayer || props.currentPlayer.color !== props.players[props.round.playerIndex].color} >
               Finish Turn
             </Button>

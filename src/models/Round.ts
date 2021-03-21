@@ -1,5 +1,6 @@
 export interface Round {
   playerIndex: number;
+  playerColor: string;
   type: string;
   count: number;
 }

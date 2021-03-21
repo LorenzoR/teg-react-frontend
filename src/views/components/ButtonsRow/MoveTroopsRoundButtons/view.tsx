@@ -1,13 +1,31 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { Button, Tooltip } from 'antd';
 import { PlusCircleOutlined, MinusCircleOutlined, CreditCardOutlined } from '@ant-design/icons';
 
-import Country from 'src/models/Country';
+import { RemoveCountryTroops } from 'src/state/game/actions';
+import { RequestAddTroops } from 'src/ops/game/actions';
+import CountryService from 'src/services/game/countryService';
 
-const MoveTroopsRoundButtons = (props: any) => {
+export interface Props {
+    round: any;
+    currentPlayerId: string;
+    players: any[];
+    countrySelection: any;
+    countries: any[];
+
+    addTroopsHandler: (payload: RequestAddTroops['payload']) => void;
+    removeTroopsHandler: (payload: RemoveCountryTroops['payload']) => void;
+    countryCardsModalHandler: () => void;
+}
+
+const MoveTroopsRoundButtons = (props: Props) => {
+    debugger;
     if (!props.players || props.players.length === 0 || !props.round) {
+        return <div></div>;
+    }
+
+    if (!props.currentPlayerId) {
         return <div></div>;
     }
     
@@ -20,11 +38,23 @@ const MoveTroopsRoundButtons = (props: any) => {
     );
 
     if (props.countrySelection.source) {
-        const continent = Country.getCountryContinent(props.countrySelection.source);
-        canAddTroops = currentPlayer.troopsToAdd
-        && (currentPlayer.troopsToAdd.free || (continent && currentPlayer.troopsToAdd[continent]));
+        const continent = CountryService.getCountryContinent(props.countrySelection.source);
+        canAddTroops = currentPlayer?.troopsToAdd
+        && (currentPlayer?.troopsToAdd.free || (continent && currentPlayer?.troopsToAdd[continent]));
     }
-    const canRemoveTroops = props.countrySelection.source && source.state.newTroops;
+    const canRemoveTroops = props.countrySelection.source && source?.state.newTroops;
+
+    const addTroops = () => {
+        props.addTroopsHandler({
+            countryKey: props.countrySelection.source,
+            troops: 1,
+            playerColor: currentPlayer.color,
+        });
+    }
+
+    const removeTroops = () => {
+        props.removeTroopsHandler({ countryKey: props.countrySelection.source, troops: 1 })
+    }
 
     return (
         <>
@@ -35,7 +65,7 @@ const MoveTroopsRoundButtons = (props: any) => {
                     icon={<PlusCircleOutlined />}
                     style={{ marginRight: '4px'}}
                     disabled={!canAddTroops}
-                    onClick={() => props.addTroopsHandler(props.countrySelection.source)}
+                    onClick={() => addTroops()}
                 >
                     Add Troops
                 </Button>
@@ -47,7 +77,7 @@ const MoveTroopsRoundButtons = (props: any) => {
                     icon={<MinusCircleOutlined />}
                     style={{ marginRight: '4px'}}
                     disabled={!canRemoveTroops}
-                    onClick={() => props.removeTroopsHandler(props.countrySelection.source)}
+                    onClick={() => removeTroops()}
                 >
                     Remove Troops
                 </Button>
@@ -66,6 +96,7 @@ const MoveTroopsRoundButtons = (props: any) => {
     )
 };
 
+/*
 MoveTroopsRoundButtons.propTypes = {
     addTroopsHandler: PropTypes.func,
     removeTroopsHandler: PropTypes.func,
@@ -76,5 +107,6 @@ MoveTroopsRoundButtons.propTypes = {
     countries: PropTypes.array,
     countryCardsModalHandler: PropTypes.func,
 };
+*/
 
 export default MoveTroopsRoundButtons;

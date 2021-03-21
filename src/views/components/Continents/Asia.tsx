@@ -16,14 +16,15 @@ import Arabia from "../Countries/Asia/Arabia";
 import India from "../Countries/Asia/India";
 import Malasia from "../Countries/Asia/Malasia";
 import Siberia from "../Countries/Asia/Siberia";
+import Country from "src/models/Country";
 
 interface Props {
-  countries: [];
+  countries: Country[];
   countrySelection: {
-      source: any;
-      target: any;
+      source: string;
+      target: string;
   };
-  countryClicked: () => void;
+  countryClicked: (id: string) => void;
 }
 
 const asia = (props: Props) => {

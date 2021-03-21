@@ -1,12 +1,28 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { Button, Tooltip } from 'antd';
 import { ThunderboltOutlined, CreditCardOutlined, LoginOutlined } from '@ant-design/icons';
 
 import RoundType from 'src/models/Round';
+import { RequestMoveTroops } from 'src/ops/game/actions';
 
-const AttackRoundButtons = (props: any) => {
+export interface Props {
+    round: any;
+    currentPlayerId: string;
+    players: any[];
+    countrySelection: any;
+    countries: any[];
+
+    attackHandler: () => void;
+    moveTroopsHandler: (payload: RequestMoveTroops["payload"]) => void;
+    getCountryCardHandler: () => void;
+}
+
+const AttackRoundButtons = (props: Props) => {
+    const attackHandler = () => {
+        props.attackHandler();
+    }
+
     if (!props.players || props.players.length === 0 || !props.round) {
         return <div></div>;
     }
@@ -27,7 +43,7 @@ const AttackRoundButtons = (props: any) => {
                     shape="round"
                     icon={<ThunderboltOutlined />}
                     style={{ marginRight: '4px'}}
-                    onClick={() => props.attackHandler()}
+                    onClick={() => attackHandler()}
                     disabled={
                         props.round.type !== RoundType.ATTACK ||
                         !props.countrySelection.source ||
@@ -43,7 +59,7 @@ const AttackRoundButtons = (props: any) => {
                         shape="round"
                         icon={<LoginOutlined />}
                         style={{ marginRight: '4px' }}
-                        onClick={() => props.moveTroopsHandler(1)}
+                        onClick={() => props.moveTroopsHandler({ count: 1 })}
                         disabled={!canMoveTroops}
                     >
                         Move Troops
@@ -65,17 +81,6 @@ const AttackRoundButtons = (props: any) => {
                 </Tooltip>
         </>
     )
-};
-
-AttackRoundButtons.propTypes = {
-    attackHandler: PropTypes.func,
-    moveTroopsHandler: PropTypes.func,
-    round: PropTypes.object,
-    currentPlayerId: PropTypes.string,
-    players: PropTypes.array,
-    countrySelection: PropTypes.object,
-    countries: PropTypes.array,
-    getCountryCardHandler: PropTypes.func,
 };
 
 export default AttackRoundButtons;

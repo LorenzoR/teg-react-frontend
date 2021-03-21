@@ -7,14 +7,15 @@ import Zaire from "../Countries/Africa/Zaire";
 import Sahara from "../Countries/Africa/Sahara";
 import SouthAfrica from "../Countries/Africa/SouthAfrica";
 import Etiopia from "../Countries/Africa/Etiopia";
+import Country from 'src/models/Country';
 
 interface Props {
-  countries: [];
+    countries: Country[];
   countrySelection: {
-      source: any;
-      target: any;
+      source: string;
+      target: string;
   };
-  countryClicked: () => void;
+  countryClicked: (id: string) => void;
 }
 
 const africa = (props: Props) => {

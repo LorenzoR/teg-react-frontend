@@ -1,4 +1,4 @@
-const PlayerTypes = {
+export const PlayerTypes = {
     BLUE: 'blue',
     RED: 'red',
     GREEN: 'green',
@@ -20,6 +20,7 @@ class Player {
     cards: { type: string } [] = [];
     isAdmin: boolean = false;
     name: string = '';
+    playerStatus: string = 'offline';
 
     static getPlayerTypes() {
         return PlayerTypes;

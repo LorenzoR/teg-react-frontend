@@ -5,14 +5,15 @@ import Australia from "../Countries/Oceania/Australia";
 import Java from "../Countries/Oceania/Java";
 import Borneo from "../Countries/Oceania/Borneo";
 import Sumatra from "../Countries/Oceania/Sumatra";
+import Country from "src/models/Country";
 
 interface Props {
-  countries: [];
+    countries: Country[];
   countrySelection: {
-      source: any;
-      target: any;
+      source: string;
+      target: string;
   };
-  countryClicked: () => void;
+  countryClicked: (id: string) => void;
 }
 
 const oceania = (props: Props) => {

@@ -3,13 +3,19 @@ import createSagaMiddleware from 'redux-saga';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 // import reducer from './reducers';
-import mySaga from './sagas';
+import { rootSaga } from './ops/ops';
 import gameReducer from './state/game';
 import globalSettingsReducer from './state/globalSettings';
+import countrySelectionReducer from './state/country-selection';
+import modalsReducer from './state/modals';
+import messageServiceReducer from './state/message-service';
 
 const rootReducer = combineReducers({
-  globalSettings: globalSettingsReducer,
-  game: gameReducer,
+    globalSettings: globalSettingsReducer,
+    game: gameReducer,
+    countrySelection: countrySelectionReducer,
+    modals: modalsReducer,
+    messageService: messageServiceReducer,
 });
 
 // create the saga middleware
@@ -21,6 +27,6 @@ const store = createStore(
 );
 
 // then run the saga
-sagaMiddleware.run(mySaga);
+sagaMiddleware.run(rootSaga);
 
 export default store;
