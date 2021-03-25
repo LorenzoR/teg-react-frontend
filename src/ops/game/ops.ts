@@ -37,6 +37,8 @@ export function* watchInitGame(action: InitGame) {
 export function* watchRequestAddTroops(action: RequestAddTroops) {
     const gameId: string = yield select(data.game.gameId);
 
+    yield put(stateActions.modals.setSpinnerVisible({ isVisible: true }));
+
     WebsocketService.sendMessage(
         {
             gameId,

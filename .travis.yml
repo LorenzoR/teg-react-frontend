@@ -23,7 +23,7 @@ before_install:
   - pip install awscli
 
 install:
-  - npm install
+  - npm install ci
 
 script:
   # - npm run cypress
