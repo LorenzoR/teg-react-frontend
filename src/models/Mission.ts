@@ -6,8 +6,10 @@ import CountryService from 'src/services/game/countryService';
 const ContinentTypes = Continent.getContinentTypes();
 const playerTypes = Player.getPlayerTypes();
 
+type MissionType = {[key: string]: { text: string; continents?: { id: string, countries: number }[]; neighbours?: number; destroy?: string }};
+
 // List of missions
-const Missions: {[key: string]: any} = {
+const Missions: MissionType = {
   AFRICA_NORTH_AMERICA_5_EUROPE_4: {
     text: 'Ocupar África, 5 países de América del Norte y 4 países de Europa.',
     continents: [
@@ -133,6 +135,7 @@ class Mission {
     return missions;
   }
 
+  /*
   static missionCompleted(mission: any, countries: any) {
     // If conqueres countries === 30 then mission completed
     const countriesPerContinent = Mission.getConqueredCountriesByContinent(
@@ -220,6 +223,7 @@ class Mission {
 
     return countriesPerContinent;
   }
+  */
 }
 
 export default Mission;

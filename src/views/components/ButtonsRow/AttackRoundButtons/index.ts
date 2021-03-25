@@ -2,7 +2,6 @@ import { connect } from 'react-redux';
 import AttackRoundButtons, { Props } from './view';
 import { AppState } from 'src/state';
 import data from 'src/ops-read';
-import stateActions from 'src/state/actions';
 import actions from 'src/ops/actions';
 
 type StateProps = Pick<Props, 
@@ -27,13 +26,13 @@ const mapStateToProps = (state: AppState): StateProps => ({
 type DispatchProps = Pick<Props,
     | 'attackHandler'
     | 'moveTroopsHandler'
-    | 'getCountryCardHandler'
+    | 'requestGetCountryCard'
     >;
 
 const mapDispatchToProps: DispatchProps = {
     attackHandler: actions.game.requestAttack,
     moveTroopsHandler: actions.game.requestMoveTroops,
-    getCountryCardHandler: () => stateActions.modals.setCardsModalOpen({ isOpen: true }),
+    requestGetCountryCard: actions.game.requestGetCountryCard,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AttackRoundButtons);

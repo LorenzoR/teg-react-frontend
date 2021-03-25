@@ -31,9 +31,8 @@ type DispatchProps = Pick<Props,
     >;
 
 const mapDispatchToProps: DispatchProps = {
-    // addTroopsHandler: stateActions.game.addCountryTroops,
     addTroopsHandler: actions.game.requestAddTroops,
-    removeTroopsHandler: stateActions.game.removeCountryTroops,
+    removeTroopsHandler: actions.game.requestAddTroops,
     countryCardsModalHandler: () => stateActions.modals.setCardsModalOpen({ isOpen: true }),
 };
 

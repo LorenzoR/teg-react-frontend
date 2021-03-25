@@ -4,7 +4,7 @@ import stateActions from 'src/state/actions';
 import data from 'src/ops-read';
 import {
     CountryAttacked, InitGame, JoinedGame, PlayersInfoReceived, RequestAddTroops,
-    RequestExchangeCard, RequestExchangeCards, RequestFinishRound, RequestGetCountryCard,
+    RequestExchangeCard, RequestExchangeCards, RequestFinishRound,
     RequestJoinGame, RequestMoveTroops, RequestReconnect, RequestSendChatMessage,
     RequestStartGame, TroopsMoved,
 } from './actions';
@@ -159,12 +159,14 @@ export function* watchRequestMoveTroops(action: RequestMoveTroops) {
         source: string;
         target: string;
         count: number;
+        countryConquered: boolean;
     } = {
         gameId: yield select(data.game.gameId),
         playerColor: me.color,
         source: yield select(data.countrySelection.source),
         target: yield select(data.countrySelection.target),
         count: action.payload.count,
+        countryConquered: action.payload.countryConquered,
     };
 
     WebsocketService.sendMessage(messageData, WebsocketSendMessagesTypes.MoveTroops);
@@ -185,29 +187,56 @@ export function watchRequestSendChatMessage(action: RequestSendChatMessage) {
     console.log('request send chat message sent!');
 }
 
-export function watchRequestExchangeCard(action: RequestExchangeCard) {
-    const messageData = { ...action.payload };
+export function* watchRequestExchangeCard(action: RequestExchangeCard) {
+    const me: Player = yield select(data.game.me);
+
+    const messageData: {
+        gameId: string;
+        playerColor: string;
+        card: string;
+    } = {
+        gameId: yield select(data.game.gameId),
+        playerColor: me.color,
+        card: action.payload.card,
+    };
 
     WebsocketService.sendMessage(messageData, WebsocketSendMessagesTypes.ExchangeCard);
     console.log('request exchange Card message sent!');
 }
 
-export function watchRequestExchangeCards(action: RequestExchangeCards) {
-    const messageData = { ...action.payload };
+export function* watchRequestExchangeCards(action: RequestExchangeCards) {
+    const me: Player = yield select(data.game.me);
+
+    const messageData: {
+        gameId: string;
+        playerColor: string;
+        cards: string[];
+    } = {
+        gameId: yield select(data.game.gameId),
+        playerColor: me.color,
+        cards: action.payload.cards,
+    };
 
     WebsocketService.sendMessage(messageData, WebsocketSendMessagesTypes.ExchangeCards);
     console.log('request exchange Cards message sent!');
 }
 
-export function watchRequestGetCountryCard(action: RequestGetCountryCard) {
-    const messageData = { ...action.payload };
+export function* watchRequestGetCountryCard() {
+    const me: Player = yield select(data.game.me);
+
+    const messageData: {
+        gameId: string;
+        playerColor: string;
+    } = {
+        gameId: yield select(data.game.gameId),
+        playerColor: me.color,
+    };
 
     WebsocketService.sendMessage(messageData, WebsocketSendMessagesTypes.GetCard);
     console.log('request get Card message sent!');
 }
 
 export function* watchCountryAttacked(action: CountryAttacked) {
-    debugger;
     const {
         gameStatus,
         winner,

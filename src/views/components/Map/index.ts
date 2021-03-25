@@ -7,6 +7,7 @@ import data from 'src/ops-read';
 type StateProps = Pick<Props,
     | 'countries'
     | 'countrySelection'
+    | 'spinnerVisible'
     >;
 
 const mapStateToProps = (state: AppState): StateProps => ({
@@ -15,6 +16,7 @@ const mapStateToProps = (state: AppState): StateProps => ({
         source: data.countrySelection.source(state),
         target: data.countrySelection.target(state),
     },
+    spinnerVisible: data.modals.isSpinnerVisible(state),
 });
 
 type DispatchProps = Pick<Props,

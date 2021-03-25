@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 
 import shadeColor from 'src/helpers/shadeColor';
+import Country from "src/models/Country";
 
 interface Props {
-    countryState: any;
+    countryState: Country["state"];
     isSelected: boolean;
     countryClicked: (id: string) => void;
 }

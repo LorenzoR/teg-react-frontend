@@ -2,8 +2,6 @@ import React from 'react';
 import _ from 'lodash';
 import { Button, Tooltip } from 'antd';
 import { PlusCircleOutlined, MinusCircleOutlined, CreditCardOutlined } from '@ant-design/icons';
-
-import { RemoveCountryTroops } from 'src/state/game/actions';
 import { RequestAddTroops } from 'src/ops/game/actions';
 import CountryService from 'src/services/game/countryService';
 
@@ -15,17 +13,12 @@ export interface Props {
     countries: any[];
 
     addTroopsHandler: (payload: RequestAddTroops['payload']) => void;
-    removeTroopsHandler: (payload: RemoveCountryTroops['payload']) => void;
+    removeTroopsHandler: (payload: RequestAddTroops['payload']) => void;
     countryCardsModalHandler: () => void;
 }
 
 const MoveTroopsRoundButtons = (props: Props) => {
-    debugger;
-    if (!props.players || props.players.length === 0 || !props.round) {
-        return <div></div>;
-    }
-
-    if (!props.currentPlayerId) {
+    if (!props.players || props.players.length === 0 || !props.round || !props.currentPlayerId) {
         return <div></div>;
     }
     
@@ -53,7 +46,11 @@ const MoveTroopsRoundButtons = (props: Props) => {
     }
 
     const removeTroops = () => {
-        props.removeTroopsHandler({ countryKey: props.countrySelection.source, troops: 1 })
+        props.removeTroopsHandler({
+            countryKey: props.countrySelection.source,
+            troops: -1,
+            playerColor: currentPlayer.color,
+        })
     }
 
     return (
@@ -95,18 +92,5 @@ const MoveTroopsRoundButtons = (props: Props) => {
         </>
     )
 };
-
-/*
-MoveTroopsRoundButtons.propTypes = {
-    addTroopsHandler: PropTypes.func,
-    removeTroopsHandler: PropTypes.func,
-    round: PropTypes.object,
-    currentPlayerId: PropTypes.string,
-    players: PropTypes.array,
-    countrySelection: PropTypes.object,
-    countries: PropTypes.array,
-    countryCardsModalHandler: PropTypes.func,
-};
-*/
 
 export default MoveTroopsRoundButtons;

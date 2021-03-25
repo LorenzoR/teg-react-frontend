@@ -17,10 +17,11 @@ class Player {
         text: '',
     };
     color: string = '';
-    cards: { type: string } [] = [];
+    cards: { type: string; country: string; exchanged: boolean } [] = [];
     isAdmin: boolean = false;
     name: string = '';
     playerStatus: string = 'offline';
+    canGetCard = false;
 
     static getPlayerTypes() {
         return PlayerTypes;

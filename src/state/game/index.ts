@@ -5,6 +5,7 @@ import { ActionTypes as ReduxActionTypes } from 'src/ops/actions';
 import { JoinedGame, PlayersInfoReceived } from 'src/ops/game/actions';
 import { Dices } from 'src/models/Dices';
 import Country from 'src/models/Country';
+import { EventLog } from 'src/models/EventLog';
 
 
 const CountriesList: {[key: string]: { name: string, countries: {[key: string]: string}}} = {
@@ -131,9 +132,9 @@ export interface State {
     countries: Country[];
     players: Player[];
     round: Round;
-    me: Player | undefined;
+    me?: Player;
     gameStatus: string;
-    eventsLog: any[];
+    eventsLog: EventLog[];
     currentPlayerId: string;
     dices: Dices,
     winner: string;

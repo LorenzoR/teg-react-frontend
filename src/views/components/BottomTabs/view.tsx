@@ -12,6 +12,7 @@ import ActivityTab from './ActivityTab/ActivityTab';
 import ChatMessagesTab from './ChatMessagesTab/ChatMessagesTab';
 import Country from 'src/models/Country';
 import { RequestSendChatMessage } from 'src/ops/game/actions';
+import { EventLog } from 'src/models/EventLog';
 
 const { TabPane } = Tabs;
 
@@ -23,7 +24,7 @@ interface ChatMessage {
 export interface Props {
     players: Player[];
     currentPlayerId: string;
-    eventsLog: any[];
+    eventsLog: EventLog[];
     chatMessages: ChatMessage;
     countries: Country[];
 

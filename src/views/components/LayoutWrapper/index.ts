@@ -6,45 +6,18 @@ import actions from 'src/ops/actions';
 import data from 'src/ops-read';
 
 type StateProps = Pick<Props, 
-    | 'countries'
     | 'players'
     | 'round'
     | 'currentPlayer'
-    | 'gameStatus'
-    | 'eventsLog'
-    | 'currentPlayerId'
-    | 'countrySelection'
-    | 'countryConqueredModalVisible'
-    | 'countryCardsVisible'
     >;
 
 const mapStateToProps = (state: AppState): StateProps => {
     return {
-        countries: state.game.countries,
-        players: state.game.players,
-        round: state.game.round,
-        currentPlayer: state.game.me,
-        gameStatus: state.game.gameStatus,
-        eventsLog: state.game.eventsLog,
-        currentPlayerId: data.game.me(state)?.id || '', // state.game.currentPlayerId,
-        countrySelection: {
-            source: data.countrySelection.source(state),
-            target: data.countrySelection.target(state),
-        },
-        // Modals
-        countryConqueredModalVisible: data.modals.isCountryConqueredVisible(state),
-        countryCardsVisible: data.modals.isCountryCardsVisible(state),
+        players: data.game.players(state),
+        round: data.game.round(state),
+        currentPlayer: data.game.me(state),
     };
 };
-
-/*
-type DispatchProps = Pick<Props, 'activateConfiguration' | 'configurationUpdate' | 'configurationSetValid'>;
-const mapDispatchToProps: DispatchProps = {
-    activateConfiguration: ops.configurations.activateConfiguration,
-    configurationUpdate: ops.configurations.configurationUpdate,
-    configurationSetValid: ops.configurations.configurationSetValid,
-};
-*/
 
 type DispatchProps = Pick<Props,
     | 'initGame'
@@ -62,20 +35,11 @@ type DispatchProps = Pick<Props,
     | 'joinedGame'
     | 'countryAttacked'
     | 'troopsMoved'
+    | 'setWinner'
     | 'setChooseColorOpen'
+    | 'setSpinnerVisible'
+    | 'setGameFinishedOpen'
     >;
-
-    /*
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-    initGame: (payload: { countries: {}[], players: Player[] }) => dispatch(actions.game.initGame(payload)),
-    setCountries: (payload: { countries: {}[] }) => dispatch(actions.game.setCountries(payload)),
-    setPlayers: (payload: { players: Player[] }) => dispatch(actions.game.setPlayers(payload)),
-    setRound: (payload: { round: Round }) => dispatch(actions.game.setRound(payload)),
-    setCurrentPlayer: (payload: { currentPlayer: Player }) => dispatch(actions.game.setCurrentPlayer(payload)),
-    setGameStatus: (payload: { gameStatus: string }) => dispatch(actions.game.setGameStatus(payload)),
-    setCurrentPlayerId: (payload: SetCurrentPlayerId['payload']) => dispatch(actions.game.setCurrentPlayerId(payload)),
-});
-*/
 
 const mapDispatchToProps: DispatchProps = {
     initGame: stateActions.game.initGame,
@@ -95,8 +59,11 @@ const mapDispatchToProps: DispatchProps = {
 
     countryAttacked: actions.game.countryAttacked,
     troopsMoved: actions.game.troopsMoved,
+    setWinner: stateActions.game.setWinner,
     // Modals
     setChooseColorOpen: stateActions.modals.setChooseColorOpen,
+    setSpinnerVisible: stateActions.modals.setSpinnerVisible,
+    setGameFinishedOpen: stateActions.modals.setGameFinishedOpen,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LayoutWrapper);

@@ -1,20 +1,20 @@
 import { WebsocketReceivedMessagesTypes } from 'src/consts';
-import { ConnectionIDReceived, GameStarted, GameSync, JoinedGame, PlayersInfoReceived } from 'src/ops/game/actions';
+import { ConnectionIDReceived, CountryAttacked, CountryCardReceived, GameStarted, GameSync, JoinedGame, PlayersInfoReceived, TroopsMoved } from 'src/ops/game/actions';
 import { IMessageEvent, w3cwebsocket as W3CWebSocket } from 'websocket';
 
 export interface OnMessageActions {
     joinGame: (body: JoinedGame['payload']) => void;
     gameStarted: (body: GameStarted['payload']) => void;
     connectionId: (body: ConnectionIDReceived['payload']) => void;
-    countryAttacked: (body: any) => void;
-    troopsMoved: (body: any) => void;
+    countryAttacked: (body: CountryAttacked['payload']) => void;
+    troopsMoved: (body: TroopsMoved['payload']) => void;
     roundFinished: (body: any) => void;
     troopsAdded: (body: any) => void;
     playerDisconnected: (body: any) => void;
     guestDisconnected: (body: any) => void;
     sync: (body: GameSync['payload']) => void;
     reJoinGame: (body: any) => void;
-    cardReceived: (body: any) => void;
+    cardReceived: (body: CountryCardReceived['payload']) => void;
     cardExchanged: (body: any) => void;
     cardsExchanged: (body: any) => void;
     playersInfo: (body: PlayersInfoReceived['payload']) => void;

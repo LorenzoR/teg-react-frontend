@@ -29,13 +29,6 @@ export interface Props {
     isAttacking: boolean;
     gameStatus: string;
     currentPlayerId: string;
-
-    addTroopsHandler: () => void;
-    attackHandler: () => void;
-    moveTroopsHandler: () => void;
-    removeTroopsHandler: () => void;
-    exchangeCardsHandler: () => void;
-    getCountryCardHandler: () => void;
 }
 
 const GameSider = (props: Props) => {

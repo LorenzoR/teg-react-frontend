@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import GameSider, { Props } from './view';
 import { AppState } from 'src/state';
-import actions from 'src/ops/actions';
 import data from 'src/ops-read';
 
 type StateProps = Pick<Props,
@@ -14,6 +13,7 @@ type StateProps = Pick<Props,
     | 'gameStatus'
     | 'currentPlayerId'
     | 'isAttacking'
+    | 'spinnerVisible'
     >;
 
 const mapStateToProps = (state: AppState): StateProps => {
@@ -32,25 +32,8 @@ const mapStateToProps = (state: AppState): StateProps => {
         isAttacking: data.game.isAttacking(state),
         gameStatus: state.game.gameStatus,
         currentPlayerId: data.game.me(state)?.id || '', // state.game.currentPlayerId,
+        spinnerVisible: data.modals.isSpinnerVisible(state),
     };
 };
 
-type DispatchProps = Pick<Props,
-    | 'addTroopsHandler'
-    | 'attackHandler'
-    | 'moveTroopsHandler'
-    | 'removeTroopsHandler'
-    | 'exchangeCardsHandler'
-    | 'getCountryCardHandler'
-    >;
-
-const mapDispatchToProps: DispatchProps = {
-    addTroopsHandler: () => actions.game.requestAddTroops,
-    attackHandler: () => actions.game.requestAttack,
-    moveTroopsHandler: () => actions.game.requestMoveTroops,
-    removeTroopsHandler: () => actions.game.requestAddTroops,
-    exchangeCardsHandler: () => actions.game.requestExchangeCard,
-    getCountryCardHandler: () => actions.game.requestGetCountryCard,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(GameSider);
+export default connect(mapStateToProps)(GameSider);

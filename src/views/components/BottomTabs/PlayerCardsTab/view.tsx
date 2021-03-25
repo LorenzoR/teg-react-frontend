@@ -10,15 +10,15 @@ export interface Props {
     currentPlayer: Player;
     countries: Country[];
 
-    changeCardHandler: (payload: RequestExchangeCard["payload"]) => void;
-    changeCardsHandler: (payload: RequestExchangeCards["payload"]) => void;
+    changeCardHandler: (payload: RequestExchangeCard['payload']) => void;
+    changeCardsHandler: (payload: RequestExchangeCards['payload']) => void;
 }
 
 const PlayerCardsTab = (props: Props) => {
-    const [checkedCards, setCheckedCards] = useState<any>([]);
+    const [checkedCards, setCheckedCards] = useState<string[]>([]);
 
-    const clickCard = (country: any) => {
-        const cards: any[] = [...checkedCards];
+    const clickCard = (country: string) => {
+        const cards: string[] = [...checkedCards];
 
         if (!_.find(cards, (obj) => obj === country)) {
             // Add card
@@ -37,11 +37,10 @@ const PlayerCardsTab = (props: Props) => {
     let playerCards;
 
     if (props.currentPlayer.cards?.length > 0) {
-        // playerCards = <ul>;
         playerCards = (
             <div>
                 <ul>
-                    {props.currentPlayer.cards.map((card: any) => {
+                    {props.currentPlayer.cards.map((card) => {
                         const country = _.find(props.countries, { countryKey: card.country });
 
                         if (!country) {
@@ -59,7 +58,7 @@ const PlayerCardsTab = (props: Props) => {
                         if (countryBelongsToPlayer) {
                             button = (
                                 <Button
-                                    onClick={() => props.changeCardHandler(card.country)}
+                                    onClick={() => props.changeCardHandler({ card: card.country })}
                                     disabled={card.exchanged}
 
                                 >
@@ -79,14 +78,13 @@ const PlayerCardsTab = (props: Props) => {
                     })}
                 </ul>
                 <Button
-                    onClick={() => props.changeCardsHandler(checkedCards)}
+                    onClick={() => props.changeCardsHandler({ cards: checkedCards })}
                     disabled={props.currentPlayer.cards.length < 3}
                 >
                     Change 3 cards
         </Button>
             </div>
         );
-        // playerCards = </ul>;
     } else {
         playerCards = <div>No cards</div>;
     }

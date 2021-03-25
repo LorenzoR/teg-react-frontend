@@ -1,3 +1,4 @@
+import { EventLog } from "src/models/EventLog";
 import Player from "src/models/Player";
 import { Round } from "src/models/Round";
 
@@ -201,7 +202,7 @@ const setWinner = (payload: SetWinner['payload']) => ({
 export interface SetEventsLog {
     type: typeof SET_EVENTS_LOG;
     payload: {
-        eventsLog: any[];
+        eventsLog: EventLog[];
     }
 };
 

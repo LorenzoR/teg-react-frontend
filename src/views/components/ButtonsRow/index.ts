@@ -10,6 +10,7 @@ type StateProps = Pick<Props,
     | 'players'
     | 'countrySelection'
     | 'countries'
+    | 'spinnerVisible'
     >;
 
 const mapStateToProps = (state: AppState): StateProps => {
@@ -22,6 +23,7 @@ const mapStateToProps = (state: AppState): StateProps => {
             target: data.countrySelection.target(state),
         },
         countries: data.game.countries(state),
+        spinnerVisible: data.modals.isSpinnerVisible(state),
     };
 };
 

@@ -18,7 +18,6 @@ export interface Props {
 }
 
 const CountryCardsModal = (props: Props) => {
-    debugger;
     const initialState: string[] = [];
     const [checkedCards, setCheckedCards] = useState(initialState);
 

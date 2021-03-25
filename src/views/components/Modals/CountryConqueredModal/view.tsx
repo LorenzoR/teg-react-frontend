@@ -22,14 +22,14 @@ const countryConqueredModal = (props: Props) => {
                 <Button
                     key="move_1"
                     type="primary"
-                    onClick={() => props.moveTroopsHandler({ count: 0 })}
+                    onClick={() => props.moveTroopsHandler({ count: 0, countryConquered: true })}
                 >
                     1
                 </Button>,
                 <Button
                     key="move_2"
                     type="primary"
-                    onClick={() => props.moveTroopsHandler({ count: 1 })}
+                    onClick={() => props.moveTroopsHandler({ count: 1, countryConquered: true })}
                     disabled={props.troops < 2}
                 >
                     2
@@ -37,7 +37,7 @@ const countryConqueredModal = (props: Props) => {
                 <Button
                     key="move_3"
                     type="primary"
-                    onClick={() => props.moveTroopsHandler({ count: 2 })}
+                    onClick={() => props.moveTroopsHandler({ count: 2, countryConquered: true })}
                     disabled={props.troops < 3}
                 >
                     3

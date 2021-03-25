@@ -1,5 +1,6 @@
 import Country from 'src/models/Country';
 import { Dices } from 'src/models/Dices';
+import { EventLog } from 'src/models/EventLog';
 import Player from 'src/models/Player';
 import { Round } from 'src/models/Round';
 import { ActionCreator, ActionCreatorWithPayload } from 'src/utils/types';
@@ -27,6 +28,7 @@ const CONNECTION_ID_RECEIVED: 'CONNECTION_ID_RECEIVED' = 'CONNECTION_ID_RECEIVED
 const GAME_SYNC: 'GAME_SYNC' = 'GAME_SYNC';
 const COUNTRY_ATTACKED: 'COUNTRY_ATTACKED' = 'COUNTRY_ATTACKED';
 const TROOPS_MOVED: 'TROOPS_MOVED' = 'TROOPS_MOVED';
+const COUNTRY_CARD_RECEIVED: 'COUNTRY_CARD_RECEIVED' = 'COUNTRY_CARD_RECEIVED';
 
 export interface InitGame {
     type: typeof INIT_GAME;
@@ -117,7 +119,7 @@ export interface GameStarted {
         countries: Country[];
         round: Round;
         gameStatus: string;
-        eventsLog: any;
+        eventsLog: EventLog[];
     };
 }
 
@@ -145,7 +147,7 @@ export interface GameSync {
         countries: Country[];
         round: Round;
         gameStatus: string;
-        eventsLog: any;
+        eventsLog: EventLog[];
         currentPlayerId: string;
     };
 }
@@ -193,7 +195,6 @@ export const requestReconnect: ActionCreatorWithPayload<RequestReconnect> = payl
 export interface RequestSendChatMessage {
     type: typeof REQUEST_SEND_CHAT_MSG;
     payload: {
-        gameId: string;
         message: string;
     };
 }
@@ -206,8 +207,6 @@ export const requestSendChatMessage: ActionCreatorWithPayload<RequestSendChatMes
 export interface RequestExchangeCard {
     type: typeof REQUEST_EXCHANGE_CARD;
     payload: {
-        // gameId: string;
-        // playerColor: string;
         card: string;
     };
 }
@@ -220,8 +219,6 @@ export const requestExchangeCard: ActionCreatorWithPayload<RequestExchangeCard> 
 export interface RequestExchangeCards {
     type: typeof REQUEST_EXCHANGE_CARDS;
     payload: {
-        // gameId: string;
-        // playerColor: string;
         cards: string[];
     };
 }
@@ -235,6 +232,7 @@ export interface RequestMoveTroops {
     type: typeof REQUEST_MOVE_TROOPS;
     payload: {
         count: number;
+        countryConquered: boolean;
     };
 }
 
@@ -245,15 +243,10 @@ export const requestMoveTroops: ActionCreatorWithPayload<RequestMoveTroops> = pa
 
 export interface RequestGetCountryCard {
     type: typeof REQUEST_GET_COUNTRY_CARD;
-    payload: {
-        gameId: string;
-        playerColor: string;
-    };
 }
 
-export const requestGetCountryCard: ActionCreatorWithPayload<RequestGetCountryCard> = payload => ({
+export const requestGetCountryCard: ActionCreator<RequestGetCountryCard> = () => ({
     type: REQUEST_GET_COUNTRY_CARD,
-    payload,
 });
 
 export interface CountryAttacked {
@@ -266,7 +259,7 @@ export interface CountryAttacked {
         dices: Dices;
         players: Player[];
         countryConquered: boolean;
-        eventsLog: any;
+        eventsLog: EventLog[];
     };
 }
 
@@ -281,7 +274,7 @@ export interface TroopsMoved {
         source: Country;
         target: Country;
         round: Round;
-        eventsLog: any[];
+        eventsLog: EventLog[];
     };
 }
 
@@ -296,6 +289,20 @@ export interface RequestCounterFinished {
 
 export const requestCounterFinished: ActionCreator<RequestCounterFinished> = () => ({
     type: REQUEST_COUNTER_FINISHED,
+});
+
+export interface CountryCardReceived {
+    type: typeof COUNTRY_CARD_RECEIVED;
+    payload: {
+        players?: Player[];
+        playerName?: string;
+        round?: Round;
+    };
+}
+
+export const countryCardReceived: ActionCreatorWithPayload<CountryCardReceived> = (payload) => ({
+    type: COUNTRY_CARD_RECEIVED,
+    payload,
 });
 
 export const ActionTypes = {
@@ -319,6 +326,7 @@ export const ActionTypes = {
     COUNTRY_ATTACKED,
     TROOPS_MOVED,
     REQUEST_COUNTER_FINISHED,
+    COUNTRY_CARD_RECEIVED,
 };
 
 export type Actions =
@@ -342,6 +350,7 @@ export type Actions =
     | CountryAttacked
     | TroopsMoved
     | RequestCounterFinished
+    | CountryCardReceived
     ;
 
 export default {
@@ -365,4 +374,5 @@ export default {
     countryAttacked,
     troopsMoved,
     requestCounterFinished,
+    countryCardReceived,
 };
