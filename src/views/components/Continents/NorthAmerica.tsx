@@ -11,14 +11,15 @@ import NewYork from "../Countries/NorthAmerica/NewYork";
 import Greenland from "../Countries/NorthAmerica/Greenland";
 import Mexico from "../Countries/NorthAmerica/Mexico";
 import Labrador from "../Countries/NorthAmerica/Labrador";
+import Country from "src/models/Country";
 
 interface Props {
-  countries: [];
+  countries: Country[];
   countrySelection: {
-      source: any;
-      target: any;
+      source: string;
+      target: string;
   };
-  countryClicked: () => void;
+  countryClicked: (id: string) => void;
 }
 
 const northAmerica = (props: Props) => {

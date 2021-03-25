@@ -10,14 +10,15 @@ import Poland from "../Countries/Europe/Poland";
 import Italy from "../Countries/Europe/Italy";
 import Rusia from "../Countries/Europe/Rusia";
 import Sweden from "../Countries/Europe/Sweden";
+import Country from "src/models/Country";
 
 interface Props {
-  countries: [];
+    countries: Country[];
   countrySelection: {
-      source: any;
-      target: any;
+      source: string;
+      target: string;
   };
-  countryClicked: () => void;
+  countryClicked: (id: string) => void;
 }
 
 const europe = (props: Props) => {

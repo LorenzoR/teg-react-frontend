@@ -1,4 +1,4 @@
-const PlayerTypes = {
+export const PlayerTypes = {
     BLUE: 'blue',
     RED: 'red',
     GREEN: 'green',
@@ -16,6 +16,12 @@ class Player {
     mission: Mission = {
         text: '',
     };
+    color: string = '';
+    cards: { type: string; country: string; exchanged: boolean } [] = [];
+    isAdmin: boolean = false;
+    name: string = '';
+    playerStatus: string = 'offline';
+    canGetCard = false;
 
     static getPlayerTypes() {
         return PlayerTypes;

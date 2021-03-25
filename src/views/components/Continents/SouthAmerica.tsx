@@ -7,14 +7,15 @@ import Peru from '../Countries/SouthAmerica/Peru';
 import Chile from '../Countries/SouthAmerica/Chile';
 import Argentina from '../Countries/SouthAmerica/Argentina';
 import Uruguay from '../Countries/SouthAmerica/Uruguay';
+import Country from 'src/models/Country';
 
 interface Props {
-  countries: [];
+    countries: Country[];
   countrySelection: {
-      source: any;
-      target: any;
+      source: string;
+      target: string;
   };
-  countryClicked: () => void;
+  countryClicked: (id: string) => void;
 }
 
 const southAmerica = (props: Props) => {

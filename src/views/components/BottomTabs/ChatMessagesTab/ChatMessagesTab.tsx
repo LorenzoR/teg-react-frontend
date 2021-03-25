@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-
 import { List, Avatar, Button } from 'antd';
-
 import { UserOutlined } from '@ant-design/icons';
+import { RequestSendChatMessage } from 'src/ops/game/actions';
 
-const ChatMessagesTab = (props: any) => {
+interface Props {
+    messages: { title: string, color: string, text: string }[];
+
+    sendChatMessageHandler: (payload: RequestSendChatMessage['payload']) => void;
+    markChatMessagesAsReadHandler: () => void;
+}
+
+const ChatMessagesTab = (props: Props) => {
   const [message, setMessage] = useState('');
 
   const submitForm = (event: any) => {
     event.preventDefault();
-    props.sendChatMessageHandler(message);
+    props.sendChatMessageHandler({ message });
 
     // Clear input
     setMessage('');
@@ -57,12 +62,6 @@ const ChatMessagesTab = (props: any) => {
       </form>
     </div>
   );
-};
-
-ChatMessagesTab.propTypes = {
-  messages: PropTypes.array,
-  sendChatMessageHandler: PropTypes.func,
-  markChatMessagesAsReadHandler: PropTypes.func,
 };
 
 export default ChatMessagesTab;

@@ -1,13 +1,15 @@
 import Continent from './Continent';
-import Country from './Country';
 import Player from './Player';
 import shuffleArray from '../helpers/shuffleArray';
+import CountryService from 'src/services/game/countryService';
 
 const ContinentTypes = Continent.getContinentTypes();
 const playerTypes = Player.getPlayerTypes();
 
+type MissionType = {[key: string]: { text: string; continents?: { id: string, countries: number }[]; neighbours?: number; destroy?: string }};
+
 // List of missions
-const Missions: {[key: string]: any} = {
+const Missions: MissionType = {
   AFRICA_NORTH_AMERICA_5_EUROPE_4: {
     text: 'Ocupar África, 5 países de América del Norte y 4 países de Europa.',
     continents: [
@@ -133,6 +135,7 @@ class Mission {
     return missions;
   }
 
+  /*
   static missionCompleted(mission: any, countries: any) {
     // If conqueres countries === 30 then mission completed
     const countriesPerContinent = Mission.getConqueredCountriesByContinent(
@@ -171,20 +174,20 @@ class Mission {
     }
 
     for (let i = 0; i < countries.length; i += 1) {
-      const firstLevelNeighbours = Country.getNeighbours(
+      const firstLevelNeighbours = CountryService.getNeighbours(
         countries[i].countryKey,
       );
 
       for (let j = 0; j < firstLevelNeighbours.length; j += 1) {
         // if (_.find(countries, (o) => firstLevelNeighbours[j] === o.countryKey)) {
         if (firstLevelNeighbours[j] === countries[1].countryKey) {
-          const secondLevelNeighbours = Country.getNeighbours(
+          const secondLevelNeighbours = CountryService.getNeighbours(
             firstLevelNeighbours[j],
           );
 
           for (let k = 0; k < secondLevelNeighbours.length; k += 1) {
             if (secondLevelNeighbours[k] === countries[2].countryKey) {
-              const thirdLevelNeighbours = Country.getNeighbours(
+              const thirdLevelNeighbours = CountryService.getNeighbours(
                 secondLevelNeighbours[k],
               );
 
@@ -212,7 +215,7 @@ class Mission {
     });
 
     countries.forEach((country: any) => {
-      const index = Country.getCountryContinent(country.countryKey);
+      const index = CountryService.getCountryContinent(country.countryKey);
       if (index) {
         countriesPerContinent[index]++;
       }
@@ -220,6 +223,7 @@ class Mission {
 
     return countriesPerContinent;
   }
+  */
 }
 
 export default Mission;

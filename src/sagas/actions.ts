@@ -1,10 +1,10 @@
-import test, { Actions as TestActions, SOME_ACTION } from '../state/game/actions';
+import test, { Actions as TestActions, ActionTypes as GameActionTypes } from '../state/game/actions';
 
 export type Actions = 
     | TestActions;
 
 export const ActionTypes = {
-    SOME_ACTION,
+    GameActionTypes,
 };
 
 export default {
