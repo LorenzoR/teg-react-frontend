@@ -48,33 +48,6 @@ export function* watchRequestAddTroops(action: RequestAddTroops) {
         },
         WebsocketSendMessagesTypes.AddTroops,
     );
-
-    /*
-    const { troops, countryKey } = action.payload;
-    const endpoint = `${process.env.REACT_APP_WEBSOCKET_ENDPOINT}?game_id=${gameId}`;
-
-    const websocketClient: WebsocketService = yield select(data.messageService.client);
-
-    try {
-        if (websocketClient) {
-            websocketClient.sendMessage(
-                {
-                  gameId,
-                  country: countryName,
-                  count: 1,
-                  playerColor: player.color,
-                },
-                'addTroops',
-            );
-        }
-
-        yield put(stateActions.messageService.setClient({ client }));
-    } catch (error) {
-        // yield put(handleAjaxException(error));
-    } finally {
-        // yield put(actions.currentPersonalReport.setDoneStatuses({ doneStatuses: [] }));
-    }
-    */
 }
 
 export function* watchRequestJoinGame(action: RequestJoinGame) {
@@ -119,11 +92,13 @@ export function* watchRequestStartGame(action: RequestStartGame) {
     console.log('startGame message sent!');
 }
 
-export function watchRequestFinishRound(action: RequestFinishRound) {
+export function* watchRequestFinishRound(action: RequestFinishRound) {
     const messageData = { ...action.payload };
 
+    yield put(stateActions.modals.setSpinnerVisible({ isVisible: true }));
+
     WebsocketService.sendMessage(messageData, WebsocketSendMessagesTypes.FinishRound);
-    console.log('startGame message sent!');
+    console.log('finish round message sent!');
 }
 
 export function* watchRequestAttack() {
@@ -171,6 +146,8 @@ export function* watchRequestMoveTroops(action: RequestMoveTroops) {
         countryConquered: action.payload.countryConquered,
     };
 
+    yield put(stateActions.modals.setSpinnerVisible({ isVisible: true }));
+
     WebsocketService.sendMessage(messageData, WebsocketSendMessagesTypes.MoveTroops);
     console.log('request move Troops message sent!');
 }
@@ -192,6 +169,8 @@ export function watchRequestSendChatMessage(action: RequestSendChatMessage) {
 export function* watchRequestExchangeCard(action: RequestExchangeCard) {
     const me: Player = yield select(data.game.me);
 
+    yield put(stateActions.modals.setSpinnerVisible({ isVisible: true }));
+
     const messageData: {
         gameId: string;
         playerColor: string;
@@ -209,6 +188,8 @@ export function* watchRequestExchangeCard(action: RequestExchangeCard) {
 export function* watchRequestExchangeCards(action: RequestExchangeCards) {
     const me: Player = yield select(data.game.me);
 
+    yield put(stateActions.modals.setSpinnerVisible({ isVisible: true }));
+
     const messageData: {
         gameId: string;
         playerColor: string;
@@ -225,6 +206,8 @@ export function* watchRequestExchangeCards(action: RequestExchangeCards) {
 
 export function* watchRequestGetCountryCard() {
     const me: Player = yield select(data.game.me);
+
+    yield put(stateActions.modals.setSpinnerVisible({ isVisible: true }));
 
     const messageData: {
         gameId: string;

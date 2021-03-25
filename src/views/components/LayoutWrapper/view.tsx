@@ -272,6 +272,9 @@ class LayoutWrapper extends Component<Props, State> {
             cardReceived: (body: any) => {
                 const { players, playerName, round } = body;
 
+                // Hide spinner
+                this.setMapSpinnerVisibility(false);
+
                 if (players) {
                     // Message to the player that got the card
                     this.props.setPlayers({ players });
@@ -292,6 +295,9 @@ class LayoutWrapper extends Component<Props, State> {
             cardExchanged: (body: any) => {
                 const { players, countries } = body;
 
+                // Hide spinner
+                this.setMapSpinnerVisibility(false);
+
                 // Message to everyone
                 notification.info({
                     message: `Country card`,
@@ -304,6 +310,9 @@ class LayoutWrapper extends Component<Props, State> {
             },
             cardsExchanged: (body: any) => {
                 const { players } = body;
+
+                // Hide spinner
+                this.setMapSpinnerVisibility(false);
 
                 // Message to everyone
                 notification.info({
