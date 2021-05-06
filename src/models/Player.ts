@@ -17,7 +17,7 @@ class Player {
         text: '',
     };
     color: string = '';
-    cards: { type: string; country: string; exchanged: boolean } [] = [];
+    cards: CountryCard[] = [];
     isAdmin: boolean = false;
     name: string = '';
     playerStatus: string = 'offline';
@@ -26,6 +26,12 @@ class Player {
     static getPlayerTypes() {
         return PlayerTypes;
     }
+}
+
+export interface CountryCard {
+    type: 'balloon' | 'ship' | 'cannon' | 'wildCard';
+    country: string;
+    exchanged: boolean;
 }
 
 export default Player;

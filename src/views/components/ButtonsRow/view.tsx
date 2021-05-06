@@ -39,10 +39,12 @@ const ButtonsRow = (props: Props) => {
         );
     }
 
+    // <div style={{ textAlign: 'left', padding: '5px', position: 'fixed', zIndex: 1, width: '100%' , background: '#f0f2f5'}}>
+
     return (
         <Row>
             <Col span={24}>
-                <div style={{ textAlign: 'left', padding: '5px', position: 'fixed', zIndex: 1, width: '100%' , background: '#f0f2f5'}}>
+                <div style={{ textAlign: 'left', padding: '5px', width: '100%' , background: '#f0f2f5'}}>
                     <Spin spinning={props.spinnerVisible}>
                         {buttons}
                     </Spin>

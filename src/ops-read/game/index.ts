@@ -15,6 +15,7 @@ const isAttacking = createSelector(self, data => data.isAttacking);
 const dices = createSelector(self, data => data.dices);
 const gameStatus = createSelector(self, data => data.gameStatus);
 const winner = createSelector(self, data => data.winner);
+const chatMessages = createSelector(self, data => data.chatMessages);
 
 export default {
     self,
@@ -30,4 +31,5 @@ export default {
     dices,
     gameStatus,
     winner,
+    chatMessages,
 };

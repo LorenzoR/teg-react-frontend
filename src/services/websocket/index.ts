@@ -121,6 +121,8 @@ class WebsocketService {
 
     static getClient = () => WebsocketService.client;
 
+    // TODO Check error
+    // "WebSocket is already in CLOSING or CLOSED state."
     static sendMessage = (data: {}, action: string) => {
         WebsocketService.client && WebsocketService.client.send(
             JSON.stringify({

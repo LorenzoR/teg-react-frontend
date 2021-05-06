@@ -4,7 +4,9 @@ import { watchCountrySelection } from './country-selection/ops';
 import {
     watchRequestAddTroops, watchInitGame, watchPlayersInfoReceived,
     watchRequestJoinGame, watchJoinedGame, watchRequestStartGame,
-    watchRequestFinishRound, watchRequestAttack, watchCountryAttacked, watchTroopsMoved, watchRequestMoveTroops, watchRequestGetCountryCard, watchRequestExchangeCard, watchRequestExchangeCards,
+    watchRequestFinishRound, watchRequestAttack, watchCountryAttacked,
+    watchTroopsMoved, watchRequestMoveTroops, watchRequestGetCountryCard,
+    watchRequestExchangeCard, watchRequestExchangeCards, watchRequestSendChatMessage,
 } from './game/ops';
 
 export function* rootSaga() {
@@ -33,5 +35,7 @@ export function* rootSaga() {
         takeEvery(ActionTypes.GameActionTypes.REQUEST_GET_COUNTRY_CARD, watchRequestGetCountryCard),
         takeEvery(ActionTypes.GameActionTypes.REQUEST_EXCHANGE_CARD, watchRequestExchangeCard),
         takeEvery(ActionTypes.GameActionTypes.REQUEST_EXCHANGE_CARDS, watchRequestExchangeCards),
+
+        takeEvery(ActionTypes.GameActionTypes.REQUEST_SEND_CHAT_MSG, watchRequestSendChatMessage),
     ]);
 }

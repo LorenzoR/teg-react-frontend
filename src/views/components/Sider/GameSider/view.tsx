@@ -63,7 +63,7 @@ const GameSider = (props: Props) => {
     }
 
     return (
-        <Sider style={{ color: 'white', marginTop: '104px' }}>
+        <Sider style={{ color: 'white' }}>
             <Card size="small" title="Country Selection" headStyle={cardHeadStyle}>
                 <Spin spinning={props.spinnerVisible}>
                     <p>From: {props.countrySelection.source}</p>

@@ -17,7 +17,7 @@ const mapStateToProps = (state: AppState): StateProps => ({
     gameStatus: data.game.gameStatus(state),
     players: data.game.players(state),
     currentPlayer: data.game.me(state),
-    spinnerVisible: state.game.players?.length <= 0,
+    spinnerVisible: data.game.players(state)?.length <= 0,
 });
 
 type DispatchProps = Pick<Props,

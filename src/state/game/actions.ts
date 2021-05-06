@@ -18,6 +18,8 @@ const SET_DICES: 'SET_DICES' = 'SET_DICES';
 const SET_WINNER: 'SET_WINNER' = 'SET_WINNER';
 const SET_EVENTS_LOG: 'SET_EVENTS_LOG' = 'SET_EVENTS_LOG';
 const SET_IS_ATTACKING: 'SET_IS_ATTACKING' = 'SET_IS_ATTACKING';
+const ADD_CHAT_MESSAGE: 'ADD_CHAT_MESSAGE' = 'ADD_CHAT_MESSAGE';
+const SET_UNREAD_MSG_COUNT: 'SET_UNREAD_MSG_COUNT' = 'SET_UNREAD_MSG_COUNT';
 
 export interface InitGame {
     type: typeof INIT_GAME;
@@ -223,6 +225,32 @@ const setIsAttacking = (payload: SetIsAttacking['payload']) => ({
     payload,
 });
 
+export interface AddChatMessage {
+    type: typeof ADD_CHAT_MESSAGE;
+    payload: {
+        title: string;
+        color: string;
+        text: string;
+    }
+};
+
+const addChatMessage = (payload: AddChatMessage['payload']) => ({
+    type: ADD_CHAT_MESSAGE,
+    payload,
+});
+
+export interface SetUnreadMsgCount {
+    type: typeof SET_UNREAD_MSG_COUNT;
+    payload: {
+        count: number;
+    }
+};
+
+const setUnreadMsgCount = (payload: SetUnreadMsgCount['payload']) => ({
+    type: SET_UNREAD_MSG_COUNT,
+    payload,
+});
+
 export const ActionTypes = {
     INIT_GAME,
     SET_GAME_ID,
@@ -240,6 +268,8 @@ export const ActionTypes = {
     SET_WINNER,
     SET_EVENTS_LOG,
     SET_IS_ATTACKING,
+    ADD_CHAT_MESSAGE,
+    SET_UNREAD_MSG_COUNT,
 };
 
 export type Actions =
@@ -259,6 +289,8 @@ export type Actions =
     | SetWinner
     | SetEventsLog
     | SetIsAttacking
+    | AddChatMessage
+    | SetUnreadMsgCount
     ;
 
 export default {
@@ -278,4 +310,6 @@ export default {
     setWinner,
     setEventsLog,
     setIsAttacking,
+    addChatMessage,
+    setUnreadMsgCount,
 };

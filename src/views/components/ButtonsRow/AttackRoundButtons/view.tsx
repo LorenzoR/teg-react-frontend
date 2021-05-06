@@ -18,6 +18,7 @@ export interface Props {
     attackHandler: () => void;
     moveTroopsHandler: (payload: RequestMoveTroops['payload']) => void;
     requestGetCountryCard: () => void;
+    countryCardsModalHandler: () => void;
 }
 
 const AttackRoundButtons = (props: Props) => {
@@ -37,6 +38,34 @@ const AttackRoundButtons = (props: Props) => {
     const canAttack = props.round.type === RoundType.ATTACK && source && target
         && source.state.troops > 1
         && source.state.player?.color !== target.state.player?.color;
+
+    const myCardsButton = (
+        <Button
+            type="primary"
+            shape="round"
+            icon={<CreditCardOutlined />}
+            onClick={() => props.countryCardsModalHandler()}
+        >
+            My Cards
+        </Button>
+    );
+
+    const getCardButton = (
+        <Button
+            type="primary"
+            shape="round"
+            icon={<CreditCardOutlined />}
+            onClick={() => props.requestGetCountryCard()}
+            disabled={
+                props.round.type === RoundType.ADD_TROOPS ||
+                !props.players[props.round.playerIndex].canGetCard
+            }
+        >
+            Get Card
+        </Button>
+    );
+
+    const cardButton = props.round.type === RoundType.GET_CARD ? myCardsButton : getCardButton;
 
     return (
         <>
@@ -65,18 +94,7 @@ const AttackRoundButtons = (props: Props) => {
                     </Button>
             </Tooltip>
             <Tooltip title="Cards">
-                <Button
-                    type="primary"
-                    shape="round"
-                    icon={<CreditCardOutlined />}
-                    onClick={() => props.requestGetCountryCard()}
-                    disabled={
-                        props.round.type === RoundType.ADD_TROOPS ||
-                        !props.players[props.round.playerIndex].canGetCard
-                    }
-                >
-                    Get Card
-                    </Button>
+                {cardButton}
             </Tooltip>
         </>
     )

@@ -6,6 +6,8 @@ import Player from "src/models/Player";
 import Country from "src/models/Country";
 import { RequestExchangeCard, RequestExchangeCards } from "src/ops/game/actions";
 
+import { ReactComponent as BallonCardImg } from 'src/assets/cards/balloon.svg';
+
 export interface Props {
     currentPlayer: Player;
     countries: Country[];
@@ -68,12 +70,15 @@ const PlayerCardsTab = (props: Props) => {
                         }
 
                         return (
-                            <li key={card.country}>
-                                <Checkbox onClick={() => clickCard(card.country)}>
-                                    {card.country} ({card.type}) &nbsp;
-                                </Checkbox>
-                                {button}
-                            </li>
+                            <div>
+                                <BallonCardImg />
+                                <li key={card.country}>
+                                    <Checkbox onClick={() => clickCard(card.country)}>
+                                        {card.country} ({card.type}) &nbsp;
+                                    </Checkbox>
+                                    {button}
+                                </li>
+                            </div>
                         );
                     })}
                 </ul>
@@ -81,7 +86,7 @@ const PlayerCardsTab = (props: Props) => {
                     onClick={() => props.changeCardsHandler({ cards: checkedCards })}
                     disabled={props.currentPlayer.cards.length < 3}
                 >
-                    Change 3 cards
+                    Change 3 cardsss
         </Button>
             </div>
         );

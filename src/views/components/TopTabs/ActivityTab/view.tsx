@@ -14,7 +14,7 @@ const formatTimestamp = (timestamp: EventLog["time"]) => {
   return moment(timestamp).format(DATE_TIME_FORMAT);
 }
 
-interface Props {
+export interface Props {
     eventsLog: EventLog[];
 }
 

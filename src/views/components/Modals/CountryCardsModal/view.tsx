@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
 import _ from 'lodash';
 
-import { Modal, Button, Checkbox, Alert } from 'antd';
-import Player from 'src/models/Player';
+import { Modal, Button, Checkbox, Alert, Card } from 'antd';
+import Player, { CountryCard } from 'src/models/Player';
 import Country from 'src/models/Country';
 import { RequestExchangeCard, RequestExchangeCards } from 'src/ops/game/actions';
 import { SetCardsModalOpen } from 'src/state/modals/actions';
+
+import { ReactComponent as BallonCardImg } from 'src/assets/cards/balloon.svg';
+import { ReactComponent as CannonCardImg } from 'src/assets/cards/cannon.svg';
+import { ReactComponent as ShipCardImg } from 'src/assets/cards/ship.svg';
+import { ReactComponent as WildCardCardImg } from 'src/assets/cards/wildCard.svg';
+
+import { TextAlignProperty } from 'csstype';
 
 export interface Props {
     currentPlayer: Player;
@@ -15,6 +22,21 @@ export interface Props {
     changeCardHandler: (payload: RequestExchangeCard['payload']) => void;
     changeCardsHandler: (payload: RequestExchangeCards['payload']) => void;
     setCardsModalOpen: (payload: SetCardsModalOpen['payload']) => void;
+}
+
+const getCardImage = (type: string) => {
+    switch (type) {
+        case 'balloon':
+            return <BallonCardImg />;
+        case 'ship':
+            return <ShipCardImg />;
+        case 'cannon':
+            return <CannonCardImg />;
+        case 'wildcard':
+            return <WildCardCardImg />;
+        default:
+            return null;
+    }
 }
 
 const CountryCardsModal = (props: Props) => {
@@ -45,11 +67,29 @@ const CountryCardsModal = (props: Props) => {
     let playerCards;
 
     if (props.currentPlayer.cards.length > 0) {
+
+        const gridStyle = {
+            width: '20%',
+            textAlign: 'center' as TextAlignProperty,
+            height: '233px',
+            padding: '15px 0 0 0',
+            margin: '0',
+        };
+
         // playerCards = <ul>;
         playerCards = (
             <div>
-                <ul>
-                    {props.currentPlayer.cards.map((card: any) => {
+                <Card>
+                    {Array.from({...props.currentPlayer.cards, length: 5}).map((card: CountryCard | undefined) => {
+                    // {props.currentPlayer.cards.map((card: any) => {
+                        if (!card) {
+                            return (
+                                <Card.Grid style={gridStyle}>
+                                    &nbsp;
+                                </Card.Grid>
+                            );
+                        }
+
                         const country = _.find(props.countries, { countryKey: card.country });
 
                         if (!country) {
@@ -77,15 +117,16 @@ const CountryCardsModal = (props: Props) => {
                         }
 
                         return (
-                            <li key={card.country}>
-                                <Checkbox onClick={() => clickCard(card.country)}>
-                                    {card.country} ({card.type}) &nbsp;
-                </Checkbox>
-                                {button}
-                            </li>
+                            <Card.Grid style={gridStyle}>
+                                <div onClick={() => clickCard(card.country)}>
+                                    {getCardImage(card.type)}
+                                    <h4>{card.country}</h4>
+                                    {button}
+                                </div>
+                            </Card.Grid>
                         );
                     })}
-                </ul>
+                </Card>
             </div>
         );
         // playerCards = </ul>;
@@ -105,6 +146,7 @@ const CountryCardsModal = (props: Props) => {
                     OK
                 </Button>,
             ]}
+            width={850}
         >
             <div>
                 {playerCards}

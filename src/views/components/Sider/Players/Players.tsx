@@ -11,7 +11,7 @@ const players = (props: any) => {
         const playerStatus = player.playerStatus === 'offline' ? <Tooltip title="Offline"><DisconnectOutlined /></Tooltip> : 'OK';
 
         return (
-            <p key={player.name}>
+            <p key={player.color}>
                 <Avatar style={{ backgroundColor: player.color }} icon={<UserOutlined />} />
                 &nbsp; {playerName}
                 &nbsp; {playerStatus}

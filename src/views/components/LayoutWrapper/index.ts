@@ -39,6 +39,9 @@ type DispatchProps = Pick<Props,
     | 'setChooseColorOpen'
     | 'setSpinnerVisible'
     | 'setGameFinishedOpen'
+    | 'setEventsLog'
+    | 'addChatMessage'
+    | 'setIsAttacking'
     >;
 
 const mapDispatchToProps: DispatchProps = {
@@ -64,6 +67,12 @@ const mapDispatchToProps: DispatchProps = {
     setChooseColorOpen: stateActions.modals.setChooseColorOpen,
     setSpinnerVisible: stateActions.modals.setSpinnerVisible,
     setGameFinishedOpen: stateActions.modals.setGameFinishedOpen,
+
+    setEventsLog: stateActions.game.setEventsLog,
+
+    addChatMessage: stateActions.game.addChatMessage,
+    
+    setIsAttacking: stateActions.game.setIsAttacking,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LayoutWrapper);

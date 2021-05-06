@@ -139,6 +139,10 @@ export interface State {
     dices: Dices,
     winner: string;
     isAttacking: boolean;
+    chatMessages: {
+        unreadCount: number;
+        messages: { title: string, color: string, text: string }[],
+    };
 }
 
 const initialState: State = {
@@ -151,6 +155,7 @@ const initialState: State = {
       playerColor: '',
       count: 0,
       type: RoundType.FIRST_ADD_TROOPS,
+      gotCard: false,
     },
     me: undefined,
     gameStatus: '',
@@ -162,6 +167,10 @@ const initialState: State = {
     },
     winner: '',
     isAttacking: false,
+    chatMessages: {
+        unreadCount: 0,
+        messages: [],
+    },
 };
 
 const reducer = (state = initialState, action: Actions | PlayersInfoReceived | JoinedGame) => {
@@ -228,6 +237,25 @@ const reducer = (state = initialState, action: Actions | PlayersInfoReceived | J
             return { ...state, eventsLog: action.payload.eventsLog };
         case ActionTypes.SET_IS_ATTACKING:
             return { ...state, isAttacking: action.payload.isAttacking };
+        case ActionTypes.ADD_CHAT_MESSAGE: {
+            const messages = [...state.chatMessages.messages ];
+            messages.unshift(action.payload);
+            return {
+                ...state,
+                chatMessages: {
+                    messages,
+                    unreadCount: state.chatMessages.unreadCount + 1
+                },
+            };
+        }
+        case ActionTypes.SET_UNREAD_MSG_COUNT:
+            return {
+                ...state,
+                chatMessages: {
+                    ...state.chatMessages,
+                    unreadCount: action.payload.count,
+                },
+            };
         default:
           return state;
     }

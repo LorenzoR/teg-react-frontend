@@ -3,6 +3,7 @@ import AttackRoundButtons, { Props } from './view';
 import { AppState } from 'src/state';
 import data from 'src/ops-read';
 import actions from 'src/ops/actions';
+import stateActions from 'src/state/actions';
 
 type StateProps = Pick<Props, 
     | 'round'
@@ -27,12 +28,14 @@ type DispatchProps = Pick<Props,
     | 'attackHandler'
     | 'moveTroopsHandler'
     | 'requestGetCountryCard'
+    | 'countryCardsModalHandler'
     >;
 
 const mapDispatchToProps: DispatchProps = {
     attackHandler: actions.game.requestAttack,
     moveTroopsHandler: actions.game.requestMoveTroops,
     requestGetCountryCard: actions.game.requestGetCountryCard,
+    countryCardsModalHandler: () => stateActions.modals.setCardsModalOpen({ isOpen: true }),
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AttackRoundButtons);

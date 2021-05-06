@@ -5,20 +5,12 @@ import { Layout } from 'antd';
 import { notification, Modal } from 'antd';
 import { Alert } from 'antd';
 
-import Map from '../Map';
-import BottomTabs from '../BottomTabs';
-
 import GameHeader from '../Header';
-import GameSider from '../Sider/GameSider';
-
-import Modals from '../Modals';
 
 import RoundType, { Round } from 'src/models/Round';
 
-import ButtonsRow from '../ButtonsRow';
 import Player from 'src/models/Player';
-import { SetCurrentPlayerId, SetGameId, SetWinner } from 'src/state/game/actions';
-import { ChatMessage } from 'src/models/ChatMessage';
+import { AddChatMessage, SetCurrentPlayerId, SetEventsLog, SetGameId, SetIsAttacking, SetWinner } from 'src/state/game/actions';
 import { SelectCountry } from 'src/ops/country-selection/actions';
 import { SetSource, SetTarget } from 'src/state/country-selection/actions';
 
@@ -29,9 +21,9 @@ import {
 } from 'src/ops/game/actions';
 
 import { SetChooseColorOpen, SetGameFinishedOpen, SetSpinnerVisible } from 'src/state/modals/actions';
-import { EventLog } from 'src/models/EventLog';
+import TopTabs from '../TopTabs';
 
-const { Header, Footer, Content } = Layout;
+const { Header, Footer } = Layout;
 
 export interface Props {
     match: {
@@ -64,36 +56,24 @@ export interface Props {
     setChooseColorOpen: (payload: SetChooseColorOpen['payload']) => void;
     setSpinnerVisible: (payload: SetSpinnerVisible['payload']) => void;
     setGameFinishedOpen: (payload: SetGameFinishedOpen['payload']) => void;
+
+    setEventsLog: (payload: SetEventsLog['payload']) => void;
+    addChatMessage: (payload: AddChatMessage['payload']) => void;
+
+    setIsAttacking: (payload: SetIsAttacking['payload']) => void;
 }
 
-interface State {
-    eventsLog: EventLog[];
-    chatMessages: {
-        unreadCount: number;
-        messages: ChatMessage[];
-    };
-}
-
-class LayoutWrapper extends Component<Props, State> {
-    state = {
-        eventsLog: [] as EventLog[],
-        chatMessages: {
-            unreadCount: 0,
-            messages: [] as { title: string, color: string, text: string }[],
-        }
-    };
-
+class LayoutWrapper extends Component<Props> {
     componentWillMount() {
         const onMessageActions = {
             joinGame: (body: JoinedGame['payload']) => {
                 console.log('join game received!');
-                const { gameStatus, players } = body;
-                this.props.joinedGame({ gameStatus, players });
+                this.props.joinedGame(body);
             },
             gameStarted: (body: GameStarted['payload']) => {
                 const { players, countries, round, gameStatus, eventsLog } = body;
 
-                this.setState({ eventsLog });
+                this.props.setEventsLog({ eventsLog });
 
                 this.props.initGame({ round, gameStatus, gameId: gameId || '', countries, players });
 
@@ -160,6 +140,18 @@ class LayoutWrapper extends Component<Props, State> {
                     });
                 }
 
+                // Another player attacked so show animation
+                // TODO show attacker and defender
+                if (this.props.players[this.props.round.playerIndex].color !== this.props.currentPlayer?.color) {
+                    console.log('setIsAttacking true');
+                    this.props.setIsAttacking({ isAttacking: true });
+
+                    setTimeout(() => {
+                        console.log('setIsAttacking false');
+                        this.props.setIsAttacking({ isAttacking: false });
+                    }, 2000);
+                }
+
                 setTimeout(() => {
                     // Country conquered, show notification
                     if (countryConquered) {
@@ -204,7 +196,7 @@ class LayoutWrapper extends Component<Props, State> {
             troopsAdded: (body: any) => {
                 const { players, countries, eventsLog } = body;
 
-                this.setState({ eventsLog });
+                this.props.setEventsLog({ eventsLog });
                 this.props.setCountries({ countries });
                 this.props.setPlayers({ players });
 
@@ -246,8 +238,9 @@ class LayoutWrapper extends Component<Props, State> {
                     (obj) => obj.id === currentPlayerId,
                 );
 
-                this.setState({ eventsLog });
+                this.props.setEventsLog({ eventsLog });
 
+                // TODO. Only for player that chose color
                 this.props.setChooseColorOpen({ isOpen: false });
                 this.props.setPlayers({ players });
                 this.props.setCountries({ countries });
@@ -267,7 +260,9 @@ class LayoutWrapper extends Component<Props, State> {
                     placement: 'bottomLeft',
                 });
 
-                this.props.setPlayers({ players });
+                const playersWithColorAndName = players.filter((o: Player) => o.name && o.color);
+
+                this.props.setPlayers({ players: playersWithColorAndName });
             },
             cardReceived: (body: any) => {
                 const { players, playerName, round } = body;
@@ -329,8 +324,9 @@ class LayoutWrapper extends Component<Props, State> {
             },
             messageReceived: (body: any) => {
                 const { player, message } = body;
-                const chatMessages = { ...this.state.chatMessages };
+                // const chatMessages = { ...this.state.chatMessages };
                 // Increment unread count
+                /*
                 chatMessages.unreadCount += 1;
                 // Add message to beginning of array
                 chatMessages.messages.unshift({
@@ -338,8 +334,15 @@ class LayoutWrapper extends Component<Props, State> {
                     color: player.color,
                     text: message,
                 });
+                */
 
-                this.setState({ chatMessages });
+                this.props.addChatMessage({
+                    title: player.name,
+                    color: player.color,
+                    text: message,
+                });
+
+                // this.setState({ chatMessages });
             },
             error: (body: any) => {
                 const { errorMsg } = body;
@@ -410,26 +413,15 @@ class LayoutWrapper extends Component<Props, State> {
         this.props.setSpinnerVisible({ isVisible });
     }
 
+    // const style = { position: 'fixed', zIndex: 1, width: '100%' };
+
     render() {
         return (
             <Layout>
-                <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
+                <Header style={{ marginBottom: '10px' }}>
                     <GameHeader />
                 </Header>
-                <Layout>
-                    <Content className="site-layout" style={{ marginTop: 64 }}>
-                        <Modals />
-                        <div>
-                            <ButtonsRow />
-                            <div style={{ padding: '40px 0' }}>
-                                <Map />
-                            </div>
-                            <hr />
-                            <BottomTabs />
-                        </div>
-                    </Content>
-                    <GameSider />
-                </Layout>
+                <TopTabs />
                 <Footer>Footer</Footer>
             </Layout>
         );

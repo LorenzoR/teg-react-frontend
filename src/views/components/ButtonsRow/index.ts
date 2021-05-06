@@ -15,9 +15,9 @@ type StateProps = Pick<Props,
 
 const mapStateToProps = (state: AppState): StateProps => {
     return {
-        round: state.game.round,
+        round: data.game.round(state),
         currentPlayerId: data.game.me(state)?.id || '', // state.game.currentPlayerId,
-        players: state.game.players,
+        players: data.game.players(state),
         countrySelection: {
             source: data.countrySelection.source(state),
             target: data.countrySelection.target(state),

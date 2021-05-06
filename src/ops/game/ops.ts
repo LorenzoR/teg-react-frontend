@@ -104,10 +104,12 @@ export function* watchRequestFinishRound(action: RequestFinishRound) {
 export function* watchRequestAttack() {
     // Set attacking flag and some dices just to show animation
     yield put(stateActions.game.setIsAttacking({ isAttacking: true }));
-    yield put(stateActions.game.setDices({ dices: {
-        attacker: [1, 1, 1],
-        defender: [1, 1, 1],
-    }}));
+    yield put(stateActions.game.setDices({
+        dices: {
+            attacker: [1, 1, 1],
+            defender: [1, 1, 1],
+        }
+    }));
 
     const me: Player = yield select(data.game.me);
 
@@ -159,8 +161,14 @@ export function watchRequestReconnect(action: RequestReconnect) {
     console.log('request reConnect message sent!');
 }
 
-export function watchRequestSendChatMessage(action: RequestSendChatMessage) {
-    const messageData = { ...action.payload };
+export function* watchRequestSendChatMessage(action: RequestSendChatMessage) {
+    const messageData: {
+        gameId: string,
+        message: string,
+    } = {
+        gameId: yield select(data.game.gameId),
+        message: action.payload.message,
+    };
 
     WebsocketService.sendMessage(messageData, WebsocketSendMessagesTypes.ChatMessage);
     console.log('request send chat message sent!');
