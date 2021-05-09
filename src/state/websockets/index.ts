@@ -1,18 +1,23 @@
 import { Actions, ActionTypes } from './actions';
-import WebsocketService from 'src/services/websocket';
 
 export interface State {
-    client?: WebsocketService;
+    message: {
+        action: string;
+        body: any;
+    };
 }
 
 const initialState: State = {
-    client: undefined,
+    message: {
+        action: '',
+        body: undefined,
+    },
 };
 
 const reducer = (state = initialState, action: Actions) => {
     switch (action.type) {
-        case ActionTypes.SET_CLIENT:
-            return { ...state, client: action.payload.client };
+        case ActionTypes.SET_RECEIVED_MESSAGE:
+            return { ...state, message: action.payload.message };
         default:
             return state;
     }

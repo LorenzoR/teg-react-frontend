@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import _ from 'lodash';
 
-import { Modal, Button, Checkbox, Alert, Card } from 'antd';
+import { Modal, Button, Alert, Card } from 'antd';
 import Player, { CountryCard } from 'src/models/Player';
 import Country from 'src/models/Country';
 import { RequestExchangeCard, RequestExchangeCards } from 'src/ops/game/actions';

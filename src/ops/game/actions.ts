@@ -21,6 +21,7 @@ const REQUEST_COUNTER_FINISHED: 'REQUEST_COUNTER_FINISHED' = 'REQUEST_COUNTER_FI
 
 /* Responses */
 const INIT_GAME: 'INIT_GAME' = 'INIT_GAME';
+const CREATE_GAME: 'CREATE_GAME' = 'CREATE_GAME';
 const JOINED_GAME: 'JOINED_GAME' = 'JOINED_GAME';
 const PLAYERS_INFO_RECEIVED: 'PLAYERS_INFO_RECEIVED' = 'PLAYERS_INFO_RECEIVED';
 const GAME_STARTED: 'GAME_STARTED' = 'GAME_STARTED';
@@ -34,6 +35,22 @@ export interface InitGame {
     type: typeof INIT_GAME;
     payload: {
         gameId: string;
+        // countries: {}[];
+        // players: Player[];
+        // gameStatus: string;
+        // round: Round;
+    };
+}
+
+export const initGame: ActionCreatorWithPayload<InitGame> = payload => ({
+    type: INIT_GAME,
+    payload,
+});
+
+export interface CreateGame {
+    type: typeof CREATE_GAME;
+    payload: {
+        gameId: string;
         countries: {}[];
         players: Player[];
         gameStatus: string;
@@ -41,8 +58,8 @@ export interface InitGame {
     };
 }
 
-export const initGame: ActionCreatorWithPayload<InitGame> = payload => ({
-    type: INIT_GAME,
+export const createGame: ActionCreatorWithPayload<CreateGame> = payload => ({
+    type: CREATE_GAME,
     payload,
 });
 
@@ -115,6 +132,7 @@ export const requestStartGame: ActionCreatorWithPayload<RequestStartGame> = payl
 export interface GameStarted {
     type: typeof GAME_STARTED;
     payload: {
+        UUID: string;
         players: Player[];
         countries: Country[];
         round: Round;
@@ -307,6 +325,7 @@ export const countryCardReceived: ActionCreatorWithPayload<CountryCardReceived> 
 
 export const ActionTypes = {
     INIT_GAME,
+    CREATE_GAME,
     REQUEST_ADD_TROOPS,
     REQUEST_JOIN_GAME,
     JOINED_GAME,
@@ -331,6 +350,7 @@ export const ActionTypes = {
 
 export type Actions =
     | InitGame
+    | CreateGame
     | RequestAddTroops
     | RequestJoinGame
     | JoinedGame
@@ -355,6 +375,7 @@ export type Actions =
 
 export default {
     initGame,
+    createGame,
     requestAddTroops,
     requestJoinGame,
     joinedGame,

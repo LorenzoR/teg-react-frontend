@@ -11,27 +11,42 @@ import {
 import { WebsocketSendMessagesTypes } from 'src/consts';
 import Country from 'src/models/Country';
 import Player from 'src/models/Player';
+import store from 'src/store';
+import { ActionTypes } from '../actions';
+import { MessageData } from 'src/services/websocket';
 
 export function* watchInitGame(action: InitGame) {
     const gameId = action.payload.gameId;
-    // const endpoint = `${process.env.REACT_APP_WEBSOCKET_ENDPOINT}?game_id=${gameId}`;
 
     try {
-        /*
-        const client = new WebsocketService(
-            endpoint,
-            gameId,
-            undefined,
-        );
-
-        yield put(stateActions.messageService.setClient({ client }));
-        */
-        yield put(stateActions.game.setGameId({ gameId }));
+        yield createWebsocketService(gameId);
     } catch (error) {
         // yield put(handleAjaxException(error));
     } finally {
         // yield put(actions.currentPersonalReport.setDoneStatuses({ doneStatuses: [] }));
     }
+}
+
+function* createWebsocketService(gameId: string) {
+    const onMessageActions = {
+        dispatchMessage: (messageData: MessageData) => {
+            store.dispatch({
+                type: ActionTypes.WebsocketsActionTypes.SET_RECEIVED_MESSAGE,
+                payload: { message: messageData },
+            });
+        },
+    };
+
+    // const gameId = this.props.match.params.gameId;
+    // this.props.setGameId({ gameId });
+    yield put(stateActions.game.setGameId({ gameId }));
+    const endpoint = `${process.env.REACT_APP_WEBSOCKET_ENDPOINT}?game_id=${gameId}`;
+
+    new WebsocketService(
+        endpoint,
+        gameId,
+        onMessageActions, // TODO. Create OnMessageActions
+    );
 }
 
 export function* watchRequestAddTroops(action: RequestAddTroops) {

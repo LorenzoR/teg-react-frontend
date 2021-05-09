@@ -1,8 +1,18 @@
+// import { WebsocketReceivedMessagesTypes } from 'src/consts';
+// import { ConnectionIDReceived, CountryAttacked, CountryCardReceived, GameStarted, GameSync, JoinedGame, PlayersInfoReceived, TroopsMoved } from 'src/ops/game/actions';
 import { WebsocketReceivedMessagesTypes } from 'src/consts';
-import { ConnectionIDReceived, CountryAttacked, CountryCardReceived, GameStarted, GameSync, JoinedGame, PlayersInfoReceived, TroopsMoved } from 'src/ops/game/actions';
 import { IMessageEvent, w3cwebsocket as W3CWebSocket } from 'websocket';
+// import store from 'src/store';
+// import { ActionTypes } from 'src/ops/actions';
+
+export interface MessageData {
+    action: WebsocketReceivedMessagesTypes;
+    body: any;
+}
 
 export interface OnMessageActions {
+    dispatchMessage: (messageData: MessageData) => void;
+    /*
     joinGame: (body: JoinedGame['payload']) => void;
     gameStarted: (body: GameStarted['payload']) => void;
     connectionId: (body: ConnectionIDReceived['payload']) => void;
@@ -20,6 +30,7 @@ export interface OnMessageActions {
     playersInfo: (body: PlayersInfoReceived['payload']) => void;
     messageReceived: (body: any) => void;
     error: (body: any) => void;
+    */
 }
 
 class WebsocketService {
@@ -33,7 +44,7 @@ class WebsocketService {
         WebsocketService.client.onclose = (event) => {
             // alert(`Closing. ${JSON.stringify(event)}`);
         }
-      
+
         WebsocketService.client.onerror = (error) => {
             alert(`ERROR. Could not connect to server: ${JSON.stringify(error)}`);
         }
@@ -43,7 +54,7 @@ class WebsocketService {
             // console.log('data', data);
             // console.log('props', this.props);
             // this.logInUser('someUsername');
-      
+
             // Send message to get players
             if (WebsocketService.client?.readyState === WebsocketService.client.OPEN) {
                 setTimeout(() => WebsocketService.sendMessage({ gameId }, 'getPlayers'), 500);
@@ -51,69 +62,80 @@ class WebsocketService {
         }
 
         WebsocketService.client.onmessage = (message: IMessageEvent) => {
-            console.log('recibido');
+            console.log('WebsocketService.client.onmessage(): recibido');
             if (message && message.data) {
-                const messageData = JSON.parse(message.data as string);
+                const messageData: MessageData = JSON.parse(message.data as string);
                 if (messageData.body && onMessageActions) {
-                    console.log('data', JSON.parse(message.data as string));
-        
-                    const { action, body } = messageData;
-        
-                    switch (action) {
-                        case WebsocketReceivedMessagesTypes.JoinedGame:
-                            onMessageActions.joinGame(body);
-                            break;
-                        case WebsocketReceivedMessagesTypes.GameStarted:
-                            onMessageActions.gameStarted(body);
-                            break;
-                        case WebsocketReceivedMessagesTypes.ConnectionId:
-                            onMessageActions.connectionId(body);
-                            break;
-                        case WebsocketReceivedMessagesTypes.CountryAttacked:
-                            onMessageActions.countryAttacked(body);
-                            break;
-                        case WebsocketReceivedMessagesTypes.TroopsMoved:
-                            onMessageActions.troopsMoved(body);
-                            break;
-                        case WebsocketReceivedMessagesTypes.RoundFinished:
-                            onMessageActions.roundFinished(body);
-                            break;
-                        case WebsocketReceivedMessagesTypes.TroopsAdded:
-                            onMessageActions.troopsAdded(body);
-                            break;
-                        case WebsocketReceivedMessagesTypes.PlayerDisconnected:
-                            onMessageActions.playerDisconnected(body);
-                            break;
-                        case WebsocketReceivedMessagesTypes.GuestDisconnected:
-                            onMessageActions.guestDisconnected(body);
-                            break;
-                        case WebsocketReceivedMessagesTypes.Sync:
-                            onMessageActions.sync(body);
-                            break;
-                        case WebsocketReceivedMessagesTypes.ReJoinedGame:
-                            onMessageActions.reJoinGame(body);
-                            break;
-                        case WebsocketReceivedMessagesTypes.CardReceived:
-                            onMessageActions.cardReceived(body);
-                            break;
-                        case WebsocketReceivedMessagesTypes.CardExchanged:
-                            onMessageActions.cardExchanged(body);
-                            break;
-                        case WebsocketReceivedMessagesTypes.CardsExchanged:
-                            onMessageActions.cardsExchanged(body);
-                            break;
-                        case WebsocketReceivedMessagesTypes.PlayersInfo:
-                            onMessageActions.playersInfo(body);
-                            break;
-                        case WebsocketReceivedMessagesTypes.MessageReceived:
-                            onMessageActions.messageReceived(body);
-                            break;
-                        case WebsocketReceivedMessagesTypes.Error:
-                            onMessageActions.error(body);
-                            break;
-                        default:
-                            break;
+                    console.log('WebsocketService.client.onmessage(): data', JSON.parse(message.data as string));
+
+                    // const { action, body } = messageData;
+
+                    onMessageActions.dispatchMessage(messageData);
+
+                    /*
+                    store.dispatch({
+                        type: ActionTypes.WebsocketsActionTypes.SET_RECEIVED_MESSAGE,
+                        payload: { message: messageData },
+                    });
+
+                    if (1 + 1 === 4) {
+                        switch (action) {
+                            case WebsocketReceivedMessagesTypes.JoinedGame:
+                                onMessageActions.joinGame(body);
+                                break;
+                            case WebsocketReceivedMessagesTypes.GameStarted:
+                                onMessageActions.gameStarted(body);
+                                break;
+                            case WebsocketReceivedMessagesTypes.PlayersInfo:
+                                onMessageActions.playersInfo(body);
+                                break;
+                            case WebsocketReceivedMessagesTypes.ConnectionId:
+                                onMessageActions.connectionId(body);
+                                break;
+                            case WebsocketReceivedMessagesTypes.CountryAttacked:
+                                onMessageActions.countryAttacked(body);
+                                break;
+                            case WebsocketReceivedMessagesTypes.TroopsMoved:
+                                onMessageActions.troopsMoved(body);
+                                break;
+                            case WebsocketReceivedMessagesTypes.RoundFinished:
+                                onMessageActions.roundFinished(body);
+                                break;
+                            case WebsocketReceivedMessagesTypes.TroopsAdded:
+                                onMessageActions.troopsAdded(body);
+                                break;
+                            case WebsocketReceivedMessagesTypes.PlayerDisconnected:
+                                onMessageActions.playerDisconnected(body);
+                                break;
+                            case WebsocketReceivedMessagesTypes.GuestDisconnected:
+                                onMessageActions.guestDisconnected(body);
+                                break;
+                            case WebsocketReceivedMessagesTypes.Sync:
+                                onMessageActions.sync(body);
+                                break;
+                            case WebsocketReceivedMessagesTypes.ReJoinedGame:
+                                onMessageActions.reJoinGame(body);
+                                break;
+                            case WebsocketReceivedMessagesTypes.CardReceived:
+                                onMessageActions.cardReceived(body);
+                                break;
+                            case WebsocketReceivedMessagesTypes.CardExchanged:
+                                onMessageActions.cardExchanged(body);
+                                break;
+                            case WebsocketReceivedMessagesTypes.CardsExchanged:
+                                onMessageActions.cardsExchanged(body);
+                                break;
+                            case WebsocketReceivedMessagesTypes.MessageReceived:
+                                onMessageActions.messageReceived(body);
+                                break;
+                            case WebsocketReceivedMessagesTypes.Error:
+                                onMessageActions.error(body);
+                                break;
+                            default:
+                                break;
+                        }
                     }
+                    */
                 }
             }
         }

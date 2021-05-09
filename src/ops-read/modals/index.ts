@@ -11,6 +11,7 @@ const isChooseColorVisible = createSelector(self, data => data.isChooseColorVisi
 const isCountryCardsVisible = createSelector(self, data => data.isCountryCardsVisible);
 const isGameFinishedVisible = createSelector(self, data => data.isGameFinishedVisible);
 const isCountryConqueredVisible = createSelector(self, data => data.isCountryConqueredVisible);
+const isPlayerMissionOpen = createSelector(self, data => data.isPlayerMissionOpen);
 
 export default {
     self,
@@ -21,4 +22,5 @@ export default {
     isCountryCardsVisible,
     isGameFinishedVisible,
     isCountryConqueredVisible,
+    isPlayerMissionOpen,
 };

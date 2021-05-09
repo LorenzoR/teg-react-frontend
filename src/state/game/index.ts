@@ -179,6 +179,15 @@ const reducer = (state = initialState, action: Actions | PlayersInfoReceived | J
             return {
                 ...state,
                 gameId: action.payload.gameId,
+                // countries: action.payload.countries,
+                // players: action.payload.players,
+                // gameStatus: action.payload.gameStatus,
+                // round: action.payload.round,
+            };
+        case ActionTypes.CREATE_GAME:
+            return {
+                ...state,
+                gameId: action.payload.gameId,
                 countries: action.payload.countries,
                 players: action.payload.players,
                 gameStatus: action.payload.gameStatus,

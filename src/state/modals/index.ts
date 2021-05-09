@@ -8,6 +8,7 @@ export interface State {
     isCountryCardsVisible: boolean;
     isSpinnerVisible: boolean;
     isAttacking: boolean;
+    isPlayerMissionOpen: boolean;
 }
 
 const initialState: State = {
@@ -18,6 +19,7 @@ const initialState: State = {
     isCountryCardsVisible: false,
     isSpinnerVisible: false,
     isAttacking: false,
+    isPlayerMissionOpen: false,
 };
 
 const reducer = (state = initialState, action: Actions) => {
@@ -34,6 +36,10 @@ const reducer = (state = initialState, action: Actions) => {
             return { ...state, isSpinnerVisible: action.payload.isVisible };
         case ActionTypes.SET_ATTACKING:
             return { ...state, isAttacking: action.payload.isAttacking };
+        case ActionTypes.SET_PLAYER_MISSION_OPEN: {
+            return { ...state, isPlayerMissionOpen: action.payload.isOpen };
+        }
+
         default:
             return state;
     }

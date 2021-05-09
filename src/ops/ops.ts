@@ -8,6 +8,7 @@ import {
     watchTroopsMoved, watchRequestMoveTroops, watchRequestGetCountryCard,
     watchRequestExchangeCard, watchRequestExchangeCards, watchRequestSendChatMessage,
 } from './game/ops';
+import { watchWSMsgReceiced } from './websockets/ops';
 
 export function* rootSaga() {
     yield all([
@@ -37,5 +38,9 @@ export function* rootSaga() {
         takeEvery(ActionTypes.GameActionTypes.REQUEST_EXCHANGE_CARDS, watchRequestExchangeCards),
 
         takeEvery(ActionTypes.GameActionTypes.REQUEST_SEND_CHAT_MSG, watchRequestSendChatMessage),
+
+        takeEvery(ActionTypes.GameActionTypes.REQUEST_SEND_CHAT_MSG, watchRequestSendChatMessage),
+
+        takeEvery(ActionTypes.WebsocketsActionTypes.SET_RECEIVED_MESSAGE, watchWSMsgReceiced),
     ]);
 }

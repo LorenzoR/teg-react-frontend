@@ -3,7 +3,8 @@ import { State as GameState } from './game';
 import { State as CountrySelection } from './country-selection';
 import { State as CurrentTurn } from './current-turn';
 import { State as Modals } from './modals';
-import { State as MessageService } from './message-service';
+import { State as Websockets } from './websockets';
+import { State as Notifications } from './notifications';
 
 export interface AppState {
     self: AppState;
@@ -12,5 +13,6 @@ export interface AppState {
     countrySelection: CountrySelection;
     currentTurn: CurrentTurn;
     modals: Modals;
-    messageService: MessageService;
+    notifications: Notifications;
+    websockets: Websockets;
 }

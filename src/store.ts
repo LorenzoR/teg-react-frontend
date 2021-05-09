@@ -8,14 +8,16 @@ import gameReducer from './state/game';
 import globalSettingsReducer from './state/globalSettings';
 import countrySelectionReducer from './state/country-selection';
 import modalsReducer from './state/modals';
-import messageServiceReducer from './state/message-service';
+import websocketsReducer from './state/websockets';
+import notificationsReducer from './state/notifications';
 
 const rootReducer = combineReducers({
     globalSettings: globalSettingsReducer,
     game: gameReducer,
     countrySelection: countrySelectionReducer,
     modals: modalsReducer,
-    messageService: messageServiceReducer,
+    notifications: notificationsReducer,
+    websockets: websocketsReducer,
 });
 
 // create the saga middleware

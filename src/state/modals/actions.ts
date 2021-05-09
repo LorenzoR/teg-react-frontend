@@ -4,6 +4,8 @@ const SET_CARDS_MODAL_OPEN: 'SET_CARDS_MODAL_OPEN' = 'SET_CARDS_MODAL_OPEN';
 const SET_CHOOSE_COLOR_OPEN: 'SET_CHOOSE_COLOR_OPEN' = 'SET_CHOOSE_COLOR_OPEN';
 const SET_COUNTRY_CONQUERED_OPEN: 'SET_COUNTRY_CONQUERED_OPEN' = 'SET_COUNTRY_CONQUERED_OPEN';
 const SET_GAME_FINISHED_OPEN: 'SET_GAME_FINISHED_OPEN' = 'SET_GAME_FINISHED_OPEN';
+const SET_PLAYER_MISSION_OPEN: 'SET_PLAYER_MISSION_OPEN' = 'SET_PLAYER_MISSION_OPEN';
+const SET_ERROR_MODAL_OPEN: 'SET_ERROR_MODAL_OPEN' = 'SET_ERROR_MODAL_OPEN';
 
 const SET_SPINNER_VISIBLE: 'SET_SPINNER_VISIBLE' = 'SET_SPINNER_VISIBLE';
 const SET_ATTACKING: 'SET_ATTACKING' = 'SET_ATTACKING';
@@ -57,6 +59,32 @@ export const setGameFinishedOpen: ActionCreatorWithPayload<SetGameFinishedOpen> 
     payload,
 });
 
+export interface SetPlayerMissionOpen {
+    type: typeof SET_PLAYER_MISSION_OPEN;
+    payload: {
+        isOpen: boolean;
+    };
+}
+
+export const setPlayerMissionOpen: ActionCreatorWithPayload<SetPlayerMissionOpen> = payload => ({
+    type: SET_PLAYER_MISSION_OPEN,
+    payload,
+});
+
+export interface SetErrorModalOpen {
+    type: typeof SET_ERROR_MODAL_OPEN;
+    payload: {
+        isOpen: boolean;
+        title?: string;
+        content?: String;
+    };
+}
+
+export const setErrorModalOpen: ActionCreatorWithPayload<SetErrorModalOpen> = payload => ({
+    type: SET_ERROR_MODAL_OPEN,
+    payload,
+});
+
 export interface SetSpinnerVisible {
     type: typeof SET_SPINNER_VISIBLE;
     payload: {
@@ -86,6 +114,8 @@ export const ActionTypes = {
     SET_CHOOSE_COLOR_OPEN,
     SET_COUNTRY_CONQUERED_OPEN,
     SET_GAME_FINISHED_OPEN,
+    SET_PLAYER_MISSION_OPEN,
+    SET_ERROR_MODAL_OPEN,
     SET_SPINNER_VISIBLE,
     SET_ATTACKING,
 };
@@ -95,6 +125,8 @@ export type Actions =
     | SetChooseColorOpen
     | SetCountryConqueredOpen
     | SetGameFinishedOpen
+    | SetPlayerMissionOpen
+    | SetErrorModalOpen
     | SetSpinnerVisible
     | SetAttacking
     ;
@@ -104,6 +136,8 @@ export default {
     setChooseColorOpen,
     setCountryConqueredOpen,
     setGameFinishedOpen,
+    setPlayerMissionOpen,
+    setErrorModalOpen,
     setSpinnerVisible,
     setAttacking,
 };

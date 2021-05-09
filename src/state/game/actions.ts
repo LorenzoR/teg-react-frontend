@@ -3,6 +3,7 @@ import Player from "src/models/Player";
 import { Round } from "src/models/Round";
 
 const INIT_GAME: 'INIT_GAME' = 'INIT_GAME';
+const CREATE_GAME: 'CREATE_GAME' = 'CREATE_GAME';
 const SET_GAME_ID: 'SET_GAME_ID' = 'SET_GAME_ID';
 const SET_COUNTRIES: 'SET_COUNTRIES' = 'SET_COUNTRIES';
 const SET_PLAYERS: 'SET_PLAYERS' = 'SET_PLAYERS';
@@ -25,15 +26,31 @@ export interface InitGame {
     type: typeof INIT_GAME;
     payload: {
         gameId: string;
-        countries: {}[];
-        players: Player[];
-        gameStatus: string;
-        round: Round;
+        // countries: {}[];
+        // players: Player[];
+        // gameStatus: string;
+        // round: Round;
     }
 };
 
 const initGame = (payload: InitGame['payload']) => ({
     type: INIT_GAME,
+    payload,
+});
+
+export interface CreateGame {
+    type: typeof CREATE_GAME;
+    payload: {
+        gameId: string;
+        countries: {}[];
+        players: Player[];
+        gameStatus: string;
+        round: Round;
+    };
+}
+
+const createGame = (payload: CreateGame['payload']) => ({
+    type: CREATE_GAME,
     payload,
 });
 
@@ -253,6 +270,7 @@ const setUnreadMsgCount = (payload: SetUnreadMsgCount['payload']) => ({
 
 export const ActionTypes = {
     INIT_GAME,
+    CREATE_GAME,
     SET_GAME_ID,
     SET_COUNTRIES,
     SET_PLAYERS,
@@ -274,6 +292,7 @@ export const ActionTypes = {
 
 export type Actions =
     | InitGame
+    | CreateGame
     | SetGameId
     | SetCountries
     | SetPlayers
@@ -295,6 +314,7 @@ export type Actions =
 
 export default {
     initGame,
+    createGame,
     setGameId,
     setCountries,
     setPlayers,
